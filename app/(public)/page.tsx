@@ -7,5 +7,6 @@ export default function Landing() {
 
       <p className="text-lg text-black/80">Smart. Fast. Reliable.</p>
     </div>
+    //
   );
 }
