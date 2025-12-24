@@ -8,9 +8,10 @@ const config: Config = {
   theme: {
     extend: {
       fontFamily: {
-        body: ["var(--font-inter)"],
-        heading: ["var(--font-geist-sans)"],
-        mono: ["var(--font-geist-mono)"],
+        sans: ["var(--font-inter)", "sans-serif"],
+      },
+      colors: {
+        brandPurple: "#AE25D4",
       },
     },
   },

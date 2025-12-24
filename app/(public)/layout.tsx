@@ -1,10 +1,17 @@
 import Image from "next/image";
 import authImage from "@/app/assets/images/authIllustration.png";
+import localFont from "next/font/local";
+import Header from "./_components/Header";
 
+const k2d = localFont({
+  src: [{ path: "../assets/fonts/K2D/K2D-Bold.woff2", weight: "700" }],
+  variable: "--font-k2d",
+  display: "swap",
+});
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <section
-      className="min-h-screen w-screen"
+      className="min-h-screen w-screen flex flex-col"
       style={{
         background: `
           linear-gradient(
@@ -18,23 +25,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         `,
       }}
     >
-      <div className="grid min-h-screen md:grid-cols-2">
-        {/* Left: Illustration */}
-        <div className="hidden md:flex items-center justify-center">
-          <Image
-            src={authImage}
-            alt="Authentication Illustration"
-            width={600}
-            height={600}
-            priority
-          />
-        </div>
+      <Header />
 
-        {/* Right: Content */}
-        <div className="flex items-center justify-center px-6">
-          <div className="w-full max-w-md">{children}</div>
-        </div>
-      </div>
+      <div className={`${k2d.className}`}>{children}</div>
     </section>
   );
 }
