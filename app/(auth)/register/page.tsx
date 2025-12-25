@@ -1,7 +1,9 @@
-export default function Page() {
-    return (
-        <div>vhjbjhbjk
+import RegisterForm from "../_components/RegisterForm";
 
-        </div>
-    );
+export default function Page() {
+  return (
+    <div>
+      <RegisterForm />
+    </div>
+  );
 }

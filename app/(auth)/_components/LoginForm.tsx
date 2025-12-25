@@ -4,10 +4,12 @@ import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { LoginData, loginSchema } from "../schema";
-import { startTransition, useTransition } from "react";
+import { useTransition } from "react";
 import Link from "next/link";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Eye, EyeOff } from "lucide-react";
+import { FcGoogle } from "react-icons/fc";
 
 export default function LoginForm() {
   const router = useRouter();
@@ -29,15 +31,15 @@ export default function LoginForm() {
       await new Promise((resolve) => setTimeout(resolve, 1000));
       router.push("/dashboard");
     });
-    console.log("login", values);
+    console.log("login successful for ", values.email);
   };
 
   return (
-    <div className=" w-full max-w-md px-6 py-6">
-      <h1 className="text-black/80 text-3xl font-extrabold text-center mb-8 ">
+    <div className=" w-full max-w-md px-5 ">
+      <h1 className="text-black/80 text-3xl font-extrabold text-center  ">
         Login
       </h1>
-      <form onSubmit={handleSubmit(submit)} className="space-y-5">
+      <form onSubmit={handleSubmit(submit)} className="space-y-5 ">
         {/* Email  */}
         <div>
           <label className="block text-md w-lg text-black/60 font-semibold mb-2">
@@ -48,6 +50,7 @@ export default function LoginForm() {
             type="email"
             autoComplete="email"
             className="h-12 w-full rounded-md border border-black/30 bg-white px-4 text-black focus:outline-none focus:border-black/60"
+            aria-invalid={!!errors.email}
             {...register("email")}
             placeholder="example@mail.com"
           />
@@ -66,20 +69,18 @@ export default function LoginForm() {
               type={showPassword ? "text" : "password"}
               autoComplete="current-password"
               className="h-12 w-full rounded-md border border-black/30 bg-white px-4 text-black focus:outline-none focus:border-black/60"
+              aria-invalid={!!errors.password}
               {...register("password")}
               placeholder="••••••••"
             />
             <button
               type="button"
-              onClick={() => setShowPassword((v) => !v)}
+              onClick={() => setShowPassword((value) => !value)}
               className="
-        absolute right-3 top-1/2 -translate-y-1/2
-        text-gray-600 hover:text-purple-700
-        focus:outline-none
-      "
+        absolute right-3 top-1/2 -translate-y-1/2 focus:outline-none text-gray-500 hover:text-gray-800"
               aria-label={showPassword ? "Hide password" : "Show password"}
             >
-              {showPassword ? "🙈" : "👁️"}
+              {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
             </button>
           </div>
           {errors.password?.message && (
@@ -87,15 +88,53 @@ export default function LoginForm() {
           )}
         </div>
 
+        {/* forgot password */}
+        <div className="flex items-end justify-end text-sm  ">
+          <Link
+            href="/forgot-password"
+            className="text-blue-400 hover:text-blue-600 hover:underline"
+          >
+            Forgot Password ?
+          </Link>
+        </div>
+
         {/* submit button */}
         <button
           type="submit"
           disabled={isSubmitting || pending}
-          className=" h-12 w-full mt-10 text-xl text-bold bg-purple-700  rounded-xl"
+          className=" h-12 w-full mt-2 text-xl bg-purple-700  rounded-xl"
         >
-          {isSubmitting || pending ? "Logging in..." : "Login"}
+          {isSubmitting || pending ? "Logging in..." : "Log in"}
         </button>
+        {/* register */}
+        <div className="flex justify-center text-sm ">
+          <p className=" text-gray-500">Don't have an account? &nbsp;</p>
+          <Link
+            href="/register"
+            className=" text-blue-400 hover:text-blue-600 hover:underline"
+          >
+            Sign up
+          </Link>
+        </div>
       </form>
+      <div className="mt-5">
+        <div className="flex items-center gap-3 mb-4">
+          <span className="h-px flex-1 bg-gray-700" />
+          <span className="text-md text-gray-700">Or</span>
+          <span className="h-px flex-1 bg-gray-700" />
+        </div>
+      </div>
+
+      <div className="flex flex-col gap-4">
+        <button
+          type="button"
+          // onClick={handleGoogleLogin}
+          className="w-full h-12 flex items-center justify-center gap-3 border border-gray-500 rounded-lg text-black/80 font-bold bg-white hover:bg-gray-100 transition"
+        >
+          <FcGoogle size={25} />
+          Continue with Google
+        </button>
+      </div>
     </div>
   );
 }
