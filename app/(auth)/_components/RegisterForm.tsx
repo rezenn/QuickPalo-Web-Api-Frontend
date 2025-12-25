@@ -3,11 +3,12 @@
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { LoginData, loginSchema } from "../schema";
+import { RegistrationData, registrationSchema } from "../schema";
 import { useTransition } from "react";
 import Link from "next/link";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { PhoneInput } from "react-international-phone";
 import { Eye, EyeOff } from "lucide-react";
 import { FcGoogle } from "react-icons/fc";
 
@@ -15,10 +16,12 @@ export default function RegisterForm() {
   const router = useRouter();
   const {
     register,
+    setValue,
+    watch,
     handleSubmit,
     formState: { errors, isSubmitting },
-  } = useForm<LoginData>({
-    resolver: zodResolver(loginSchema),
+  } = useForm<RegistrationData>({
+    resolver: zodResolver(registrationSchema),
     mode: "onSubmit",
   });
 
@@ -26,21 +29,39 @@ export default function RegisterForm() {
 
   const [pending, setTransition] = useTransition();
 
-  const submit = async (values: LoginData) => {
+  const submit = async (values: RegistrationData) => {
     setTransition(async () => {
       await new Promise((resolve) => setTimeout(resolve, 1000));
-      router.push("/dashboard");
+      router.push("/login");
     });
-    console.log("login successful for ", values.email);
+    console.log("Registration successful for ", values.email);
   };
 
   return (
     <div className=" w-full max-w-md px-5 ">
       <h1 className="text-black/80 text-3xl font-extrabold text-center  ">
-        Register
+        Sign up
       </h1>
       <form onSubmit={handleSubmit(submit)} className="space-y-5 ">
-        {/* Email  */}
+        {/* Fullname  */}
+        <div>
+          <label className="block text-md w-lg text-black/60 font-semibold mb-2">
+            Full Name
+          </label>
+          <input
+            id="fullName"
+            type="text"
+            autoComplete="fullName"
+            className="h-12 w-full rounded-md border border-black/30 bg-white px-4 text-black focus:outline-none focus:border-black/60"
+            aria-invalid={!!errors.fullName}
+            {...register("fullName")}
+            placeholder="Example Name"
+          />
+          {errors.fullName?.message && (
+            <p className="text-xs text-red-500">{errors.fullName.message}</p>
+          )}
+        </div>
+        {/*Email */}
         <div>
           <label className="block text-md w-lg text-black/60 font-semibold mb-2">
             Email
@@ -56,6 +77,32 @@ export default function RegisterForm() {
           />
           {errors.email?.message && (
             <p className="text-xs text-red-500">{errors.email.message}</p>
+          )}
+        </div>
+        {/* Phone Number  */}
+        <div>
+          <label className="block text-md w-lg text-black/60 font-semibold mb-2">
+            Phone Number
+          </label>
+          <PhoneInput
+            defaultCountry="np"
+            value={watch("phoneNumber")}
+            onChange={(value) =>
+              setValue("phoneNumber", value, {
+                shouldValidate: true,
+                shouldDirty: true,
+              })
+            }
+            inputClassName=" h-20 w-full py-5 px-4 text-black bg-white rounded-md border border-black/30 focus:border-black/60
+            "
+            countrySelectorStyleProps={{
+              buttonClassName:
+                "h-20 w-full py-5 px-4 text-black bg-white rounded-md border border-black/30 focus:border-black/60",
+            }}
+          />
+
+          {errors.phoneNumber?.message && (
+            <p className="text-xs text-red-500">{errors.phoneNumber.message}</p>
           )}
         </div>
         {/* password */}
@@ -88,32 +135,22 @@ export default function RegisterForm() {
           )}
         </div>
 
-        {/* forgot password */}
-        <div className="flex items-end justify-end text-sm  ">
-          <Link
-            href="/forgot-password"
-            className="text-blue-400 hover:text-blue-600 hover:underline"
-          >
-            Forgot Password ?
-          </Link>
-        </div>
-
         {/* submit button */}
         <button
           type="submit"
           disabled={isSubmitting || pending}
           className=" h-12 w-full mt-2 text-xl bg-purple-700  rounded-xl"
         >
-          {isSubmitting || pending ? "Logging in..." : "Log in"}
+          {isSubmitting || pending ? "Signing up..." : "Sign up"}
         </button>
         {/* register */}
         <div className="flex justify-center text-sm ">
-          <p className=" text-gray-500">Don't have an account? &nbsp;</p>
+          <p className=" text-gray-500">Already have an account? &nbsp;</p>
           <Link
-            href="/register"
+            href="/login"
             className=" text-blue-400 hover:text-blue-600 hover:underline"
           >
-            Sign up
+            Sign in
           </Link>
         </div>
       </form>
