@@ -11,7 +11,7 @@ const k2d = localFont({
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <section
-      className="min-h-screen w-screen flex flex-col"
+      className={`min-h-screen w-screen flex flex-col ${k2d.className}`}
       style={{
         background: `
           linear-gradient(
