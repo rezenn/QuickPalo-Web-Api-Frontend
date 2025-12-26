@@ -47,7 +47,7 @@ export default function SideNavigation() {
     href === "/" ? pathname === "/" : pathname?.startsWith(href);
   return (
     <aside className="w-64  text-black/80 flex flex-col">
-      <nav className="flex-1 flex flex-col gap-4 p-4">
+      <nav className="flex-1 flex flex-col gap-2 p-4">
         {NavLinks.map((link) => {
           const Icon = isActive(link.href) ? link.filledIcon : link.icon;
           return (
