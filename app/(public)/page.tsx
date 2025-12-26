@@ -5,8 +5,8 @@ export default function Landing() {
   return (
     <div className="p-10 flex items-center justify-center">
       {/* Main div with fixed width and height */}
-      <div className="w-full max-w-[1040px] flex items-center justify-center bg-white/80 rounded-xl overflow-hidden">
-        <div className=" grid min-h-[400px] md:grid-cols-[0.9fr_0.1fr_1fr] items-center gap-6 px-8 py-10">
+      <div className="w-full max-w-[1050px] flex items-center justify-center bg-white/80 rounded-xl overflow-hidden">
+        <div className=" grid min-h-[400px] md:grid-cols-[0.9fr_0.1fr_1fr] items-center gap-2 py-10">
           {/* Left: Illustration */}
           <div className="hidden md:flex  justify-center">
             <Image

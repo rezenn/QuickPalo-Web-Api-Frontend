@@ -43,8 +43,10 @@ export default function Header() {
                     key={link.href}
                     href={link.href}
                     className={
-                      "text-lg hover:text-gray-800 " +
-                      (isActive(link.href) ? "text-black" : "text-black/60")
+                      "text-lg " +
+                      (isActive(link.href)
+                        ? "text-purple-700"
+                        : "text-black/70 hover:text-black")
                     }
                   >
                     {link.label}
@@ -56,13 +58,13 @@ export default function Header() {
                 <div className="hidden sm:flex items-center gap-2">
                   <Link
                     href="/login"
-                    className="px-5 py-2 text-white inline-flex items-center justify-center rounded-md bg-purple-700 border border-gray-600 shadow-2xl "
+                    className="px-5 py-2 text-white inline-flex items-center justify-center rounded-md bg-purple-700 hover:bg-fuchsia-700 hover:rounded-4xl border border-gray-600 shadow-2xl transition-all duration-300 ease-out"
                   >
                     Login
                   </Link>
                   <Link
                     href="/register"
-                    className="px-5 py-2 text-white inline-flex items-center justify-center rounded-md bg-purple-700 border border-gray-600 shadow-2xl "
+                    className="px-5 py-2 text-white inline-flex items-center justify-center rounded-md bg-purple-700 hover:bg-fuchsia-700 hover:rounded-4xl border border-gray-600 shadow-2xl transition-all duration-300 ease-out "
                   >
                     Sign up
                   </Link>
@@ -92,6 +94,48 @@ export default function Header() {
                     </svg>
                   )}
                 </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        {/* Mobile Menu */}
+        <div
+          className={`md:hidden overflow-hidden transition-all duration-300 ${
+            open ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
+          }`}
+        >
+          <div className="mt-4 rounded-lg border border-black/10 bg-white shadow-md">
+            <div className="flex flex-col gap-3 p-4">
+              {NavLinks.map((link) => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  onClick={() => setOpen(false)}
+                  className={`text-lg ${
+                    isActive(link.href)
+                      ? "text-purple-700"
+                      : "text-black/70 hover:text-black"
+                  }`}
+                >
+                  {link.label}
+                </Link>
+              ))}
+
+              <div className="mt-3 flex flex-col gap-3">
+                <Link
+                  href="/login"
+                  onClick={() => setOpen(false)}
+                  className="px-5 py-2 text-white inline-flex items-center justify-center rounded-md bg-purple-700 hover:bg-fuchsia-700 hover:rounded-4xl border border-gray-600 shadow-2xl transition-all duration-300 ease-out"
+                >
+                  Login
+                </Link>
+                <Link
+                  href="/register"
+                  onClick={() => setOpen(false)}
+                  className="px-5 py-2 text-white inline-flex items-center justify-center rounded-md bg-purple-700 hover:bg-fuchsia-700  hover:rounded-4xl border border-gray-600 shadow-2xl transition-all duration-300 ease-out"
+                >
+                  Sign up
+                </Link>
               </div>
             </div>
           </div>
