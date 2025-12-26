@@ -3,11 +3,11 @@ import logo from "@/app/assets/images/quickpalo_logo.png";
 import profile from "@/app/assets/images/profile.png";
 import { Search, BellDot } from "lucide-react";
 
-export default function Layout({ children }: { children: React.ReactNode }) {
+export default function Header() {
   return (
-    <section className={`min-h-screen w-screen bg-white/90 text-gray-800`}>
-      <div className="max-w-screen mx-auto pl-2 pr-5 py-4">
-        {/* left: Content */}
+    <section>
+      <div className="max-w-screen mx-auto pl-2 pr-5 py-4 ">
+        {/* Header */}
         <header className="flex flex-col md:flex-row md:items-center md:justify-between">
           {/* logo */}
           <div className="flex items-center gap-2">
@@ -49,12 +49,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           </div>
         </header>
         {/* Divider */}
-        <div className="my-3 h-px w-full bg-gray-400" />
-        <div>sef</div>
-
-        <main className="w-full flex items-center justify-center">
-          {children}
-        </main>
+        <div className="mt-3 h-px w-full bg-gray-400" />
       </div>
     </section>
   );
