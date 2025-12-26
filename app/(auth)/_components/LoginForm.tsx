@@ -36,9 +36,6 @@ export default function LoginForm() {
 
   return (
     <div className=" w-full max-w-md px-5 ">
-      <h1 className="text-black/80 text-3xl font-extrabold text-center  ">
-        Login
-      </h1>
       <form onSubmit={handleSubmit(submit)} className="space-y-5 ">
         {/* Email  */}
         <div>

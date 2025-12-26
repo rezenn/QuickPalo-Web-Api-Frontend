@@ -38,7 +38,7 @@ export default function ThemeToggle() {
       type="button"
       aria-label="Toggle theme"
       onClick={cycle}
-      className=" h-9 w-9 items-center justify-center rounded-md hover:bg-purple-300"
+      className=" h-9 w-9 items-center justify-center rounded-md  hover:bg-fuchsia-600 hover:text-white"
     >
       {theme === "dark" ? (
         // Moon
@@ -46,7 +46,7 @@ export default function ThemeToggle() {
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
           viewBox="-5 -5 34 34"
-          strokeWidth={1}
+          strokeWidth={1.3}
           stroke="currentColor"
         >
           <path
@@ -61,7 +61,7 @@ export default function ThemeToggle() {
           viewBox="-5 -5 34 34"
           fill="none"
           stroke="currentColor"
-          strokeWidth={1}
+          strokeWidth={1.3}
         >
           <path
             strokeLinecap="round"
@@ -75,7 +75,7 @@ export default function ThemeToggle() {
           viewBox="-5 -5 34 34"
           fill="none"
           stroke="currentColor"
-          strokeWidth={1}
+          strokeWidth={1.3}
         >
           <path
             strokeLinecap="round"

@@ -69,16 +69,18 @@ export default function SideNavigation() {
       {/* Divider */}
       <div className="mt-3 h-px w-full bg-gray-400" />
       <div className="flex flex-col">
-        <div className="h-15 flex flex-row justify-between items-center p-3 ">
+        <div className="h-12 flex flex-row justify-between items-center p-3 ">
           <span className="font-regular text-md ">Themes</span>
           <ThemeSwitch />
         </div>
         <Link
           href="/login"
-          className=" h-12 flex flex-row justify-center items-center p-2 m-3 gap-3 rounded-xl text-red-600 bg-gray-300 hover:text-white hover:bg-fuchsia-600 "
+          className=" h-12 flex  justify-center items-center p-2 m-2 rounded-xl text-red-600 bg-gray-300 border border-gray-400 hover:text-white hover:bg-fuchsia-600 "
         >
-          <LogOutIcon />
-          <button>Logout</button>
+          <button className=" flex flex-row gap-4">
+            <LogOutIcon />
+            Logout
+          </button>
         </Link>
       </div>
     </aside>

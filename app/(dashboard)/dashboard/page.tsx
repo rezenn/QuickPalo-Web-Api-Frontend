@@ -1,11 +1,13 @@
 import Link from "next/link";
+import SmallCard from "../_component/SmallCard";
 
 export default function Dashboard() {
   return (
-    <div>
-      <div> Dashboard Screen</div>
-      <Link href="/login"> Login</Link>
-      <Link href="/register"> Register</Link>
+    <div className="h-full space-y-6">
+      <h2 className=" px-2 text-lg font-semibold ">Recently Viewed</h2>
+      <div className="flex flex-row overflow-x-auto">
+        <SmallCard />
+      </div>
     </div>
   );
 }

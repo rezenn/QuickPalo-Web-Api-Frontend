@@ -39,9 +39,6 @@ export default function RegisterForm() {
 
   return (
     <div className=" w-full max-w-md px-5 ">
-      <h1 className="text-black/80 text-3xl font-extrabold text-center  ">
-        Sign up
-      </h1>
       <form onSubmit={handleSubmit(submit)} className="space-y-5 ">
         {/* Fullname  */}
         <div>
