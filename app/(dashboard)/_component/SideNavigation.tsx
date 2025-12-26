@@ -11,7 +11,8 @@ import { ClockIcon as ClockSolid } from "@heroicons/react/24/solid";
 import { UserIcon as UserOutline } from "@heroicons/react/24/outline";
 import { UserIcon as UserSolid } from "@heroicons/react/24/solid";
 import ThemeSwitch from "./ThemeSwitch";
-import { LogOutIcon } from "lucide-react";
+import { LogOutIcon, Menu } from "lucide-react";
+import { useState } from "react";
 
 const NavLinks = [
   {
@@ -42,6 +43,7 @@ const NavLinks = [
 
 export default function SideNavigation() {
   const pathname = usePathname();
+  const [isOpen, setIsOpen] = useState(false);
 
   const isActive = (href: string) =>
     href === "/" ? pathname === "/" : pathname?.startsWith(href);

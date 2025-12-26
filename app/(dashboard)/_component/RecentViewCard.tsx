@@ -3,10 +3,10 @@ import { OrganizationsData } from "@/app/constants/organizations";
 
 export default function SmallCard() {
   return (
-    <div className="flex flex-row justify-start w-full  space-x-6">
+    <div className="flex flex-row justify-start w-full  m-2 mb-0 space-x-6 ">
       {OrganizationsData.map((organization) => (
         <div
-          className="w-[200px] h-[180px] bg-black/10 rounded-xl p-2 my-2 shadow-lg flex flex-col items-start"
+          className="w-[200px] h-[180px] bg-black/10 rounded-xl p-2 my-2 shadow-lg flex flex-col items-start hover:shadow-2xl"
           key={organization.id}
         >
           <div className="w-[180px] h-[135px] relative rounded-xl overflow-hidden border border-gray-500">
@@ -18,7 +18,9 @@ export default function SmallCard() {
               sizes="180px"
             />
           </div>
-          <p className="font-semibold my-2">{organization.title}</p>
+          <p className="font-semibold my-2 line-clamp-1">
+            {organization.title}
+          </p>
         </div>
       ))}
     </div>

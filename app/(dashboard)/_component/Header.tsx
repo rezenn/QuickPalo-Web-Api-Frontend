@@ -6,9 +6,9 @@ import { Search, BellDot } from "lucide-react";
 export default function Header() {
   return (
     <section>
-      <div className="max-w-screen mx-auto pl-2 pr-5 py-4 ">
+      <div className="mx-auto max-w-screen-2xl px-4 py-4">
         {/* Header */}
-        <header className="flex flex-col md:flex-row md:items-center md:justify-between">
+        <header className="flex items-center gap-4 md:flex-row md:items-center md:justify-between">
           {/* logo */}
           <div className="flex items-center gap-2">
             <Image
@@ -17,16 +17,20 @@ export default function Header() {
               className="w-[230px] h-auto rounded-bl-2xl rounded-tr-2xl"
               priority
             />
-            <div className="px-5 flex flex-col leading-tight">
-              <span className="text-fuchsia-700 text-lg">Hello,</span>
-              <span className="font-extrabold text-2xl">Text User</span>
+            <div className="hidden sm:flex flex-col px-4 leading-tight">
+              <span className="text-fuchsia-700 text-sm md:text-lg">
+                Hello,
+              </span>
+              <span className="font-extrabold text-lg md:text-2xl">
+                Text User
+              </span>
             </div>
           </div>
           {/* Search */}
-          <div className="relative w-full max-w-3xl">
+          <div className="relative flex-1 max-w-[250px] sm:max-w-xs md:max-w-md lg:max-w-3xl">
             <input
               type="search"
-              placeholder="Search…"
+              placeholder="Search organization..."
               className=" w-full h-12 rounded-xl border border-black/20 bg-white px-4 pr-11 text-black placeholder:text-black/40 focus:outline-none focus:border-purple-600 focus:ring-2 focus:ring-purple-600/20 transition "
             />
             <button
@@ -38,13 +42,13 @@ export default function Header() {
             </button>
           </div>
           <div className="flex flex-row gap-4">
-            <button className="text-gray-600 hover:text-purple-700 ">
+            <button className="text-gray-600 hover:text-purple-700 transition ">
               <BellDot size={24} />
             </button>
             <Image
               src={profile}
               alt="profile"
-              className="h-[50px] w-[50px] rounded-4xl border border-gray-700 "
+              className="h-10 w-10 md:h-12 md:w-12 rounded-full border border-gray-700"
             ></Image>
           </div>
         </header>

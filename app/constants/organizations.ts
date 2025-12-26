@@ -1,6 +1,7 @@
 export interface OrganizationCard {
   id: number;
   title: string;
+  slug: string;
   image: string;
   location: string;
   time: string;
@@ -13,6 +14,7 @@ export const OrganizationsData: OrganizationCard[] = [
   {
     id: 1,
     title: "RKM Hospital",
+    slug: "RKM-Hospital",
     image:
       "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRpiIGm_Z3u8IHIIqMsPBpwU8qwiYyelbFvHw&s",
     location: "Kantipath, Kathmandu",
@@ -37,6 +39,7 @@ export const OrganizationsData: OrganizationCard[] = [
   {
     id: 2,
     title: "GSK Hospital",
+    slug: "gsk-hospital",
     image:
       "https://www.shutterstock.com/shutterstock/photos/212251981/display_1500/stock-photo-modern-hospital-style-building-212251981.jpg",
     location: "Kainali, Kainali",
@@ -55,6 +58,7 @@ export const OrganizationsData: OrganizationCard[] = [
   {
     id: 3,
     title: "City Health Center",
+    slug: "City-Health-Center",
     image:
       "https://www.brockport.edu/live/image/gid/154/width/990/height/552/crop/1/src_region/0,147,3200,1931/11625_health_center_exterior19-2.jpg",
     location: "Thamel, Kathmandu",
@@ -73,6 +77,7 @@ export const OrganizationsData: OrganizationCard[] = [
   {
     id: 4,
     title: "Everest College",
+    slug: "Everest-College",
     image:
       "https://media.edusanjal.com/__sized__/cover_photo/eebs-building-thumbnail-1400x280-70.jpg",
     location: "Patan, Lalitpur",
@@ -93,6 +98,7 @@ export const OrganizationsData: OrganizationCard[] = [
   {
     id: 5,
     title: "Government Office",
+    slug: "Government-Office",
     image:
       "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSATjnnZVre_SaYbVXf-8-KSP-L2_NouAhAYA&s",
     location: "Singha Durbar, Kathmandu",
@@ -112,6 +118,7 @@ export const OrganizationsData: OrganizationCard[] = [
   {
     id: 6,
     title: "Global Medical Center",
+    slug: "Global-Medical-Center",
     image:
       "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTYxXnrIIYDkxjUkQagL5VGX4uCboVHg2YA98GqM4P3YkCs1AhYsdpn2PeIiXrnlqOFh6k&usqp=CAU",
     location: "Jhamsikhel, Lalitpur",
@@ -124,6 +131,7 @@ export const OrganizationsData: OrganizationCard[] = [
   {
     id: 7,
     title: "Kathmandu University",
+    slug: "Kathmandu-University",
     image:
       "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQwzCyPVDKe6S4Lh-J5LTAe0_WC2ZyFxBGneeCt8NL8lzG0flevqE222SewFeFpWc9x9As&usqp=CAU",
     location: "Dhulikhel, Kavrepalanchok",
@@ -144,6 +152,7 @@ export const OrganizationsData: OrganizationCard[] = [
   {
     id: 8,
     title: "Shanti Health Center",
+    slug: "Shanti-Health-Center",
     image:
       "https://media.istockphoto.com/id/157677909/photo/nurse-or-doctor-pushing-a-wheelchair-outdoors.jpg?s=612x612&w=0&k=20&c=t2H7lO8cuQ1pCeFJYk-on-G2J6AVujKnhF72yK_t0zM=",
     location: "Kuleshwor, Kathmandu",
@@ -156,6 +165,7 @@ export const OrganizationsData: OrganizationCard[] = [
   {
     id: 9,
     title: "National College of Science",
+    slug: "National-College-of-Science",
     image:
       "https://cdn.sanity.io/images/p2ba9zey/production/21bf7be80600541954415f5365f583df79d8b7be-3346x1530.jpg",
     location: "Jawalakhel, Lalitpur",

@@ -1,14 +1,18 @@
+"use client";
+
 import Image from "next/image";
 import { OrganizationsData } from "@/app/constants/organizations";
 import { MapPinIcon } from "@heroicons/react/24/solid";
 import { ClockIcon } from "@heroicons/react/24/outline";
+import Link from "next/link";
 export default function OrganizationsDetailsCard() {
   return (
-    <div className="grid grid-cols-2 md:grid-cols-4 w-full  gap-6">
+    <div className="grid grid-cols-2 md:grid-cols-4 w-full  gap-6 px-2">
       {OrganizationsData.map((organization) => (
-        <div
-          className="w-full h-[375px] bg-black/10 rounded-xl p-2 my-2 shadow-lg flex flex-col items-center "
+        <Link
           key={organization.id}
+          href={`/organization/${encodeURIComponent(organization.title)}`}
+          className="w-full h-[375px] bg-black/10 rounded-xl p-2 shadow-lg flex flex-col items-center hover:shadow-2xl"
         >
           <div className="w-full h-[202px] relative rounded-xl overflow-hidden border border-gray-500">
             <Image
@@ -19,7 +23,9 @@ export default function OrganizationsDetailsCard() {
             />
           </div>
           <div className="w-full mt-2 text-sm space-y-1 ">
-            <p className="font-semibold text-lg my-1">{organization.title}</p>
+            <h1 className="font-semibold text-lg my-1 line-clamp-1">
+              {organization.title}
+            </h1>
             <div className="flex flex-row">
               <MapPinIcon className="w-5 text-red-600" />
               <p>&nbsp;{organization.location}</p>
@@ -33,7 +39,7 @@ export default function OrganizationsDetailsCard() {
               {organization.description}
             </p>
           </div>
-        </div>
+        </Link>
       ))}
     </div>
   );

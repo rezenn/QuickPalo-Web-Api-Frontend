@@ -15,7 +15,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         <div className=" w-px bg-gray-400"></div>
 
         {/* main content */}
-        <main className=" flex-1 pl-2 overflow-y-auto custom-scroll ">
+        <main className=" flex-1 px-2 overflow-y-auto custom-scroll ">
           {children}
         </main>
       </div>
