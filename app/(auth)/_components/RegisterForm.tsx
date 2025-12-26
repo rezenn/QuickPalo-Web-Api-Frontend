@@ -100,7 +100,6 @@ export default function RegisterForm() {
                 "h-20 w-full py-5 px-4 text-black bg-white rounded-md border border-black/30 focus:border-black/60",
             }}
           />
-
           {errors.phoneNumber?.message && (
             <p className="text-xs text-red-500">{errors.phoneNumber.message}</p>
           )}
@@ -132,6 +131,37 @@ export default function RegisterForm() {
           </div>
           {errors.password?.message && (
             <p className="text-xs text-red-500">{errors.password.message}</p>
+          )}
+        </div>
+        {/* confirm password */}
+        <div>
+          <label className="block text-md text-black/60 font-semibold mb-2">
+            Confirm Password
+          </label>
+          <div className="relative">
+            <input
+              id="confirmPassword"
+              type={showPassword ? "text" : "password"}
+              autoComplete="current-password"
+              className="h-12 w-full rounded-md border border-black/30 bg-white px-4 text-black focus:outline-none focus:border-black/60"
+              aria-invalid={!!errors.confirmPassword}
+              {...register("confirmPassword")}
+              placeholder="••••••••"
+            />
+            <button
+              type="button"
+              onClick={() => setShowPassword((value) => !value)}
+              className="
+        absolute right-3 top-1/2 -translate-y-1/2 focus:outline-none text-gray-500 hover:text-gray-800"
+              aria-label={showPassword ? "Hide password" : "Show password"}
+            >
+              {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+            </button>
+          </div>
+          {errors.confirmPassword?.message && (
+            <p className="text-xs text-red-500">
+              {errors.confirmPassword.message}
+            </p>
           )}
         </div>
 
