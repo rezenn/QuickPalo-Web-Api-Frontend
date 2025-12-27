@@ -13,6 +13,68 @@ export interface OrganizationCard {
 export const OrganizationsData: OrganizationCard[] = [
   {
     id: 1,
+    title: "City Health Center",
+    slug: "City-Health-Center",
+    image:
+      "https://www.brockport.edu/live/image/gid/154/width/990/height/552/crop/1/src_region/0,147,3200,1931/11625_health_center_exterior19-2.jpg",
+    location: "Thamel, Kathmandu",
+    time: "7:00 - 19:00",
+    description:
+      "Primary care center offering outpatient services and emergency care.",
+    departments: [
+      "Dermatology",
+      "ENT ",
+      "Cardiology",
+      "Gastroenterology",
+      "Pediatrics",
+      "Rehab",
+      "Pathology",
+    ],
+    timeSlots: ["9:00 - 10:00", "10:00 - 11:00", "11:00 - 12:00"],
+  },
+  {
+    id: 2,
+    title: "Everest College",
+    slug: "Everest-College",
+    image:
+      "https://media.edusanjal.com/__sized__/cover_photo/eebs-building-thumbnail-1400x280-70.jpg",
+    location: "Patan, Lalitpur",
+    time: "9:00 - 17:00",
+    description:
+      "Leading educational institution offering undergraduate and postgraduate courses.",
+    departments: [
+      "faculty Office",
+      "Architecture",
+      "Engineering",
+      "Arts",
+      "BCA",
+      "BBA",
+      "Medicine",
+    ],
+    timeSlots: ["9:00 - 10:00", "10:00 - 11:00", "11:00 - 12:00"],
+  },
+  {
+    id: 3,
+    title: "Government Office",
+    slug: "Government-Office",
+    image:
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSATjnnZVre_SaYbVXf-8-KSP-L2_NouAhAYA&s",
+    location: "Singha Durbar, Kathmandu",
+    time: "10:00 - 16:00",
+    description:
+      "Government office providing public services and administrative support.",
+    departments: [
+      "Tax Consultation",
+      "Public Records",
+      "Business Registration",
+      "Civil Registration",
+      "Social Welfare",
+      "Property Registration",
+    ],
+    timeSlots: ["9:00 - 10:00", "10:00 - 11:00", "11:00 - 12:00"],
+  },
+  {
+    id: 4,
     title: "RKM Hospital",
     slug: "RKM-Hospital",
     image:
@@ -37,7 +99,7 @@ export const OrganizationsData: OrganizationCard[] = [
     ],
   },
   {
-    id: 2,
+    id: 5,
     title: "GSK Hospital",
     slug: "gsk-hospital",
     image:
@@ -54,68 +116,6 @@ export const OrganizationsData: OrganizationCard[] = [
       "Neurology",
     ],
     timeSlots: ["8:00-9:00", "9:00 - 10:00", "10:00 - 11:00", "11:00 - 12:00"],
-  },
-  {
-    id: 3,
-    title: "City Health Center",
-    slug: "City-Health-Center",
-    image:
-      "https://www.brockport.edu/live/image/gid/154/width/990/height/552/crop/1/src_region/0,147,3200,1931/11625_health_center_exterior19-2.jpg",
-    location: "Thamel, Kathmandu",
-    time: "7:00 - 19:00",
-    description:
-      "Primary care center offering outpatient services and emergency care.",
-    departments: [
-      "Dermatology",
-      "ENT ",
-      "Cardiology",
-      "Gastroenterology",
-      "Pediatrics",
-      "Rehab",
-      "Pathology",
-    ],
-    timeSlots: ["9:00 - 10:00", "10:00 - 11:00", "11:00 - 12:00"],
-  },
-  {
-    id: 4,
-    title: "Everest College",
-    slug: "Everest-College",
-    image:
-      "https://media.edusanjal.com/__sized__/cover_photo/eebs-building-thumbnail-1400x280-70.jpg",
-    location: "Patan, Lalitpur",
-    time: "9:00 - 17:00",
-    description:
-      "Leading educational institution offering undergraduate and postgraduate courses.",
-    departments: [
-      "faculty Office",
-      "Architecture",
-      "Engineering",
-      "Arts",
-      "BCA",
-      "BBA",
-      "Medicine",
-    ],
-    timeSlots: ["9:00 - 10:00", "10:00 - 11:00", "11:00 - 12:00"],
-  },
-  {
-    id: 5,
-    title: "Government Office",
-    slug: "Government-Office",
-    image:
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSATjnnZVre_SaYbVXf-8-KSP-L2_NouAhAYA&s",
-    location: "Singha Durbar, Kathmandu",
-    time: "10:00 - 16:00",
-    description:
-      "Government office providing public services and administrative support.",
-    departments: [
-      "Tax Consultation",
-      "Public Records",
-      "Business Registration",
-      "Civil Registration",
-      "Social Welfare",
-      "Property Registration",
-    ],
-    timeSlots: ["9:00 - 10:00", "10:00 - 11:00", "11:00 - 12:00"],
   },
   {
     id: 6,

@@ -1,8 +1,3 @@
-"use client";
-
-import { usePathname } from "next/navigation";
-import Link from "next/link";
-
 import { OrganizationsData } from "@/app/constants/organizations";
 import Image from "next/image";
 import {

@@ -1,3 +1,6 @@
+"use client";
+import Link from "next/link";
+
 import Image from "next/image";
 import { OrganizationsData } from "@/app/constants/organizations";
 
@@ -5,9 +8,10 @@ export default function SmallCard() {
   return (
     <div className="flex flex-row justify-start w-full  m-2 mb-0 space-x-6 ">
       {OrganizationsData.map((organization) => (
-        <div
-          className="w-[200px] h-[180px] bg-black/10 rounded-xl p-2 my-2 shadow-lg flex flex-col items-start hover:shadow-2xl"
+        <Link
           key={organization.id}
+          href={`/organization/${encodeURIComponent(organization.title)}`}
+          className="w-[200px] h-[180px] bg-black/10 rounded-xl p-2 my-2 shadow-lg flex flex-col items-start hover:shadow-2xl"
         >
           <div className="w-[180px] h-[135px] relative rounded-xl overflow-hidden border border-gray-500">
             <Image
@@ -21,7 +25,7 @@ export default function SmallCard() {
           <p className="font-semibold my-2 line-clamp-1">
             {organization.title}
           </p>
-        </div>
+        </Link>
       ))}
     </div>
   );
