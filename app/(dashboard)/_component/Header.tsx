@@ -6,7 +6,7 @@ import { Search, BellDot } from "lucide-react";
 export default function Header() {
   return (
     <section>
-      <div className="mx-auto max-w-screen-2xl px-4 py-4">
+      <div className=" ml-13 md:mx-auto max-w-screen-2xl px-4 py-4">
         {/* Header */}
         <header className="flex items-center gap-4 md:flex-row md:items-center md:justify-between">
           {/* logo */}

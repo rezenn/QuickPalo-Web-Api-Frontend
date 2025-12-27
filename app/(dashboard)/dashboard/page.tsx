@@ -1,7 +1,7 @@
 import Link from "next/link";
 import RecentViewCard from "../_component/RecentViewCard";
 import OrganizationsDetailsCard from "../_component/OrganizationDetailCard";
-import FiltersBar from "../_component/FiltersBar";
+import OrganizationFilter from "../_component/OrganizationFilter";
 
 export default function Dashboard() {
   return (
@@ -12,7 +12,7 @@ export default function Dashboard() {
         <div className="flex flex-row overflow-x-auto pb-2">
           <RecentViewCard />
         </div>
-        <FiltersBar />
+        <OrganizationFilter />
         <div className="flex flow-col overflow-y-auto">
           <OrganizationsDetailsCard />
         </div>

@@ -1,3 +1,8 @@
+"use client";
+
+import { usePathname } from "next/navigation";
+import Link from "next/link";
+
 import { OrganizationsData } from "@/app/constants/organizations";
 import Image from "next/image";
 import {
@@ -6,6 +11,7 @@ import {
   ChatBubbleLeftEllipsisIcon,
 } from "@heroicons/react/24/solid";
 import { ClockIcon } from "@heroicons/react/24/outline";
+import OrganizationSidebar from "../../_component/OrganizationSidebar";
 
 interface Params {
   params: { title: string };
@@ -68,17 +74,15 @@ export default async function OrganizationDetail({ params }: Params) {
         </div>
       </div>
       <div className="flex flex-col justify-start">
-        <h1 className=" py-2 font-bold text-2xl">Department</h1>
-        <div>{organization.departments}</div>
+        <div className="w-xl">
+          <OrganizationSidebar
+            departments={organization.departments}
+            timeSlots={organization.timeSlots}
+          />
+        </div>
         {/* Divider */}
         <div className="mt-3 h-px w-xl bg-gray-400" />
-        <h2 className=" py-2 font-bold text-xl">Slots</h2>
-        <div>
-          {/* <div>{organization.time}</div> */}
-          <div>{organization.timeSlots}</div>
-          {/* Divider */}
-          <div className="mt-3 mb-5 h-px w-xl bg-gray-400" />
-        </div>
+
         <div className="my-5 flex items-center justify-center">
           <button className=" h-12 w-lg px-5 py-2 text-white inline-flex items-center justify-center rounded-md bg-purple-700 hover:bg-fuchsia-700 hover:rounded-4xl border border-gray-600 shadow-2xl transition-all duration-300 ease-out ">
             Book an Appointment

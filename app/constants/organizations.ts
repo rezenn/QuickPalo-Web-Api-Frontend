@@ -68,7 +68,9 @@ export const OrganizationsData: OrganizationCard[] = [
     departments: [
       "Dermatology",
       "ENT ",
+      "Cardiology",
       "Gastroenterology",
+      "Pediatrics",
       "Rehab",
       "Pathology",
     ],

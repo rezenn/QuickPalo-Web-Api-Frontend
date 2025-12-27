@@ -1,31 +1,29 @@
 "use client";
 
-import { useState } from "react";
 import FilterChip from "./FilterChip";
 
-const filters = [
-  "All",
-  "Hospital",
-  "School",
-  "College",
-  "University",
-  "Service Center",
-];
+type FilterBarProps<T extends string> = {
+  filters: readonly T[];
+  activeFilter: T;
+  onChange: (filter: T) => void;
+  rounded?: "full" | "lg";
+};
 
-export default function FiltersBar() {
-  const [activeFilter, setActiveFilter] = useState("All");
-
+export default function FilterBar<T extends string>({
+  filters,
+  activeFilter,
+  onChange,
+  rounded = "full",
+}: FilterBarProps<T>) {
   return (
-    <div
-      className="flex flex-nowrap gap-3 overflow-x-auto scrollbar-hide px-1 
- "
-    >
-      {filters.map((filter, index) => (
+    <div className="  flex gap-3 overflow-x-auto scrollbar-hide px-1">
+      {filters.map((filter) => (
         <FilterChip
-          key={`${filter}-${index}`}
+          rounded={rounded}
+          key={filter}
           label={filter}
           isActive={activeFilter === filter}
-          onClick={() => setActiveFilter(filter)}
+          onClick={() => onChange(filter)}
         />
       ))}
     </div>
