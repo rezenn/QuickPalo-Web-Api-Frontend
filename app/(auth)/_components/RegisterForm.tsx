@@ -26,6 +26,7 @@ export default function RegisterForm() {
   });
 
   const [showPassword, setShowPassword] = useState(false);
+  const [showPassword2, setShowPassword2] = useState(false);
 
   const [pending, setTransition] = useTransition();
 
@@ -138,7 +139,7 @@ export default function RegisterForm() {
           <div className="relative">
             <input
               id="confirmPassword"
-              type={showPassword ? "text" : "password"}
+              type={showPassword2 ? "text" : "password"}
               autoComplete="current-password"
               className="h-12 w-full rounded-md border border-black/30 bg-white px-4 text-black focus:outline-none focus:border-black/60"
               aria-invalid={!!errors.confirmPassword}
@@ -147,12 +148,12 @@ export default function RegisterForm() {
             />
             <button
               type="button"
-              onClick={() => setShowPassword((value) => !value)}
+              onClick={() => setShowPassword2((value) => !value)}
               className="
         absolute right-3 top-1/2 -translate-y-1/2 focus:outline-none text-gray-500 hover:text-gray-800"
-              aria-label={showPassword ? "Hide password" : "Show password"}
+              aria-label={showPassword2 ? "Hide password" : "Show password"}
             >
-              {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+              {showPassword2 ? <EyeOff size={18} /> : <Eye size={18} />}
             </button>
           </div>
           {errors.confirmPassword?.message && (
