@@ -21,7 +21,7 @@ export default function Header() {
     href === "/" ? pathname === "/" : pathname?.startsWith(href);
 
   return (
-    <header className="m-5 top-0 z-50 ">
+    <header className="m-2 top-0 z-50 ">
       <nav className="mx-auto w-full px-5 lg:px-8 ">
         <div className="flex items-center justify-between ">
           {/* Logo */}
@@ -56,7 +56,7 @@ export default function Header() {
               </div>
               {/* Login and toggle */}
               <div className="flex items-center gap-2 md:justify-self-end">
-                <div className="hidden sm:flex items-center gap-2">
+                <div className="hidden sm:flex items-center gap-4">
                   <Link
                     href="/login"
                     className="px-5 py-2 text-white inline-flex items-center justify-center rounded-md bg-purple-700 hover:bg-fuchsia-700 hover:rounded-4xl border border-gray-600 shadow-2xl transition-all duration-300 ease-out"

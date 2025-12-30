@@ -37,7 +37,7 @@ export default function RegisterForm() {
     });
     console.log("Registration successful for ", values.email);
   };
-
+// 
   return (
     <div className=" w-full max-w-md px-5 ">
       <form onSubmit={handleSubmit(submit)} className="space-y-5 ">

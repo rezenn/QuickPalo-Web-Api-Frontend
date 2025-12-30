@@ -13,7 +13,7 @@ export default function Dashboard() {
           <RecentViewCard />
         </div>
         <OrganizationFilter />
-        <div className="flex flow-col overflow-y-auto">
+        <div className="flex flow-col overflow-y-auto pb-5">
           <OrganizationsDetailsCard />
         </div>
       </div>
