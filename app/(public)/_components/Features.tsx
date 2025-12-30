@@ -1,99 +1,83 @@
-import Image from "next/image";
-import universityImage from "@/app/assets/images/universityFeatures.jpg";
-import hospitalImage from "@/app/assets/images/hospitalFeatures.jpg";
-import clinicImage from "@/app/assets/images/clinicsFeatures.jpg";
-import corporateImage from "@/app/assets/images/corporateBuildingFeatures.jpg";
+import {
+  ClipboardClockIcon,
+  ShieldCheckIcon,
+  ClockIcon,
+  User2Icon,
+  BellRingIcon,
+  ClipboardCheckIcon,
+} from "lucide-react";
+
+const featuresData = [
+  {
+    title: "Booking Managed",
+    description:
+      "Streamlined booking across institutions with real-time control.",
+    icon: ClipboardClockIcon,
+  },
+  {
+    title: "Schedule Optimization",
+    description:
+      "Easily assign time slots and resources for maximum efficiency.",
+    icon: ClockIcon,
+  },
+  {
+    title: "User Management",
+    description: "Keep track of users, departments, and access privileges.",
+    icon: User2Icon,
+  },
+  {
+    title: "Notifications",
+    description: "Automated reminders and notifications for appointments.",
+    icon: BellRingIcon,
+  },
+  {
+    title: "Reporting",
+    description: "Generate reports for better decision-making and analytics.",
+    icon: ClipboardCheckIcon,
+  },
+  {
+    title: "Security",
+    description: "Advanced permissions and secure data handling for all users.",
+    icon: ShieldCheckIcon,
+  },
+];
 
 export default function Features() {
   return (
-    <div className="w-full max-w-full overflow-hidden">
-      <h2 className="text-3xl  text-black/65 text-center">
+    <div className="w-full max-w-full overflow-hidden px-4 md:px-8">
+      <h2 className="text-3xl text-black/95 text-center">
         Everything You Need to Manage Appointments Seamlessly
       </h2>
-      <p className="my-2 text-md text-center text-black/50">
-        Built for clarity, reliability, and real-world workflows.
+      <p className="my-2 text-md text-center text-black/75">
+        Core functionality designed for clarity, reliability, and real-world
+        workflows.
       </p>
-      <div className="my-10 flex flex-wrap justify-center gap-8">
-        <div className="flex flex-col items-center bg-white rounded-2xl shadow-xl overflow-hidden w-[220px] hover:scale-105 ">
-          {/* Image */}
-          <div className="w-full h-40 bg-gray-100 flex items-center justify-center rounded-2xl">
-            <Image
-              src={universityImage}
-              alt="University image"
-              className="object-contain rounded-2xl"
-              width={200}
-              height={120}
-            />
-          </div>
 
-          {/* Text */}
-          <div className="p-4 text-center">
-            <h4 className="text-lg font-semibold text-black/80">
-              Organization-Based Booking
-            </h4>
-            <p className="text-sm text-black/50 mt-1">University details</p>
-          </div>
-        </div>
-        <div className="flex flex-col items-center bg-white rounded-2xl shadow-xl overflow-hidden w-[220px] hover:scale-105">
-          {/* Image */}
-          <div className="w-full h-40 bg-gray-100 flex items-center justify-center rounded-2xl">
-            <Image
-              src={hospitalImage}
-              alt="Hospital image"
-              className="object-contain rounded-2xl"
-              width={200}
-              height={120}
-            />
-          </div>
+      <div className="my-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-y-8 -gap-x-9 justify-items-center">
+        {featuresData.map((feature, index) => (
+          <div
+            key={index}
+            className="w-[280px] p-6 bg-white/80 backdrop-blur-md rounded-2xl shadow-xl 
+                       hover:shadow-2xl hover:-translate-y-1 transition-all duration-300"
+          >
+            <div className="flex flex-col items-center text-center gap-4">
+              {/* Icon */}
+              <div className="flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-br from-purple-400 to-purple-700 shadow-lg">
+                <feature.icon className="w-7 h-7 text-white" />
+              </div>
 
-          {/* Text */}
-          <div className="p-4 text-center">
-            <h4 className="text-lg font-semibold text-black/80">
-              Department & Time Slot Management
-            </h4>
-            <p className="text-sm text-black/50 mt-1">University details</p>
+              {/* Text */}
+              <div className="space-y-1">
+                <h4 className="text-xl font-semibold tracking-tight text-gray-900">
+                  {feature.title}
+                </h4>
+                <p className="text-sm leading-relaxed text-gray-600">
+                  {feature.description}
+                </p>
+              </div>
+            </div>
           </div>
-        </div>
-        <div className="flex flex-col items-center bg-white rounded-2xl shadow-xl overflow-hidden w-[220px] hover:scale-105">
-          {/* Image */}
-          <div className="w-full h-40 bg-gray-100 flex items-center justify-center rounded-2xl">
-            <Image
-              src={clinicImage}
-              alt="Clinic image"
-              className="object-contain rounded-2xl"
-              width={200}
-              height={120}
-            />
-          </div>
-
-          {/* Text */}
-          <div className="p-4 text-center">
-            <h4 className="text-lg font-semibold text-black/80">
-              Appointment History & Tracking
-            </h4>
-            <p className="text-sm text-black/50 mt-1">University details</p>
-          </div>
-        </div>
-        <div className="flex flex-col items-center bg-white rounded-2xl shadow-xl overflow-hidden w-[220px] hover:scale-105">
-          {/* Image */}
-          <div className="w-full h-40 bg-gray-100 flex items-center justify-center rounded-2xl">
-            <Image
-              src={corporateImage}
-              alt="Corporate image"
-              className="object-contain rounded-2xl"
-              width={200}
-              height={120}
-            />
-          </div>
-
-          {/* Text */}
-          <div className="p-4 text-center">
-            <h4 className="text-lg font-semibold text-black/80">
-              Real-Time Availability
-            </h4>
-            <p className="text-sm text-black/50 mt-1">University details</p>
-          </div>
-        </div>
+        ))}
       </div>
     </div>
   );

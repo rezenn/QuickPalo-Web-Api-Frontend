@@ -3,6 +3,7 @@ import authImage from "@/app/assets/images/authIllustration.png";
 import Hero from "./_components/Hero";
 import CredibilitySection from "./_components/CredibilitySection";
 import Features from "./_components/Features";
+import Usecase from "./_components/Usecase";
 
 export default function Landing() {
   return (
@@ -10,6 +11,7 @@ export default function Landing() {
       <Hero />
       <CredibilitySection />
       <Features />
+      <Usecase />
       {/* <svg
         className="absolute bottom-0 w-full h-full"
         viewBox="0 0 1440 320"

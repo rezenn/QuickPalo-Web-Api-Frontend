@@ -7,11 +7,11 @@ import Image from "next/image";
 import Logo from "@/app/assets/images/quickpalo_logo.png";
 import { XIcon, Menu } from "lucide-react";
 
-const NavLinks = [
-  { href: "/", label: "Home" },
-  { href: "/about", label: "About" },
-  { href: "/features", label: "Feature" },
-];
+// const NavLinks = [
+//   { href: "/", label: "Home" },
+//   { href: "/about", label: "About" },
+//   { href: "/features", label: "Feature" },
+// ];
 
 export default function Header() {
   const pathname = usePathname();
@@ -39,7 +39,7 @@ export default function Header() {
               <div
                 className={`hidden md:flex items-center gap-8 px-5 justify-center text-black font-bold `}
               >
-                {NavLinks.map((link) => (
+                {/* {NavLinks.map((link) => (
                   <Link
                     key={link.href}
                     href={link.href}
@@ -52,7 +52,7 @@ export default function Header() {
                   >
                     {link.label}
                   </Link>
-                ))}
+                ))} */}
               </div>
               {/* Login and toggle */}
               <div className="flex items-center gap-2 md:justify-self-end">
@@ -96,7 +96,7 @@ export default function Header() {
         >
           <div className="mt-4 rounded-lg border border-black/10 bg-white shadow-md">
             <div className="flex flex-col gap-3 p-4">
-              {NavLinks.map((link) => (
+              {/* {NavLinks.map((link) => (
                 <Link
                   key={link.href}
                   href={link.href}
@@ -109,7 +109,7 @@ export default function Header() {
                 >
                   {link.label}
                 </Link>
-              ))}
+              ))} */}
 
               <div className="mt-3 flex flex-col gap-3">
                 <Link

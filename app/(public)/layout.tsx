@@ -2,6 +2,7 @@ import Image from "next/image";
 import authImage from "@/app/assets/images/authIllustration.png";
 import localFont from "next/font/local";
 import Header from "./_components/Header";
+import Footer from "./_components/Footer";
 
 const k2d = localFont({
   src: [{ path: "../assets/fonts/K2D/K2D-Bold.woff2", weight: "700" }],
@@ -19,8 +20,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             #BDDCFF 0%,
             #BCC2FB 13%,
             #BA7BF0 50%,
-            #B846E8 78%,
-            #B61BE1 100%
+            #BBA7F6 78%,
+            #BCC2FB 100%
           )
         `,
       }}
@@ -28,6 +29,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       <Header />
 
       <div className={`${k2d.className}`}>{children}</div>
+      <Footer />
     </section>
   );
 }

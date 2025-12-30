@@ -23,10 +23,11 @@ export default function CredibilitySection() {
 
             {/* Text */}
             <div className="ml-4 flex flex-col items-center justify-center">
-              <h4 className="text-2xl font-semibold text-black/80">10,000+</h4>
+              <h4 className="text-2xl font-semibold text-black/80">
+                Booking Managed
+              </h4>
               <p className="text-sm text-black/50">
-                Appointments booked and
-                <br /> managed effortlessly
+                Streamlined booking across institutions.
               </p>
             </div>
           </div>
@@ -44,7 +45,7 @@ export default function CredibilitySection() {
                 99.99% Uptime
               </h4>
               <p className="text-sm text-black/50">
-                Choose specific departments <br /> and view available time slots
+                Reliable access when it matters most.
               </p>
             </div>
           </div>
@@ -62,7 +63,7 @@ export default function CredibilitySection() {
                 Secure & Reliable
               </h4>
               <p className="text-sm text-black/50">
-                Check availability instantly <br /> and make booking with ease
+                Built with modern security standards.
               </p>
             </div>
           </div>
