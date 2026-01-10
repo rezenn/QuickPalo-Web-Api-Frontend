@@ -1,9 +1,25 @@
+"use client";
+
 import Image from "next/image";
+import Cookies from "js-cookie";
 import logo from "@/app/assets/images/quickpalo_logo.png";
 import profile from "@/app/assets/images/profile.png";
 import { Search, BellDot } from "lucide-react";
+import { useEffect, useState } from "react";
 
 export default function Header() {
+  const [user, setUser] = useState<{ fullname: string } | null>(null);
+  const [hydrated, setHydrated] = useState(false);
+
+  useEffect(() => {
+    setHydrated(true);
+    const storedUser = Cookies.get("user");
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+    }
+  }, []);
+
+  if (!hydrated) return null;
   return (
     <section>
       <div className=" ml-13 md:mx-auto max-w-screen-2xl px-4 py-4">
@@ -22,7 +38,7 @@ export default function Header() {
                 Hello,
               </span>
               <span className="font-extrabold text-lg md:text-2xl">
-                Text User
+                {user?.fullname}
               </span>
             </div>
           </div>

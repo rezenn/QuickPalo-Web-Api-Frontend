@@ -2,16 +2,20 @@
 
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { LoginData, loginSchema } from "../schema";
-import { useTransition } from "react";
+import Cookies from "js-cookie";
 import Link from "next/link";
-import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Eye, EyeOff } from "lucide-react";
 import { FcGoogle } from "react-icons/fc";
+import { login } from "@/app/services/auth.service";
 
 export default function LoginForm() {
+  // const [email, setEmail] = useState("");
+  // const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+
   const router = useRouter();
   const {
     register,
@@ -22,20 +26,36 @@ export default function LoginForm() {
     mode: "onSubmit",
   });
 
-  const [showPassword, setShowPassword] = useState(false);
-
-  const [pending, setTransition] = useTransition();
-
   const submit = async (values: LoginData) => {
-    setTransition(async () => {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      router.push("/dashboard");
-    });
-    console.log("login successful for ", values.email);
+    try {
+      const res = await login(values);
+      Cookies.set("token", res.token, {
+        expires: 7,
+        secure: true,
+        sameSite: "strict",
+      });
+      Cookies.set("user", JSON.stringify(res.data), {
+        expires: 7,
+        secure: true,
+        sameSite: "strict",
+      });
+
+      router.replace("/dashboard");
+    } catch (error: any) {
+      alert(error?.response?.data?.message || "Invalid email or password");
+    }
   };
+
+  useEffect(() => {
+    const token = Cookies.get("token");
+    if (token) {
+      router.replace("/dashboard");
+    }
+  }, []);
 
   return (
     <div className=" w-full max-w-md px-5 ">
+      console.log(user);
       <form onSubmit={handleSubmit(submit)} className="space-y-5 ">
         {/* Email  */}
         <div>
@@ -50,6 +70,7 @@ export default function LoginForm() {
             aria-invalid={!!errors.email}
             {...register("email")}
             placeholder="example@mail.com"
+            // onChange={(e) => setEmail(e.target.value)}
           />
           {errors.email?.message && (
             <p className="text-xs text-red-500">{errors.email.message}</p>
@@ -69,6 +90,7 @@ export default function LoginForm() {
               aria-invalid={!!errors.password}
               {...register("password")}
               placeholder="••••••••"
+              // onChange={(e) => setPassword(e.target.value)}
             />
             <button
               type="button"
@@ -98,10 +120,11 @@ export default function LoginForm() {
         {/* submit button */}
         <button
           type="submit"
-          disabled={isSubmitting || pending}
+          // onClick={HandleLogin}
+          disabled={isSubmitting}
           className=" h-12 w-full mt-2 text-xl bg-purple-700  rounded-xl"
         >
-          {isSubmitting || pending ? "Logging in..." : "Log in"}
+          {isSubmitting ? "Logging in..." : "Log in"}
         </button>
         {/* register */}
         <div className="flex justify-center text-sm ">
@@ -121,7 +144,6 @@ export default function LoginForm() {
           <span className="h-px flex-1 bg-gray-700" />
         </div>
       </div>
-
       <div className="flex flex-col gap-4">
         <button
           type="button"

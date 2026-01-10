@@ -1,6 +1,9 @@
 "use client";
 
 import { useState } from "react";
+import Cookies from "js-cookie";
+import { useRouter } from "next/navigation";
+
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { HomeIcon as HomeOutline } from "@heroicons/react/24/outline";
@@ -44,9 +47,15 @@ const NavLinks = [
 export default function SideNavigation() {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
+  const router = useRouter();
 
   const isActive = (href: string) =>
     href === "/" ? pathname === "/" : pathname?.startsWith(href);
+
+  const logout = () => {
+    Cookies.remove("token");
+    router.replace("/login");
+  };
 
   return (
     <>
@@ -92,16 +101,15 @@ export default function SideNavigation() {
             <span className="font-regular text-md">Themes</span>
             <ThemeSwitch />
           </div>
-          <Link
-            href="/login"
+
+          <button
+            onClick={logout}
+            //  className="flex flex-row gap-4"
             className="h-12 flex justify-center items-center p-2 m-2 rounded-xl text-red-600 bg-gray-300 border border-gray-400 hover:text-white hover:bg-fuchsia-600"
-            onClick={() => setIsOpen(false)}
           >
-            <button className="flex flex-row gap-4">
-              <LogOutIcon />
-              Logout
-            </button>
-          </Link>
+            <LogOutIcon />
+            Logout
+          </button>
         </div>
       </aside>
 

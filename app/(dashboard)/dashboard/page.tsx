@@ -1,9 +1,26 @@
+"use client";
+
 import Link from "next/link";
 import RecentViewCard from "../_component/RecentViewCard";
 import OrganizationsDetailsCard from "../_component/OrganizationDetailCard";
 import OrganizationFilter from "../_component/OrganizationFilter";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import Cookies from "js-cookie";
 
 export default function Dashboard() {
+  const [hydrated, setHydrated] = useState(false);
+  const router = useRouter();
+
+  useEffect(() => {
+    setHydrated(true);
+    const token = Cookies.get("token");
+    if (!token) {
+      router.replace("/login");
+    }
+  }, [router]);
+  if (!hydrated) return null;
+
   return (
     <div>
       {" "}

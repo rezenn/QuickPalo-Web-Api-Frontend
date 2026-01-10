@@ -4,13 +4,12 @@ import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { RegistrationData, registrationSchema } from "../schema";
-import { useTransition } from "react";
 import Link from "next/link";
-import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { PhoneInput } from "react-international-phone";
 import { Eye, EyeOff } from "lucide-react";
 import { FcGoogle } from "react-icons/fc";
+import { register as registerUser } from "@/app/services/auth.service";
 
 export default function RegisterForm() {
   const router = useRouter();
@@ -28,16 +27,16 @@ export default function RegisterForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [showPassword2, setShowPassword2] = useState(false);
 
-  const [pending, setTransition] = useTransition();
-
   const submit = async (values: RegistrationData) => {
-    setTransition(async () => {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      router.push("/login");
-    });
-    console.log("Registration successful for ", values.email);
+    try {
+      await registerUser(values);
+      alert("Registration successful");
+      router.replace("/login");
+    } catch (error: any) {
+      alert(error?.response?.data?.message || "Registration failed");
+    }
   };
-// 
+
   return (
     <div className=" w-full max-w-md px-5 ">
       <form onSubmit={handleSubmit(submit)} className="space-y-5 ">
@@ -47,16 +46,16 @@ export default function RegisterForm() {
             Full Name
           </label>
           <input
-            id="fullName"
+            id="fullname"
             type="text"
-            autoComplete="fullName"
+            autoComplete="fullname"
             className="h-12 w-full rounded-md border border-black/30 bg-white px-4 text-black focus:outline-none focus:border-black/60"
-            aria-invalid={!!errors.fullName}
-            {...register("fullName")}
+            aria-invalid={!!errors.fullname}
+            {...register("fullname")}
             placeholder="Example Name"
           />
-          {errors.fullName?.message && (
-            <p className="text-xs text-red-500">{errors.fullName.message}</p>
+          {errors.fullname?.message && (
+            <p className="text-xs text-red-500">{errors.fullname.message}</p>
           )}
         </div>
         {/*Email */}
@@ -166,10 +165,10 @@ export default function RegisterForm() {
         {/* submit button */}
         <button
           type="submit"
-          disabled={isSubmitting || pending}
+          disabled={isSubmitting}
           className=" h-12 w-full mt-2 text-xl bg-purple-700  rounded-xl"
         >
-          {isSubmitting || pending ? "Signing up..." : "Sign up"}
+          {isSubmitting ? "Signing up..." : "Sign up"}
         </button>
         {/* register */}
         <div className="flex justify-center text-sm ">

@@ -2,7 +2,7 @@ import z from "zod";
 
 export const registrationSchema = z
   .object({
-    fullName: z.string().min(1, { message: "Enter your full name" }),
+    fullname: z.string().min(1, { message: "Enter your full name" }),
     email: z.email({ message: "Enter a vaild email" }),
     phoneNumber: z.string().min(7, { message: "Enter your phone number" }),
     password: z.string().min(8, { message: "Enter atleast 8 chracters" }),
