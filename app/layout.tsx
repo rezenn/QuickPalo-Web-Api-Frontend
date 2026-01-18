@@ -4,6 +4,7 @@ import "./globals.css";
 import localFont from "next/font/local";
 import { Toaster } from "@/components/ui/sonner";
 import { AuthProvider } from "@/context/authContext";
+import { ThemeProvider } from "next-themes";
 
 const poppins = localFont({
   src: [{ path: "./assets/fonts/Poppins/Poppins-Regular.woff2" }],
@@ -22,13 +23,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body className={`${poppins.className} antialiased`}>
-        <AuthProvider>
-          {" "}
-          {children}
-          <Toaster richColors theme="light" />
-        </AuthProvider>
+        <ThemeProvider attribute="class" enableSystem>
+          <AuthProvider>
+            {" "}
+            {children}
+            <Toaster richColors theme="light" />
+          </AuthProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

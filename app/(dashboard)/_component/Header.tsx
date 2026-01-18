@@ -31,7 +31,10 @@ export default function Header() {
               <span className="text-fuchsia-700 text-sm md:text-lg">
                 Hello,
               </span>
-              <span className="font-extrabold text-lg md:text-2xl">
+              <span
+                className="font-extrabold text-lg md:text-2xl "
+                style={{ textTransform: "capitalize" }}
+              >
                 {user?.fullname || "User"}
               </span>
             </div>
@@ -57,11 +60,20 @@ export default function Header() {
             <button className="text-gray-600 hover:text-purple-700 transition">
               <BellDot size={24} />
             </button>
-            <Image
+            {/* <Image
               src={profile}
               alt="profile"
               className="h-10 w-10 md:h-12 md:w-12 rounded-full border border-gray-700"
-            />
+            /> */}
+            <div
+              className="h-10 w-10 md:h-12 md:w-12 rounded-full
+             flex items-center justify-center
+             border border-gray-300 dark:border-neutral-700
+             bg-fuchsia-700 dark:bg-fuchsia-500
+             text-white font-semibold text-2xl select-none"
+            >
+              {user?.fullname?.trim()?.charAt(0)?.toUpperCase() ?? "?"}
+            </div>
           </div>
         </header>
 
