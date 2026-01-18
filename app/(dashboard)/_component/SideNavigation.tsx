@@ -7,6 +7,8 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { HomeIcon as HomeOutline } from "@heroicons/react/24/outline";
+import { BuildingOffice2Icon as BuildingOfficeOutline } from "@heroicons/react/24/outline";
+import { BuildingOffice2Icon as BuildingOfficeSoild } from "@heroicons/react/24/solid";
 import { HomeIcon as HomeSolid } from "@heroicons/react/24/solid";
 import { CalendarDaysIcon as CalendarDaysOutline } from "@heroicons/react/24/outline";
 import { CalendarDaysIcon as CalendarDaysSolid } from "@heroicons/react/24/solid";
@@ -30,6 +32,12 @@ const NavLinks = [
     label: "Calendar",
     filledIcon: CalendarDaysSolid,
     icon: CalendarDaysOutline,
+  },
+  {
+    href: "/organizations",
+    label: "Organizations",
+    filledIcon: BuildingOfficeSoild,
+    icon: BuildingOfficeOutline,
   },
   {
     href: "/history",
