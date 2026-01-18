@@ -9,7 +9,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { PhoneInput } from "react-international-phone";
 import { Eye, EyeOff } from "lucide-react";
 import { FcGoogle } from "react-icons/fc";
-import { register as registerUser } from "@/services/auth.service";
 
 export default function RegisterForm() {
   const router = useRouter();
@@ -28,13 +27,13 @@ export default function RegisterForm() {
   const [showPassword2, setShowPassword2] = useState(false);
 
   const submit = async (values: RegistrationData) => {
-    try {
-      await registerUser(values);
-      alert("Registration successful");
-      router.replace("/login");
-    } catch (error: any) {
-      alert(error?.response?.data?.message || "Registration failed");
-    }
+    // try {
+    //   await registerUser(values);
+    //   alert("Registration successful");
+    //   router.replace("/login");
+    // } catch (error: any) {
+    //   alert(error?.response?.data?.message || "Registration failed");
+    // }
   };
 
   return (

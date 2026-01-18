@@ -9,7 +9,6 @@ import Link from "next/link";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Eye, EyeOff } from "lucide-react";
 import { FcGoogle } from "react-icons/fc";
-import { login } from "@/services/auth.service";
 
 export default function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
@@ -25,31 +24,25 @@ export default function LoginForm() {
   });
 
   const submit = async (values: LoginData) => {
-    try {
-      const res = await login(values);
-      Cookies.set("token", res.token, {
-        expires: 7,
-        secure: true,
-        sameSite: "strict",
-      });
-      Cookies.set("user", JSON.stringify(res.data), {
-        expires: 7,
-        secure: true,
-        sameSite: "strict",
-      });
+    // try {
+    //   const res = await login(values);
+    //   Cookies.set("token", res.token, {
+    //     expires: 7,
+    //     secure: true,
+    //     sameSite: "strict",
+    //   });
+    //   Cookies.set("user", JSON.stringify(res.data), {
+    //     expires: 7,
+    //     secure: true,
+    //     sameSite: "strict",
+    //   });
 
-      router.replace("/dashboard");
-    } catch (error: any) {
-      alert(error?.response?.data?.message || "Invalid email or password");
-    }
+    //   router.replace("/dashboard");
+    // } catch (error: any) {
+    //   alert(error?.response?.data?.message || "Invalid email or password");
+    // }
   };
 
-  useEffect(() => {
-    const token = Cookies.get("token");
-    if (token) {
-      router.replace("/dashboard");
-    }
-  }, []);
 
   return (
     <div className=" w-full max-w-md px-5 ">
