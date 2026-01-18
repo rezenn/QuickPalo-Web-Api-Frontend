@@ -2,18 +2,21 @@
 
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { LoginData, loginSchema } from "../schema";
-import Cookies from "js-cookie";
 import Link from "next/link";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Eye, EyeOff } from "lucide-react";
 import { FcGoogle } from "react-icons/fc";
+import { handleLogin } from "@/lib/actions/auth-action";
+import { toast } from "sonner";
+import { useAuth } from "@/context/authContext";
 
 export default function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
-
   const router = useRouter();
+  const { checkAuth } = useAuth();
+
   const {
     register,
     handleSubmit,
@@ -24,22 +27,20 @@ export default function LoginForm() {
   });
 
   const submit = async (values: LoginData) => {
-    // try {
-    //   const res = await login(values);
-    //   Cookies.set("token", res.token, {
-    //     expires: 7,
-    //     secure: true,
-    //     sameSite: "strict",
-    //   });
-    //   Cookies.set("user", JSON.stringify(res.data), {
-    //     expires: 7,
-    //     secure: true,
-    //     sameSite: "strict",
-    //   });
-    //   router.replace("/dashboard");
-    // } catch (error: any) {
-    //   alert(error?.response?.data?.message || "Invalid email or password");
-    // }
+    try {
+      const response = await handleLogin(values);
+
+      if (!response.success) {
+        toast.error(response.message || "Login failed");
+        return;
+      }
+
+      toast.success("Login successful");
+      await checkAuth();
+      router.push("/dashboard");
+    } catch (error: any) {
+      toast.error(error.message || "Login failed");
+    }
   };
 
   return (
@@ -144,4 +145,7 @@ export default function LoginForm() {
       </div>
     </div>
   );
+}
+function checkAuth() {
+  throw new Error("Function not implemented.");
 }

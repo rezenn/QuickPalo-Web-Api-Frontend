@@ -6,21 +6,19 @@ import OrganizationsDetailsCard from "../_component/OrganizationDetailCard";
 import OrganizationFilter from "../_component/OrganizationFilter";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import Cookies from "js-cookie";
+import { useAuth } from "@/context/authContext";
 
 export default function Dashboard() {
-  const [hydrated, setHydrated] = useState(false);
+  const { isAuthenticated, loading } = useAuth();
   const router = useRouter();
 
   useEffect(() => {
-    setHydrated(true);
-    const token = Cookies.get("token");
-    if (!token) {
+    if (!loading && !isAuthenticated) {
       router.replace("/login");
     }
-  }, [router]);
-  if (!hydrated) return null;
+  }, [loading, isAuthenticated, router]);
 
+  if (loading) return null;
   return (
     <div>
       {" "}
