@@ -9,11 +9,9 @@ import Link from "next/link";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Eye, EyeOff } from "lucide-react";
 import { FcGoogle } from "react-icons/fc";
-import { login } from "@/app/services/auth.service";
+import { login } from "@/services/auth.service";
 
 export default function LoginForm() {
-  // const [email, setEmail] = useState("");
-  // const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
   const router = useRouter();
@@ -55,7 +53,6 @@ export default function LoginForm() {
 
   return (
     <div className=" w-full max-w-md px-5 ">
-      console.log(user);
       <form onSubmit={handleSubmit(submit)} className="space-y-5 ">
         {/* Email  */}
         <div>

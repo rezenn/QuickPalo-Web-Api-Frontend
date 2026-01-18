@@ -9,7 +9,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { PhoneInput } from "react-international-phone";
 import { Eye, EyeOff } from "lucide-react";
 import { FcGoogle } from "react-icons/fc";
-import { register as registerUser } from "@/app/services/auth.service";
+import { register as registerUser } from "@/services/auth.service";
 
 export default function RegisterForm() {
   const router = useRouter();
