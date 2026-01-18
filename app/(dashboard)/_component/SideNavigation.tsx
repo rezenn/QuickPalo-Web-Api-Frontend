@@ -16,6 +16,7 @@ import { UserIcon as UserOutline } from "@heroicons/react/24/outline";
 import { UserIcon as UserSolid } from "@heroicons/react/24/solid";
 import ThemeSwitch from "./ThemeSwitch";
 import { LogOutIcon, Menu } from "lucide-react"; // Menu icon
+import { useAuth } from "@/context/authContext";
 
 const NavLinks = [
   {
@@ -47,15 +48,11 @@ const NavLinks = [
 export default function SideNavigation() {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
+  const { logout } = useAuth();
   const router = useRouter();
 
   const isActive = (href: string) =>
     href === "/" ? pathname === "/" : pathname?.startsWith(href);
-
-  const logout = () => {
-    Cookies.remove("token");
-    router.replace("/login");
-  };
 
   return (
     <>
