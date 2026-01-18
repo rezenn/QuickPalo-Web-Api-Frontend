@@ -36,13 +36,11 @@ export default function LoginForm() {
     //     secure: true,
     //     sameSite: "strict",
     //   });
-
     //   router.replace("/dashboard");
     // } catch (error: any) {
     //   alert(error?.response?.data?.message || "Invalid email or password");
     // }
   };
-
 
   return (
     <div className=" w-full max-w-md px-5 ">
@@ -112,7 +110,7 @@ export default function LoginForm() {
           type="submit"
           // onClick={HandleLogin}
           disabled={isSubmitting}
-          className=" h-12 w-full mt-2 text-xl bg-purple-700  rounded-xl"
+          className=" h-12 w-full mt-2 text-xl bg-purple-700  rounded-xl text-white"
         >
           {isSubmitting ? "Logging in..." : "Log in"}
         </button>

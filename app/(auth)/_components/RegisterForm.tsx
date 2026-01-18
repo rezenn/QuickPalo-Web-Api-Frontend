@@ -9,6 +9,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { PhoneInput } from "react-international-phone";
 import { Eye, EyeOff } from "lucide-react";
 import { FcGoogle } from "react-icons/fc";
+import { handleRegister } from "@/lib/actions/auth-action";
+import { toast } from "sonner";
 
 export default function RegisterForm() {
   const router = useRouter();
@@ -27,13 +29,20 @@ export default function RegisterForm() {
   const [showPassword2, setShowPassword2] = useState(false);
 
   const submit = async (values: RegistrationData) => {
-    // try {
-    //   await registerUser(values);
-    //   alert("Registration successful");
-    //   router.replace("/login");
-    // } catch (error: any) {
-    //   alert(error?.response?.data?.message || "Registration failed");
-    // }
+    try {
+      const response = await handleRegister(values);
+
+      if (!response.success) {
+        toast.error(response.message ?? "Registration failed");
+        return;
+      }
+      toast.success("Register sucessful");
+      router.push("/login");
+    } catch (err) {
+      toast.error(
+        err instanceof Error ? err.message : "Unexpected error occurred",
+      );
+    }
   };
 
   return (
@@ -138,7 +147,7 @@ export default function RegisterForm() {
             <input
               id="confirmPassword"
               type={showPassword2 ? "text" : "password"}
-              autoComplete="current-password"
+              autoComplete="new-password"
               className="h-12 w-full rounded-md border border-black/30 bg-white px-4 text-black focus:outline-none focus:border-black/60"
               aria-invalid={!!errors.confirmPassword}
               {...register("confirmPassword")}
@@ -165,11 +174,10 @@ export default function RegisterForm() {
         <button
           type="submit"
           disabled={isSubmitting}
-          className=" h-12 w-full mt-2 text-xl bg-purple-700  rounded-xl"
+          className=" h-12 w-full mt-2 text-xl text-white bg-purple-700  rounded-xl"
         >
           {isSubmitting ? "Signing up..." : "Sign up"}
         </button>
-        {/* register */}
         <div className="flex justify-center text-sm ">
           <p className=" text-gray-500">Already have an account? &nbsp;</p>
           <Link
