@@ -11,7 +11,7 @@ export default function OrganizationsDetailsCard() {
       {OrganizationsData.map((organization) => (
         <Link
           key={organization.id}
-          href={`/organization/${encodeURIComponent(organization.title)}`}
+          href={`/user/organization/${encodeURIComponent(organization.title)}`}
           className="w-full h-[375px] bg-black/10 rounded-xl p-2 shadow-lg flex flex-col items-center hover:shadow-2xl"
         >
           <div className="w-full h-[202px] relative rounded-xl overflow-hidden border border-gray-500">

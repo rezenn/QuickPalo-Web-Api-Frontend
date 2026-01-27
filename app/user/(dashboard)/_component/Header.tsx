@@ -18,7 +18,7 @@ export default function Header() {
         <header className="flex items-center gap-4 md:justify-between">
           {/* Logo + Greeting */}
           <div className="flex items-center gap-2">
-            <Link href="/dashboard">
+            <Link href="/user/dashboard">
               <Image
                 src={logo}
                 alt="logo"
@@ -35,7 +35,7 @@ export default function Header() {
                 className="font-extrabold text-lg md:text-2xl "
                 style={{ textTransform: "capitalize" }}
               >
-                {user?.fullname || "User"}
+                {user?.fullName || "User"}
               </span>
             </div>
           </div>
@@ -72,7 +72,7 @@ export default function Header() {
              bg-fuchsia-700 dark:bg-fuchsia-500
              text-white font-semibold text-2xl select-none"
             >
-              {user?.fullname?.trim()?.charAt(0)?.toUpperCase() ?? "?"}
+              {user?.fullName?.trim()?.charAt(0)?.toUpperCase() ?? "?"}
             </div>
           </div>
         </header>

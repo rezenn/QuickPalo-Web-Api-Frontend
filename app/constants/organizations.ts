@@ -1,8 +1,11 @@
+import building1 from "@/app/assets/images/hospitalFeatures.jpg";
+import { StaticImageData } from "next/image";
+
 export interface OrganizationCard {
   id: number;
   title: string;
   slug: string;
-  image: string;
+  image: string | StaticImageData;
   location: string;
   time: string;
   description: string;
@@ -15,8 +18,7 @@ export const OrganizationsData: OrganizationCard[] = [
     id: 1,
     title: "City Health Center",
     slug: "City-Health-Center",
-    image:
-      "https://www.brockport.edu/live/image/gid/154/width/990/height/552/crop/1/src_region/0,147,3200,1931/11625_health_center_exterior19-2.jpg",
+    image: building1,
     location: "Thamel, Kathmandu",
     time: "7:00 - 19:00",
     description:
@@ -36,8 +38,7 @@ export const OrganizationsData: OrganizationCard[] = [
     id: 2,
     title: "Everest College",
     slug: "Everest-College",
-    image:
-      "https://media.edusanjal.com/__sized__/cover_photo/eebs-building-thumbnail-1400x280-70.jpg",
+    image: building1,
     location: "Patan, Lalitpur",
     time: "9:00 - 17:00",
     description:
@@ -57,8 +58,7 @@ export const OrganizationsData: OrganizationCard[] = [
     id: 3,
     title: "Government Office",
     slug: "Government-Office",
-    image:
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSATjnnZVre_SaYbVXf-8-KSP-L2_NouAhAYA&s",
+    image: building1,
     location: "Singha Durbar, Kathmandu",
     time: "10:00 - 16:00",
     description:
@@ -77,8 +77,7 @@ export const OrganizationsData: OrganizationCard[] = [
     id: 4,
     title: "RKM Hospital",
     slug: "RKM-Hospital",
-    image:
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRpiIGm_Z3u8IHIIqMsPBpwU8qwiYyelbFvHw&s",
+    image: building1,
     location: "Kantipath, Kathmandu",
     time: "8:00 - 20:00",
     description:
@@ -102,8 +101,7 @@ export const OrganizationsData: OrganizationCard[] = [
     id: 5,
     title: "GSK Hospital",
     slug: "gsk-hospital",
-    image:
-      "https://www.shutterstock.com/shutterstock/photos/212251981/display_1500/stock-photo-modern-hospital-style-building-212251981.jpg",
+    image: building1,
     location: "Kainali, Kainali",
     time: "8:00 - 16:00",
     description: "Top ranked elite medical university with global faculty.",
@@ -121,8 +119,7 @@ export const OrganizationsData: OrganizationCard[] = [
     id: 6,
     title: "Global Medical Center",
     slug: "Global-Medical-Center",
-    image:
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTYxXnrIIYDkxjUkQagL5VGX4uCboVHg2YA98GqM4P3YkCs1AhYsdpn2PeIiXrnlqOFh6k&usqp=CAU",
+    image: building1,
     location: "Jhamsikhel, Lalitpur",
     time: "8:00 - 22:00",
     description:
@@ -134,8 +131,7 @@ export const OrganizationsData: OrganizationCard[] = [
     id: 7,
     title: "Kathmandu University",
     slug: "Kathmandu-University",
-    image:
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQwzCyPVDKe6S4Lh-J5LTAe0_WC2ZyFxBGneeCt8NL8lzG0flevqE222SewFeFpWc9x9As&usqp=CAU",
+    image: building1,
     location: "Dhulikhel, Kavrepalanchok",
     time: "8:30 - 16:30",
     description:
@@ -155,8 +151,7 @@ export const OrganizationsData: OrganizationCard[] = [
     id: 8,
     title: "Shanti Health Center",
     slug: "Shanti-Health-Center",
-    image:
-      "https://media.istockphoto.com/id/157677909/photo/nurse-or-doctor-pushing-a-wheelchair-outdoors.jpg?s=612x612&w=0&k=20&c=t2H7lO8cuQ1pCeFJYk-on-G2J6AVujKnhF72yK_t0zM=",
+    image: building1,
     location: "Kuleshwor, Kathmandu",
     time: "24 hours",
     description:
@@ -168,8 +163,7 @@ export const OrganizationsData: OrganizationCard[] = [
     id: 9,
     title: "National College of Science",
     slug: "National-College-of-Science",
-    image:
-      "https://cdn.sanity.io/images/p2ba9zey/production/21bf7be80600541954415f5365f583df79d8b7be-3346x1530.jpg",
+    image: building1,
     location: "Jawalakhel, Lalitpur",
     time: "9:00 - 18:00",
     description:

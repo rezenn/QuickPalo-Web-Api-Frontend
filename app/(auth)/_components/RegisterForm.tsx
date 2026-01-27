@@ -48,22 +48,22 @@ export default function RegisterForm() {
   return (
     <div className=" w-full max-w-md px-5 ">
       <form onSubmit={handleSubmit(submit)} className="space-y-5 ">
-        {/* Fullname  */}
+        {/* fullName  */}
         <div>
           <label className="block text-md w-lg text-black/60 font-semibold mb-2">
             Full Name
           </label>
           <input
-            id="fullname"
+            id="fullName"
             type="text"
-            autoComplete="fullname"
+            autoComplete="fullName"
             className="h-12 w-full rounded-md border border-black/30 bg-white px-4 text-black focus:outline-none focus:border-black/60"
-            aria-invalid={!!errors.fullname}
-            {...register("fullname")}
-            placeholder="Example Name"
+            aria-invalid={!!errors.fullName}
+            {...register("fullName")}
+            placeholder="Full Name"
           />
-          {errors.fullname?.message && (
-            <p className="text-xs text-red-500">{errors.fullname.message}</p>
+          {errors.fullName?.message && (
+            <p className="text-xs text-red-500">{errors.fullName.message}</p>
           )}
         </div>
         {/*Email */}
@@ -78,7 +78,7 @@ export default function RegisterForm() {
             className="h-12 w-full rounded-md border border-black/30 bg-white px-4 text-black focus:outline-none focus:border-black/60"
             aria-invalid={!!errors.email}
             {...register("email")}
-            placeholder="example@mail.com"
+            placeholder="user@mail.com"
           />
           {errors.email?.message && (
             <p className="text-xs text-red-500">{errors.email.message}</p>

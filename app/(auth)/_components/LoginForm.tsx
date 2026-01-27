@@ -37,7 +37,7 @@ export default function LoginForm() {
 
       toast.success("Login successful");
       await checkAuth();
-      router.push("/dashboard");
+      router.push("/user/dashboard");
     } catch (error: any) {
       toast.error(error.message || "Login failed");
     }

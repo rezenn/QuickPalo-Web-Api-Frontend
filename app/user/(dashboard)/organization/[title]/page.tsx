@@ -18,7 +18,7 @@ export default async function OrganizationDetail({ params }: Params) {
 
   const decodedTitle = decodeURIComponent(resolvedParams.title);
   const organization = OrganizationsData.find(
-    (org) => org.title === decodedTitle
+    (org) => org.title === decodedTitle,
   );
 
   if (!organization) return <p>Organization not found</p>;

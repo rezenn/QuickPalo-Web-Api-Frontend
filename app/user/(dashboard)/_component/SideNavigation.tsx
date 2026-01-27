@@ -22,31 +22,31 @@ import { useAuth } from "@/context/authContext";
 
 const NavLinks = [
   {
-    href: "/dashboard",
+    href: "/user/dashboard",
     label: "Dashboard",
     filledIcon: HomeSolid,
     icon: HomeOutline,
   },
   {
-    href: "/calendar",
+    href: "/user/calendar",
     label: "Calendar",
     filledIcon: CalendarDaysSolid,
     icon: CalendarDaysOutline,
   },
   {
-    href: "/organizations",
+    href: "/user/organizations",
     label: "Organizations",
     filledIcon: BuildingOfficeSoild,
     icon: BuildingOfficeOutline,
   },
   {
-    href: "/history",
+    href: "/user/history",
     label: "History",
     filledIcon: ClockSolid,
     icon: ClockOutline,
   },
   {
-    href: "/profile",
+    href: "/user/profile",
     label: "Profile",
     filledIcon: UserSolid,
     icon: UserOutline,

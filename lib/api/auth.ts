@@ -24,3 +24,31 @@ export const login = async (loginData: any) => {
     );
   }
 };
+
+export const getUser = async () => {
+  try {
+    const response = await axiosInstance.get(API.AUTH.GETUSER);
+    return response.data;
+  } catch (err: Error | any) {
+    throw new Error(err.response?.data?.message || err.message || "me failed");
+  }
+};
+
+export const updateProfile = async (profileData: any) => {
+  try {
+    const response = await axiosInstance.put(
+      API.AUTH.UPDATEPROFILE,
+      profileData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data", //for file upload
+        },
+      },
+    );
+    return response.data;
+  } catch (err: Error | any) {
+    throw new Error(
+      err.response?.data?.message || err.message || "update profile not found ",
+    );
+  }
+};

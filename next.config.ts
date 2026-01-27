@@ -1,14 +1,20 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  reactStrictMode: true,
+  experimental: {
+    serverActions: {
+      bodySizeLimit: "5mb",
+    },
+  },
+
   images: {
+    dangerouslyAllowLocalIP: true,
     remotePatterns: [
       {
-        protocol: "https",
-        hostname: "**",
-        port: "",
-        pathname: "**",
+        protocol: "http",
+        hostname: "localhost",
+        port: "5050",
+        pathname: "/uploads/**",
       },
     ],
   },
