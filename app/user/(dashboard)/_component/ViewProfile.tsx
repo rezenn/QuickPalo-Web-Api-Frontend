@@ -238,7 +238,7 @@ export default function ViewProfile() {
         </div>
 
         {/* Footer */}
-        <div className="px-8 py-6 bg-gradient-to-r from-gray-50 to-white border-t border-gray-100 rounded-b-3xl">
+        <div className="px-8 py-6 bg-linear-to-r from-gray-50 to-white border-t border-gray-100 rounded-b-3xl">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <p className="text-gray-600 text-sm">
               User ID:{" "}
@@ -251,7 +251,7 @@ export default function ViewProfile() {
       </div>
 
       {/* Tips Section */}
-      <div className="mt-8 bg-gradient-to-r from-blue-50 to-cyan-50 border border-blue-100 rounded-2xl p-6">
+      <div className="mt-8 bg-linear-to-r from-blue-50 to-cyan-50 border border-blue-100 rounded-2xl p-6">
         <div className="flex items-start gap-4">
           <div className="p-3 bg-blue-100 rounded-xl">
             <svg
