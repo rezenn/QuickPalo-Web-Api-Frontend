@@ -2,21 +2,43 @@
 
 import Image from "next/image";
 import logo from "@/app/assets/images/quickpalo_logo.png";
-import profile from "@/app/assets/images/profile.png";
-import { Search, BellDot } from "lucide-react";
+import { Search, BellDot, User } from "lucide-react";
 import { useAuth } from "@/context/authContext";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 
 export default function Header() {
   const { user, loading } = useAuth();
+  const [imageError, setImageError] = useState(false);
+
+  // Reset image error when user changes
+  useEffect(() => {
+    setImageError(false);
+  }, [user]);
 
   if (loading) return null;
+  const getProfileImageUrl = () => {
+    if (!user) return null;
+
+    // Check imageUrl first
+    if (user.imageUrl) {
+      return user.imageUrl;
+    }
+
+    //  check profilePicture
+    if (user.profilePicture) {
+      return `${process.env.NEXT_PUBLIC_API_BASE_URL}/uploads/profile/${user.profilePicture}`;
+    }
+
+    return null;
+  };
+
+  const profileImageUrl = getProfileImageUrl();
 
   return (
     <section>
       <div className="ml-13 md:mx-auto max-w-screen-2xl px-4 py-4">
         <header className="flex items-center gap-4 md:justify-between">
-          {/* Logo + Greeting */}
           <div className="flex items-center gap-2">
             <Link href="/user/dashboard">
               <Image
@@ -31,9 +53,16 @@ export default function Header() {
               <span className="text-fuchsia-700 text-sm md:text-lg">
                 Hello,
               </span>
+
               <span
-                className="font-extrabold text-lg md:text-2xl "
+                className="
+      font-extrabold
+      text-lg md:text-2xl
+      max-w-[200px]
+      truncate
+    "
                 style={{ textTransform: "capitalize" }}
+                title={user?.fullName}
               >
                 {user?.fullName || "User"}
               </span>
@@ -60,19 +89,34 @@ export default function Header() {
             <button className="text-gray-600 hover:text-purple-700 transition">
               <BellDot size={24} />
             </button>
-            {/* <Image
-              src={profile}
-              alt="profile"
-              className="h-10 w-10 md:h-12 md:w-12 rounded-full border border-gray-700"
-            /> */}
-            <div
-              className="h-10 w-10 md:h-12 md:w-12 rounded-full
-             flex items-center justify-center
-             border border-gray-300 dark:border-neutral-700
-             bg-fuchsia-700 dark:bg-fuchsia-500
-             text-white font-semibold text-2xl select-none"
-            >
-              {user?.fullName?.trim()?.charAt(0)?.toUpperCase() ?? "?"}
+
+            <div className="relative h-12 w-12">
+              <div className="relative h-12 w-12 rounded-full overflow-hidden border-2 border-fuchsia-400 hover:border-purple-600 transition-colors">
+                <Link href="/user/profile">
+                  {" "}
+                  {profileImageUrl && !imageError ? (
+                    <Image
+                      src={profileImageUrl}
+                      alt="Profile"
+                      fill
+                      className="object-cover"
+                      unoptimized
+                      onError={() => {
+                        console.error(
+                          "Header image failed to load:",
+                          profileImageUrl,
+                        );
+                        setImageError(true);
+                      }}
+                      sizes="48px"
+                    />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center bg-linear-to-br from-purple-100 to-pink-100">
+                      <User className="text-purple-500" size={24} />
+                    </div>
+                  )}
+                </Link>
+              </div>
             </div>
           </div>
         </header>

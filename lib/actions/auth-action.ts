@@ -22,7 +22,6 @@ export async function handleRegister(resgistrationData: any) {
   }
 }
 
-
 export async function handleLogin(loginData: any) {
   try {
     const result = await login(loginData);
@@ -62,20 +61,53 @@ export async function handleGetUser() {
 export async function handleUpdateProfile(profileData: any) {
   try {
     const result = await updateProfile(profileData);
+
+    console.log("DEBUG - Raw update result:", {
+      success: result.success,
+      dataStructure: result.data ? "Exists" : "Missing",
+      profilePictureField: result.data?.profilePicture,
+      imageUrlField: result.data?.imageUrl,
+    });
+
     if (result.success) {
-      await setUserData(result.data); // update cookie
-      revalidatePath("/user/profile"); // revalidate profile page/ refresh new data
+      const userData = {
+        _id: result.data._id,
+        fullName: result.data.fullName,
+        email: result.data.email,
+        phoneNumber: result.data.phoneNumber,
+        role: result.data.role,
+        profilePicture: result.data.profilePicture,
+        imageUrl: result.data.imageUrl,
+        createdAt: result.data.createdAt,
+        updatedAt: result.data.updatedAt,
+      };
+
+      console.log("DEBUG - User data to save to cookie:", {
+        profilePicture: userData.profilePicture,
+        imageUrl: userData.imageUrl,
+        keys: Object.keys(userData),
+      });
+
+      // Store in cookies
+      await setUserData(userData);
+
+      // Revalidate paths
+      revalidatePath("/user/profile");
+      revalidatePath("/user/dashboard");
+
       return {
         success: true,
         message: "Profile updated successfully",
-        data: result.data,
+        data: userData,
       };
     }
+
     return {
       success: false,
       message: result.message || "Failed to update profile",
     };
   } catch (error: Error | any) {
+    console.error("Update profile error:", error);
     return { success: false, message: error.message };
   }
 }

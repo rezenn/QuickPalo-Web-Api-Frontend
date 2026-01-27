@@ -1,19 +1,9 @@
-import { notFound } from "next/navigation";
-import UpdateForm from "../_component/UpdateForm";
-import { handleGetUser } from "@/lib/actions/auth-action";
+import ViewProfile from "../_component/ViewProfile";
 
 export default async function Profile() {
-  const result = await handleGetUser();
-
-  if (!result.success) {
-    throw new Error("Error fetching user data");
-  }
-  if (!result.data) {
-    notFound();
-  }
   return (
     <div>
-      <UpdateForm user={result.data} />
+      <ViewProfile />
     </div>
   );
 }

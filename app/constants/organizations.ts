@@ -1,4 +1,4 @@
-import building1 from "@/app/assets/images/hospitalFeatures.jpg";
+import building1 from "@/app/assets/images/clinicsFeatures.jpg";
 import { StaticImageData } from "next/image";
 
 export interface OrganizationCard {
