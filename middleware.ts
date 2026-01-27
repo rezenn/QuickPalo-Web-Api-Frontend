@@ -11,7 +11,7 @@ export async function middleware(request: NextRequest) {
     pathname.startsWith("/forget-password") ||
     pathname.startsWith("/reset-password");
 
-  // Block unauthenticated access to protected routes
+  // Block unauthenticated access
   if (!token && pathname.startsWith("/user")) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
@@ -34,7 +34,5 @@ export const config = {
     // what routes to protect/match
     "/admin/:path*",
     "/user/:path*",
-    // "/login",
-    // "/register",
   ],
 };

@@ -22,6 +22,7 @@ export async function handleRegister(resgistrationData: any) {
   }
 }
 
+
 export async function handleLogin(loginData: any) {
   try {
     const result = await login(loginData);

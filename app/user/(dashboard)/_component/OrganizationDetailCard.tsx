@@ -5,6 +5,7 @@ import { OrganizationsData } from "@/app/constants/organizations";
 import { MapPinIcon } from "@heroicons/react/24/solid";
 import { ClockIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
+
 export default function OrganizationsDetailsCard() {
   return (
     <div className="grid grid-cols-2 md:grid-cols-4 w-full  gap-6 px-2">
