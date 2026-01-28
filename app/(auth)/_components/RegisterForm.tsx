@@ -33,14 +33,14 @@ export default function RegisterForm() {
       const response = await handleRegister(values);
 
       if (!response.success) {
-        toast.error(response.message ?? "Registration failed");
+        toast.error(response.message ?? "Registration failed!");
         return;
       }
-      toast.success("Register sucessful");
+      toast.success("Sucessfully registered!");
       router.push("/login");
     } catch (err) {
       toast.error(
-        err instanceof Error ? err.message : "Unexpected error occurred",
+        err instanceof Error ? err.message : "Unexpected error occurred!",
       );
     }
   };

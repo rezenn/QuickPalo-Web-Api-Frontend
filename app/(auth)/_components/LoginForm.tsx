@@ -31,15 +31,15 @@ export default function LoginForm() {
       const response = await handleLogin(values);
 
       if (!response.success) {
-        toast.error(response.message || "Login failed");
+        toast.error(response.message || "Login failed!");
         return;
       }
 
-      toast.success("Login successful");
+      toast.success("Successfully logged in!");
       await checkAuth();
       router.push("/user/dashboard");
     } catch (error: any) {
-      toast.error(error.message || "Login failed");
+      toast.error(error.message || "Login failed!");
     }
   };
 
