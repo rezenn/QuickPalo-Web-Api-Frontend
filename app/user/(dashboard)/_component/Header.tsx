@@ -27,7 +27,7 @@ export default function Header() {
 
     //  check profilePicture
     if (user.profilePicture) {
-      return `${process.env.NEXT_PUBLIC_API_BASE_URL}/uploads/profile/${user.profilePicture}`;
+      return `${process.env.NEXT_PUBLIC_API_BASE_URL?.replace("/api", "")}/uploads/profile/${user.profilePicture}`;
     }
 
     return null;

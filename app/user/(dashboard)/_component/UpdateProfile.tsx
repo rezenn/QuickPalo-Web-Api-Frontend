@@ -29,7 +29,6 @@ export default function UpdateUserForm({ initialUser }: { initialUser: any }) {
     setValue,
     formState: { errors, isSubmitting, isDirty },
     reset,
-    watch,
   } = useForm<UpdateUserData>({
     resolver: zodResolver(updateUserSchema),
     defaultValues: {
@@ -46,9 +45,6 @@ export default function UpdateUserForm({ initialUser }: { initialUser: any }) {
   const [imageHover, setImageHover] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // Watch form values for changes
-  const watchedFullName = watch("fullName");
-  const watchedPhone = watch("phoneNumber");
   const hasChanges = isDirty || previewImage;
 
   // Reset form when user changes
@@ -80,7 +76,6 @@ export default function UpdateUserForm({ initialUser }: { initialUser: any }) {
 
       if (!res.success) throw new Error(res.message);
 
-      // Update context
       if (res.data) {
         updateUserData(res.data);
         await refreshUser();
@@ -90,7 +85,6 @@ export default function UpdateUserForm({ initialUser }: { initialUser: any }) {
       setPreviewImage(null);
       setSuccess("Profile updated successfully!");
 
-      // Play success animation
       setTimeout(() => {
         setSuccess(null);
       }, 3000);
@@ -102,7 +96,6 @@ export default function UpdateUserForm({ initialUser }: { initialUser: any }) {
         phoneNumber: res.data?.phoneNumber || data.phoneNumber,
       });
 
-      // Clear file input
       if (fileInputRef.current) {
         fileInputRef.current.value = "";
       }
@@ -120,7 +113,7 @@ export default function UpdateUserForm({ initialUser }: { initialUser: any }) {
     if (user?.imageUrl) return user.imageUrl;
 
     if (user?.profilePicture) {
-      return `${process.env.NEXT_PUBLIC_API_BASE_URL}/uploads/profile/${user.profilePicture}`;
+      return `${process.env.NEXT_PUBLIC_API_BASE_URL?.replace("/api", "")}/uploads/profile/${user.profilePicture}`;
     }
 
     return null;
