@@ -10,14 +10,14 @@ import {
   HomeIcon as HomeOutline,
   BuildingOffice2Icon as BuildingOfficeOutline,
   CalendarDaysIcon as CalendarDaysOutline,
-  ClockIcon as ClockOutline,
+  UsersIcon as UsersOutline,
   UserIcon as UserOutline,
 } from "@heroicons/react/24/outline";
 import {
   HomeIcon as HomeSolid,
   BuildingOffice2Icon as BuildingOfficeSoild,
   CalendarDaysIcon as CalendarDaysSolid,
-  ClockIcon as ClockSolid,
+  UsersIcon as UsersSolid,
   UserIcon as UserSolid,
 } from "@heroicons/react/24/solid";
 import ThemeSwitch from "./ThemeSwitch";
@@ -29,28 +29,28 @@ import logo from "@/app/assets/images/quickpalo_logo.png";
 
 const NavLinks = [
   {
-    href: "/user/dashboard",
+    href: "/admin/dashboard",
     label: "Dashboard",
     filledIcon: HomeSolid,
     icon: HomeOutline,
   },
   {
-    href: "/user/calendar",
+    href: "/admin/calendar",
     label: "Calendar",
     filledIcon: CalendarDaysSolid,
     icon: CalendarDaysOutline,
   },
   {
-    href: "/user/organizations",
+    href: "/admin/organizations",
     label: "Organizations",
     filledIcon: BuildingOfficeSoild,
     icon: BuildingOfficeOutline,
   },
   {
-    href: "/user/history",
-    label: "History",
-    filledIcon: ClockSolid,
-    icon: ClockOutline,
+    href: "/admin/users",
+    label: "Users",
+    filledIcon: UsersSolid,
+    icon: UsersOutline,
   },
   {
     href: "/user/profile",

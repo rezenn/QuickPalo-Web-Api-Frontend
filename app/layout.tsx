@@ -15,6 +15,10 @@ const poppins = localFont({
 export const metadata: Metadata = {
   title: "QuickPalo",
   description: "Booking means efficiency",
+  icons: {
+    icon: "/icons/icon.png",
+    apple: "/icons/icon.png",
+  },
 };
 
 export default function RootLayout({

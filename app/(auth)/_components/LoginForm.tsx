@@ -15,7 +15,7 @@ import { useAuth } from "@/context/authContext";
 export default function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
-  const { checkAuth } = useAuth();
+  const { checkAuth, setUser } = useAuth();
 
   const {
     register,
@@ -37,7 +37,21 @@ export default function LoginForm() {
 
       toast.success("Successfully logged in!");
       await checkAuth();
-      router.push("/user/dashboard");
+
+      const userData = response.data;
+
+      switch (userData.role) {
+        case "admin":
+          router.push("/admin/dashboard");
+          break;
+        case "organization":
+          router.push("/organization/dashboard");
+          break;
+        case "user":
+        default:
+          router.push("/user/dashboard");
+          break;
+      }
     } catch (error: any) {
       toast.error(error.message || "Login failed!");
     }
