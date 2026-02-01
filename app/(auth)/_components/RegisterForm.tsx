@@ -3,7 +3,7 @@
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { RegistrationData, registrationSchema } from "../schema";
+import { RegistrationData, registrationSchema } from "../../schema/schema";
 import Link from "next/link";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { PhoneInput } from "react-international-phone";

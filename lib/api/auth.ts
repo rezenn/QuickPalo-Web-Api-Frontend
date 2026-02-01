@@ -65,3 +65,22 @@ export const updateProfile = async (profileData: any) => {
     );
   }
 };
+
+export const updateUserAsAdmin = async (userId: string, userData: FormData) => {
+  try {
+    const response = await axiosInstance.put(
+      API.ADMIN.AUTH.UPDATEUSERASADMIN,
+      userData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      },
+    );
+    return response.data;
+  } catch (err: Error | any) {
+    throw new Error(
+      err.response?.data?.message || err.message || "Failed to update user",
+    );
+  }
+};

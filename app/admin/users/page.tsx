@@ -9,6 +9,7 @@ import {
   Edit,
   Trash2,
   Plus,
+  User as UserIcon,
   Users as UsersIcon,
 } from "lucide-react";
 import Image from "next/image";
@@ -111,7 +112,7 @@ export default function AdminUsersPage() {
       return `${process.env.NEXT_PUBLIC_API_BASE_URL?.replace("/api", "")}/uploads/profile/${user.profilePicture}`;
     }
 
-    return profile.src;
+    return null;
   };
   if (loading)
     return (
@@ -203,9 +204,9 @@ export default function AdminUsersPage() {
             <table className="w-full">
               <thead className="bg-gray-200 border-b border-gray-200">
                 <tr>
-                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase whitespace-nowrap">
+                  {/* <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase whitespace-nowrap">
                     S.N
-                  </th>
+                  </th> */}
                   <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase whitespace-nowrap">
                     User
                   </th>
@@ -219,6 +220,9 @@ export default function AdminUsersPage() {
                     Registered Date
                   </th>
                   <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase whitespace-nowrap">
+                    Last Updated Date
+                  </th>
+                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase whitespace-nowrap">
                     Actions
                   </th>
                 </tr>
@@ -228,7 +232,7 @@ export default function AdminUsersPage() {
                   <tr>
                     <td
                       colSpan={6}
-                      className="px-6 py-8 text-center text-gray-500"
+                      className="px-9 py-8 text-center text-gray-500"
                     >
                       No users found
                     </td>
@@ -239,30 +243,31 @@ export default function AdminUsersPage() {
                       key={user._id}
                       className="hover:bg-gray-100 transition-colors"
                     >
-                      <td className="px-6 py-4 align-middle whitespace-nowrap">
-                        <div className="flex items-center text-sm">
-                          <span className="text-gray-900 truncate max-w-50">
-                            {index + 1}
-                          </span>
-                        </div>
-                      </td>
-
                       <td className="px-6 py-4 align-middle">
-                        <div className="flex items-center gap-4">
-                          <div className="h-20 w-20 shrink-0 relative rounded-full overflow-hidden  ">
-                            <Image
-                              src={getProfileImageUrl(user)}
-                              alt={user.fullName}
-                              fill
-                              className="object-cover"
-                              unoptimized
-                              priority
-                              onError={(e) => {
-                                e.currentTarget.src = profile.src;
-                              }}
-                            />
+                        <div className="flex items-center gap-2">
+                          <div className="h-12 w-12 shrink-0 relative rounded-full overflow-hidden  ">
+                            {getProfileImageUrl(user) ? (
+                              <Image
+                                src={getProfileImageUrl(user)}
+                                alt={user.fullName}
+                                fill
+                                className="object-cover"
+                                unoptimized
+                                priority
+                                onError={(e) => {
+                                  e.currentTarget.src = "none";
+                                }}
+                              />
+                            ) : (
+                              <div className="w-full h-full flex items-center justify-center bg-linear-to-br from-purple-100 to-pink-100  rounded-full border-2 border-fuchsia-400">
+                                <UserIcon
+                                  className="text-purple-400"
+                                  size={32}
+                                />
+                              </div>
+                            )}
                           </div>
-                          <div className="ml-3">
+                          <div className="gap-1">
                             <div
                               className="text-sm font-semibold text-gray-900"
                               style={{ textTransform: "capitalize" }}
@@ -270,7 +275,7 @@ export default function AdminUsersPage() {
                               {user.fullName}
                             </div>
                             <div className="text-xs text-gray-500">
-                              ID: {user._id.substring(0, 15)}...
+                              ID: {user._id.substring(0, 12)}...
                             </div>
                           </div>
                         </div>
@@ -279,7 +284,7 @@ export default function AdminUsersPage() {
                       <td className="px-6 py-4 align-middle whitespace-nowrap">
                         <div className="flex items-center text-sm">
                           <Mail className="h-4 w-4 mr-2 text-gray-400 shrink-0" />
-                          <span className="text-gray-900 truncate max-w-50">
+                          <span className="text-gray-900 truncate w-30">
                             {user.email}
                           </span>
                         </div>
@@ -300,10 +305,16 @@ export default function AdminUsersPage() {
                           {formatDate(user.createdAt)}
                         </div>
                       </td>
+                      <td className="px-6 py-4 align-middle whitespace-nowrap">
+                        <div className="flex items-center text-sm text-gray-900">
+                          <Calendar className="h-4 w-4 mr-2 text-gray-400 shrink-0" />
+                          {formatDate(user.updatedAt)}
+                        </div>
+                      </td>
 
                       <td className="px-6 py-4 align-middle whitespace-nowrap">
                         <div className="flex items-center space-x-2">
-                          <Link href={`/admin/users/edit/${user._id}`}>
+                          <Link href={`/admin/users/edit-user/${user._id}`}>
                             <button
                               className="p-2 text-blue-600 hover:text-blue-900 hover:bg-blue-50 rounded-lg transition-colors"
                               title="Edit user"

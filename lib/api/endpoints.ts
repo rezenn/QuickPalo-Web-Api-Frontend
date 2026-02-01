@@ -8,6 +8,7 @@ export const API = {
   ADMIN: {
     AUTH: {
       GETALLUSERS: "/auth/users",
+      UPDATEUSERASADMIN: "/auth/:id",
     },
   },
 };
