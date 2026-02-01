@@ -30,7 +30,20 @@ export const getUser = async () => {
     const response = await axiosInstance.get(API.AUTH.GETUSER);
     return response.data;
   } catch (err: Error | any) {
-    throw new Error(err.response?.data?.message || err.message || "me failed");
+    throw new Error(
+      err.response?.data?.message || err.message || "Failed to fetch user",
+    );
+  }
+};
+
+export const getAllUsers = async () => {
+  try {
+    const response = await axiosInstance.get(API.ADMIN.AUTH.GETALLUSERS);
+    return response.data;
+  } catch (err: Error | any) {
+    throw new Error(
+      err.response?.data?.message || err.message || "Failed to fetch users",
+    );
   }
 };
 

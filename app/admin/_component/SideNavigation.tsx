@@ -53,7 +53,7 @@ const NavLinks = [
     icon: UsersOutline,
   },
   {
-    href: "/user/profile",
+    href: "/admin/profile",
     label: "Profile",
     filledIcon: UserSolid,
     icon: UserOutline,

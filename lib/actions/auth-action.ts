@@ -1,6 +1,12 @@
 "use server";
 import { revalidatePath } from "next/cache";
-import { register, login, updateProfile, getUser } from "../api/auth";
+import {
+  register,
+  login,
+  updateProfile,
+  getUser,
+  getAllUsers,
+} from "../api/auth";
 import { setAuthToken, setUserData } from "../cookie";
 
 export async function handleRegister(resgistrationData: any) {
@@ -52,6 +58,26 @@ export async function handleGetUser() {
     return {
       success: false,
       message: result.message || "user data fetch failed",
+    };
+  } catch (err: Error | any) {
+    return { success: false, message: err.message };
+  }
+}
+
+export async function handleGetAllUsers() {
+  try {
+    const result = await getAllUsers();
+    if (result.success) {
+      return {
+        success: true,
+        message: "all user data fetched successful",
+        data: result.data,
+      };
+    }
+    return {
+      success: false,
+      message: result.message || "all user data fetch failed",
+      data: result.data,
     };
   } catch (err: Error | any) {
     return { success: false, message: err.message };

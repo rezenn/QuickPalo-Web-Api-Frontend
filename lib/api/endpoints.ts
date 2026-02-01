@@ -5,4 +5,9 @@ export const API = {
     GETUSER: "/auth/get-user",
     UPDATEPROFILE: "/auth/update-user",
   },
+  ADMIN: {
+    AUTH: {
+      GETALLUSERS: "/auth/users",
+    },
+  },
 };
