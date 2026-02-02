@@ -33,11 +33,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     try {
       const token = await getAuthToken();
       const user = await getUserData();
-      console.log("DEBUG - checkAuth loaded user:", {
-        hasUser: !!user,
-        profilePicture: user?.profilePicture,
-        keys: user ? Object.keys(user) : [],
-      });
+
       setUser(user);
       setIsAuthenticated(!!token);
     } catch (err) {
@@ -52,23 +48,16 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const refreshUser = async () => {
     try {
       const user = await getUserData();
-      console.log("DEBUG - refreshUser loaded:", {
-        profilePicture: user?.profilePicture,
-        imageUrl: user?.imageUrl,
-      });
+
       setUser(user);
       return user;
     } catch (err) {
-      console.error("DEBUG - refreshUser error:", err);
+      console.error("error:", err);
       return null;
     }
   };
 
   const updateUserData = (newData: any) => {
-    console.log("DEBUG - updateUserData called:", {
-      profilePicture: newData?.profilePicture,
-      imageUrl: newData?.imageUrl,
-    });
     setUser(newData);
   };
 

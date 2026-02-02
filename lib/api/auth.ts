@@ -4,7 +4,7 @@ import { API } from "./endpoints";
 export const register = async (registerData: any) => {
   try {
     const response = await axiosInstance.post(API.AUTH.REGISTER, registerData);
-    console.log(axiosInstance.defaults.baseURL + "/api/auth/register");
+    // console.log(axiosInstance.defaults.baseURL + "/api/auth/register");
 
     return response.data;
   } catch (error: Error | any) {
@@ -46,6 +46,16 @@ export const getAllUsers = async () => {
     );
   }
 };
+export const getOneUser = async (userId: string) => {
+  try {
+    const response = await axiosInstance.get(`auth/${userId}`);
+    return response.data;
+  } catch (err: Error | any) {
+    throw new Error(
+      err.response?.data?.message || err.message || "Failed to fetch user",
+    );
+  }
+};
 
 export const updateProfile = async (profileData: any) => {
   try {
@@ -62,6 +72,25 @@ export const updateProfile = async (profileData: any) => {
   } catch (err: Error | any) {
     throw new Error(
       err.response?.data?.message || err.message || "update profile not found ",
+    );
+  }
+};
+
+export const createUser = async (profileData: any) => {
+  try {
+    const response = await axiosInstance.post(
+      API.ADMIN.AUTH.CREATEUSER,
+      profileData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      },
+    );
+    return response.data;
+  } catch (err: Error | any) {
+    throw new Error(
+      err.response?.data?.message || err.message || "new user not created",
     );
   }
 };

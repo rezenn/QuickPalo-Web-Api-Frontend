@@ -79,7 +79,7 @@ export default function Header() {
 
             <div className="relative">
               <div className="relative h-12 w-12 sm:h-14 sm:w-14 rounded-full overflow-hidden border-2 border-fuchsia-400 hover:border-purple-600 transition-colors">
-                <Link href="/user/profile">
+                <Link href="/admin/profile">
                   {profileImageUrl && !imageError ? (
                     <Image
                       src={profileImageUrl}

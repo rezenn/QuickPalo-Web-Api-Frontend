@@ -7,7 +7,9 @@ export const API = {
   },
   ADMIN: {
     AUTH: {
-      GETALLUSERS: "/auth/users",
+      GETALLUSERS: "/admin/auth/users",
+      CREATEUSER: "/admin/auth/create-user",
+      GETUSERBYID: "/auth/:id",
       UPDATEUSERASADMIN: "/auth/:id",
     },
   },

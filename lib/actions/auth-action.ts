@@ -6,6 +6,8 @@ import {
   updateProfile,
   getUser,
   getAllUsers,
+  getOneUser,
+  createUser,
 } from "../api/auth";
 import { setAuthToken, setUserData } from "../cookie";
 
@@ -83,17 +85,29 @@ export async function handleGetAllUsers() {
     return { success: false, message: err.message };
   }
 }
+export async function handleGetOneUser(userId: string) {
+  try {
+    const result = await getOneUser(userId);
+    if (result.success) {
+      return {
+        success: true,
+        message: "user data fetched successful",
+        data: result.data,
+      };
+    }
+    return {
+      success: false,
+      message: result.message || "user data fetch failed",
+      data: result.data,
+    };
+  } catch (err: Error | any) {
+    return { success: false, message: err.message };
+  }
+}
 
 export async function handleUpdateProfile(profileData: any) {
   try {
     const result = await updateProfile(profileData);
-
-    console.log("DEBUG - Raw update result:", {
-      success: result.success,
-      dataStructure: result.data ? "Exists" : "Missing",
-      profilePictureField: result.data?.profilePicture,
-      imageUrlField: result.data?.imageUrl,
-    });
 
     if (result.success) {
       const userData = {
@@ -107,12 +121,6 @@ export async function handleUpdateProfile(profileData: any) {
         createdAt: result.data.createdAt,
         updatedAt: result.data.updatedAt,
       };
-
-      console.log("DEBUG - User data to save to cookie:", {
-        profilePicture: userData.profilePicture,
-        imageUrl: userData.imageUrl,
-        keys: Object.keys(userData),
-      });
 
       // Store in cookies
       await setUserData(userData);
@@ -135,5 +143,42 @@ export async function handleUpdateProfile(profileData: any) {
   } catch (error: Error | any) {
     console.error("Update profile error:", error);
     return { success: false, message: error.message };
+  }
+}
+
+export async function handleCreateUser(userData: FormData) {
+  try {
+    const fullName = userData.get("fullName") as string;
+    const email = userData.get("email") as string;
+    const phoneNumber = userData.get("phoneNumber") as string;
+    const password = userData.get("password") as string;
+    const confirmPassword = userData.get("confirmPassword") as string;
+
+    if (!fullName || !email || !phoneNumber || !password || !confirmPassword) {
+      return {
+        success: false,
+        message: "All fields are required",
+      };
+    }
+    const result = await createUser(userData);
+
+    if (result.success) {
+      revalidatePath("admin/users");
+      return {
+        success: true,
+        message: "User created successfully",
+        data: result.data,
+      };
+    }
+    return {
+      success: false,
+      message: result.message || "Failed to create user",
+    };
+  } catch (error: Error | any) {
+    console.error("Create user error:", error);
+    return {
+      success: false,
+      message: error.message || "An error occurred while creating user",
+    };
   }
 }

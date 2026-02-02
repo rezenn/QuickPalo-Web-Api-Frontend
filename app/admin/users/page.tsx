@@ -9,6 +9,7 @@ import {
   Edit,
   Trash2,
   Plus,
+  TrendingUpIcon,
   User as UserIcon,
   Users as UsersIcon,
 } from "lucide-react";
@@ -18,6 +19,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { getAllUsers } from "@/lib/api/auth";
 import { format } from "date-fns";
+import { useRouter } from "next/navigation";
 
 export default function AdminUsersPage() {
   const { user, loading } = useAuth();
@@ -28,6 +30,8 @@ export default function AdminUsersPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [totalUsers, setTotalUsers] = useState(0);
   const [newUsersThisMonth, setNewUsersThisMonth] = useState(0);
+  const [newUsersLastMonth, setNewUsersLastMonth] = useState(0);
+  const router = useRouter();
 
   useEffect(() => {
     fetchUsers();
@@ -44,14 +48,35 @@ export default function AdminUsersPage() {
         );
         setUsers(normalUsers);
         setFilteredUsers(normalUsers);
-
         setTotalUsers(normalUsers.length);
-        const thisMonth = new Date().getMonth();
+
+        const now = new Date();
+        const currentYear = now.getFullYear();
+        const currentMonth = new Date().getMonth();
+
         const newThisMonth = normalUsers.filter((user: any) => {
           const userDate = new Date(user.createdAt);
-          return userDate.getMonth() === thisMonth;
+          const userYear = userDate.getFullYear();
+          const userMonth = userDate.getMonth();
+
+          return userYear === currentYear && userMonth === currentMonth;
         }).length;
         setNewUsersThisMonth(newThisMonth);
+
+        const lastMonthDate = new Date();
+        lastMonthDate.setMonth(lastMonthDate.getMonth() - 1);
+        const lastMonthYear = lastMonthDate.getFullYear();
+        const lastMonth = lastMonthDate.getMonth();
+
+        const newLastMonth = normalUsers.filter((user: any) => {
+          const userDate = new Date(user.createdAt);
+          const userYear = userDate.getFullYear();
+          const userMonth = userDate.getMonth();
+
+          return userYear === lastMonthYear && userMonth === lastMonth;
+        }).length;
+
+        setNewUsersLastMonth(newLastMonth);
       }
     } catch (error) {
       console.error("Error fetching users:", error);
@@ -66,7 +91,7 @@ export default function AdminUsersPage() {
     }
 
     try {
-      // Add your delete API call here
+      // Add delete API
       const updatedUsers = users.filter((user) => user._id !== userId);
       setUsers(updatedUsers);
       setFilteredUsers(updatedUsers);
@@ -114,16 +139,6 @@ export default function AdminUsersPage() {
 
     return null;
   };
-  if (loading)
-    return (
-      <div>
-        <div className="w-full gap-x-2 flex justify-center items-center">
-          <div className="w-5 bg-[#d991c2] h-5 rounded-full animate-bounce"></div>
-          <div className="w-5 h-5 bg-[#9869b8] rounded-full animate-bounce"></div>
-          <div className="w-5 h-5 bg-[#6756cc] rounded-full animate-bounce"></div>
-        </div>
-      </div>
-    );
 
   return (
     <div className="space-y-6 p-6">
@@ -133,7 +148,10 @@ export default function AdminUsersPage() {
           <h1 className="text-2xl font-bold text-gray-900">Users Management</h1>
           <p className="text-gray-600">Manage all registered users</p>
         </div>
-        <button className="px-4 py-2 bg-gray-100 rounded-lg hover:bg-gray-200 flex items-center gap-2">
+        <button
+          className="px-4 py-2 rounded-lg flex items-center gap-2 bg-fuchsia-200/50 hover:bg-fuchsia-200 text-gray-900 font-medium transition-colors duration-200 shadow-sm hover:shadow border border-fuchsia-400/40"
+          onClick={() => router.push("/admin/users/create-user")}
+        >
           <Plus size={18} />
           Add new user
         </button>
@@ -166,6 +184,42 @@ export default function AdminUsersPage() {
             </div>
             <div className="bg-purple-600 p-3 rounded-full">
               <UsersIcon className="h-6 w-6 text-white" />
+            </div>
+          </div>
+        </div>
+        <div className="bg-linear-to-br from-fuchsia-50 to-fuchsia-100 border border-fuchsia-200 rounded-xl p-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm font-medium text-fuchsia-700">
+                New Last Month
+              </p>
+              <p className="text-3xl font-bold text-fuchsia-900 mt-2">
+                {newUsersLastMonth}
+              </p>
+            </div>
+            <div className="bg-fuchsia-600 p-3 rounded-full">
+              <UsersIcon className="h-6 w-6 text-white" />
+            </div>
+          </div>
+        </div>
+        <div
+          className={`${newUsersThisMonth > newUsersLastMonth ? "bg-linear-to-br from-green-50 to-green-100 border-green-200 text-green-700" : "bg-linear-to-br from-red-50 to-red-100 border-red-200 text-red-700"} border  rounded-xl p-6`}
+        >
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm font-medium">Growth Rate</p>
+              <p
+                className={`text-2xl font-bold ${newUsersThisMonth > newUsersLastMonth ? "text-green-600" : "text-red-600"}`}
+              >
+                {newUsersLastMonth > 0
+                  ? `${Math.round(((newUsersThisMonth - newUsersLastMonth) / newUsersLastMonth) * 100)}%`
+                  : newUsersThisMonth > 0
+                    ? "100%"
+                    : "0%"}
+              </p>
+            </div>
+            <div className="bg-teal-600 p-3 rounded-full">
+              <TrendingUpIcon className="h-6 w-6 text-white" />
             </div>
           </div>
         </div>
@@ -314,14 +368,15 @@ export default function AdminUsersPage() {
 
                       <td className="px-6 py-4 align-middle whitespace-nowrap">
                         <div className="flex items-center space-x-2">
-                          <Link href={`/admin/users/edit-user/${user._id}`}>
-                            <button
-                              className="p-2 text-blue-600 hover:text-blue-900 hover:bg-blue-50 rounded-lg transition-colors"
-                              title="Edit user"
-                            >
-                              <Edit size={18} />
-                            </button>
-                          </Link>
+                          <button
+                            className="p-2 text-blue-600 hover:text-blue-900 hover:bg-blue-50 rounded-lg transition-colors"
+                            title="Edit user"
+                            onClick={() =>
+                              router.push(`/admin/users/edit-user/${user._id}`)
+                            }
+                          >
+                            <Edit size={18} />
+                          </button>
                           <button
                             className="p-2 text-red-600 hover:text-red-900 hover:bg-red-50 rounded-lg transition-colors"
                             title="Delete user"

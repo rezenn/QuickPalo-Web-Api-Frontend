@@ -16,7 +16,10 @@ import {
 } from "lucide-react";
 
 import { handleUpdateProfile } from "@/lib/actions/auth-action";
-import { UpdateUserData, updateUserSchema } from "../update-user.schema";
+import {
+  UpdateUserData,
+  updateUserSchema,
+} from "../../schema/update-user.schema";
 import { useAuth } from "@/context/authContext";
 import Link from "next/link";
 
