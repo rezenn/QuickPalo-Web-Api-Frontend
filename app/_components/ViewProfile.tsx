@@ -12,6 +12,19 @@ export default function ViewProfile() {
   const [imageError, setImageError] = useState(false);
   const [hover, setHover] = useState(false);
 
+  const getRoleBasedRoute = (baseRoute: string, role?: string) => {
+    if (!role) return `/user${baseRoute}`;
+    switch (role.toLocaleLowerCase()) {
+      case "admin":
+        return `/admin${baseRoute}`;
+      case "organization":
+        return `/organization${baseRoute}`;
+      case "user":
+      default:
+        return `/user${baseRoute}`;
+    }
+  };
+
   useEffect(() => {
     setImageError(false);
   }, [user]);
@@ -62,7 +75,9 @@ export default function ViewProfile() {
         <div className="relative h-48 bg-[linear-gradient(to_left,#BDDCFF_0%,#BCC2FB_13%,#BA7BF0_50%,#B846E8_78%,#B61BE1_100%)]">
           <div className="absolute inset-0 bg-black/10"></div>
           <div className="absolute bottom-0 left-8 transform translate-y-1/2">
-            <Link href="/user/profile/update-profile">
+            <Link
+              href={getRoleBasedRoute("/profile/update-profile", user?.role)}
+            >
               <div
                 className="relative group"
                 onMouseEnter={() => setHover(true)}
@@ -216,7 +231,12 @@ export default function ViewProfile() {
                 </p>
 
                 <div className="space-y-4">
-                  <Link href="/user/profile/update-profile">
+                  <Link
+                    href={getRoleBasedRoute(
+                      "/profile/update-profile",
+                      user?.role,
+                    )}
+                  >
                     <button className="w-full bg-[#B61BE1] text-white font-semibold py-3 px-4 rounded-xl flex items-center justify-center gap-2 transition-all duration-300 transform hover:-translate-y-0.5 hover:shadow-lg">
                       <Edit3 size={18} />
                       Edit Profile

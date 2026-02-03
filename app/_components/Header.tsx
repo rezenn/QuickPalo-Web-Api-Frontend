@@ -1,7 +1,6 @@
 "use client";
 
 import Image from "next/image";
-import logo from "@/app/assets/images/quickpalo_logo.png";
 import { Search, BellDot, User } from "lucide-react";
 import { useAuth } from "@/context/authContext";
 import Link from "next/link";
@@ -10,6 +9,19 @@ import { useEffect, useState } from "react";
 export default function Header() {
   const { user, loading } = useAuth();
   const [imageError, setImageError] = useState(false);
+
+  const getRoleBasedRoute = (baseRoute: string, role?: string) => {
+    if (!role) return `/user${baseRoute}`;
+    switch (role.toLocaleLowerCase()) {
+      case "admin":
+        return `/admin${baseRoute}`;
+      case "organization":
+        return `/organization${baseRoute}`;
+      case "user":
+      default:
+        return `/user${baseRoute}`;
+    }
+  };
 
   useEffect(() => {
     setImageError(false);
@@ -38,14 +50,14 @@ export default function Header() {
       <div className="px-3 sm:px-4 py-3 sm:py-4">
         <header className="flex items-center justify-between gap-2 sm:gap-4">
           {/* Left Section - Greeting and Name */}
-          <div className="flex items-center gap-2 min-w-0 flex-shrink">
+          <div className="flex items-center gap-2 min-w-0 shrink">
             <div className="flex flex-col leading-tight min-w-0">
               <span className="text-fuchsia-700 text-md sm:text-sm md:text-lg whitespace-nowrap">
                 Hello,
               </span>
               <div className="flex items-center gap-1 min-w-0">
                 <span
-                  className="font-extrabold text-lg sm:text-base md:text-2xl truncate min-w-0 max-w-[200px]"
+                  className="font-extrabold text-lg sm:text-base md:text-2xl truncate min-w-0 max-w-50"
                   style={{ textTransform: "capitalize" }}
                   title={user?.fullName}
                 >
@@ -56,7 +68,7 @@ export default function Header() {
           </div>
 
           {/* Middle Section - Search */}
-          <div className="flex-1 min-w-0 max-w-[200px] sm:max-w-[300px] md:max-w-md lg:max-w-2xl mx-2">
+          <div className="flex-1 min-w-0 max-w-50 sm:max-w-75 md:max-w-md lg:max-w-2xl mx-2">
             <div className="relative">
               <input
                 type="search"
@@ -73,14 +85,17 @@ export default function Header() {
           </div>
 
           {/* Right Section - Icons */}
-          <div className="flex items-center gap-2 sm:gap-4 flex-shrink-0">
+          <div className="flex items-center gap-2 sm:gap-4 shrink-0">
             <button className="text-gray-600 hover:text-purple-700 transition p-1">
               <BellDot size={20} className="sm:w-6 sm:h-6" />
             </button>
 
             <div className="relative">
               <div className="relative h-12 w-12 sm:h-14 sm:w-14 rounded-full overflow-hidden border-2 border-fuchsia-400 hover:border-purple-600 transition-colors">
-                <Link href="/user/profile">
+                <Link
+                  // href="/admin/profile"
+                  href={getRoleBasedRoute("/profile", user?.role)}
+                >
                   {profileImageUrl && !imageError ? (
                     <Image
                       src={profileImageUrl}
@@ -92,7 +107,7 @@ export default function Header() {
                       sizes="(max-width: 640px) 36px, 48px"
                     />
                   ) : (
-                    <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-purple-100 to-pink-100">
+                    <div className="w-full h-full flex items-center justify-center bg-linear-to-br from-purple-100 to-pink-100">
                       <User className="text-purple-500" size={18} />
                     </div>
                   )}

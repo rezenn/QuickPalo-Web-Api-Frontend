@@ -16,10 +16,7 @@ import {
 } from "lucide-react";
 
 import { handleUpdateProfile } from "@/lib/actions/auth-action";
-import {
-  UpdateUserData,
-  updateUserSchema,
-} from "../../schema/update-user.schema";
+import { UpdateUserData, updateUserSchema } from "../schema/update-user.schema";
 import { useAuth } from "@/context/authContext";
 import Link from "next/link";
 
@@ -49,6 +46,19 @@ export default function UpdateUserForm({ initialUser }: { initialUser: any }) {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const hasChanges = isDirty || previewImage;
+
+  const getRoleBasedRoute = (baseRoute: string, role?: string) => {
+    if (!role) return `/user${baseRoute}`;
+    switch (role.toLocaleLowerCase()) {
+      case "admin":
+        return `/admin${baseRoute}`;
+      case "organization":
+        return `/organization${baseRoute}`;
+      case "user":
+      default:
+        return `/user${baseRoute}`;
+    }
+  };
 
   // Reset form when user changes
   useEffect(() => {
@@ -133,13 +143,14 @@ export default function UpdateUserForm({ initialUser }: { initialUser: any }) {
       {" "}
       <Link
         className=" w-20 h-10 px-2 flex flex-row justify-center items-center gap-2 rounded-2xl bg-fuchsia-100 "
-        href="/user/profile"
+        // href="/user/profile"
+        href={getRoleBasedRoute("/profile", user?.role)}
       >
         <ArrowLeft />
         <p>Back</p>
       </Link>
       <div className="text-center mb-8">
-        <h1 className="text-3xl font-bold bg-gradient-to-r from-purple-600 to-pink-500 bg-clip-text text-transparent">
+        <h1 className="text-3xl font-bold bg-linear-to-r from-purple-600 to-pink-500 bg-clip-text text-transparent">
           Update Your Profile
         </h1>
         <p className="text-gray-600 mt-2">
@@ -147,11 +158,11 @@ export default function UpdateUserForm({ initialUser }: { initialUser: any }) {
         </p>
       </div>
       {/* Main Card */}
-      <div className="bg-gradient-to-br from-white via-white to-purple-50 shadow-2xl rounded-3xl overflow-hidden border border-purple-100">
+      <div className="bg-linear-to-br from-white via-white to-purple-50 shadow-2xl rounded-3xl overflow-hidden border border-purple-100">
         <div className="px-8 pt-8">
           {success && (
             <div className="mb-6 animate-in slide-in-from-top duration-500">
-              <div className="flex items-center gap-3 bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 rounded-2xl p-4">
+              <div className="flex items-center gap-3 bg-linear-to-r from-green-50 to-emerald-50 border border-green-200 rounded-2xl p-4">
                 <div className="p-2 bg-green-100 rounded-full">
                   <CheckCircle className="text-green-600" size={20} />
                 </div>
@@ -167,7 +178,7 @@ export default function UpdateUserForm({ initialUser }: { initialUser: any }) {
 
           {error && (
             <div className="mb-6 animate-in slide-in-from-top duration-500">
-              <div className="flex items-center gap-3 bg-gradient-to-r from-red-50 to-rose-50 border border-red-200 rounded-2xl p-4">
+              <div className="flex items-center gap-3 bg-linear-to-r from-red-50 to-rose-50 border border-red-200 rounded-2xl p-4">
                 <div className="p-2 bg-red-100 rounded-full">
                   <AlertCircle className="text-red-600" size={20} />
                 </div>
@@ -187,7 +198,7 @@ export default function UpdateUserForm({ initialUser }: { initialUser: any }) {
               onMouseEnter={() => setImageHover(true)}
               onMouseLeave={() => setImageHover(false)}
             >
-              <div className="relative h-48 w-48 rounded-full border-4 border-fuchsia-400 shadow-2xl overflow-hidden bg-gradient-to-br from-purple-100 to-pink-100">
+              <div className="relative h-48 w-48 rounded-full border-4 border-fuchsia-400 shadow-2xl overflow-hidden bg-linear-to-br from-purple-100 to-pink-100">
                 {profileImageUrl ? (
                   <Image
                     src={profileImageUrl}
@@ -268,7 +279,7 @@ export default function UpdateUserForm({ initialUser }: { initialUser: any }) {
               <div className="relative">
                 <input
                   {...register("fullName")}
-                  className="w-full bg-gradient-to-r from-gray-50 to-white border-2 border-gray-200 rounded-xl px-4 py-3.5 focus:border-purple-500 focus:ring-4 focus:ring-purple-100 outline-none transition-all duration-300 group-hover:border-purple-300"
+                  className="w-full bg-linear-to-r from-gray-50 to-white border-2 border-gray-200 rounded-xl px-4 py-3.5 focus:border-purple-500 focus:ring-4 focus:ring-purple-100 outline-none transition-all duration-300 group-hover:border-purple-300"
                   placeholder="Enter your full name"
                 />
               </div>
@@ -289,7 +300,7 @@ export default function UpdateUserForm({ initialUser }: { initialUser: any }) {
                 <input
                   {...register("email")}
                   disabled
-                  className="w-full bg-gradient-to-r from-gray-50 to-gray-100 border-2 border-gray-200 rounded-xl px-4 py-3.5 text-gray-500 cursor-not-allowed"
+                  className="w-full bg-linear-to-r from-gray-50 to-gray-100 border-2 border-gray-200 rounded-xl px-4 py-3.5 text-gray-500 cursor-not-allowed"
                   placeholder="Your email address"
                 />
                 <div className="absolute right-3 top-1/2 transform -translate-y-1/2"></div>
@@ -308,7 +319,7 @@ export default function UpdateUserForm({ initialUser }: { initialUser: any }) {
               <div className="relative">
                 <input
                   {...register("phoneNumber")}
-                  className="w-full bg-gradient-to-r from-gray-50 to-white border-2 border-gray-200 rounded-xl px-4 py-3.5 focus:border-purple-500 focus:ring-4 focus:ring-purple-100 outline-none transition-all duration-300 group-hover:border-purple-300"
+                  className="w-full bg-linear-to-r from-gray-50 to-white border-2 border-gray-200 rounded-xl px-4 py-3.5 focus:border-purple-500 focus:ring-4 focus:ring-purple-100 outline-none transition-all duration-300 group-hover:border-purple-300"
                   placeholder="Enter your phone number"
                 />
               </div>
@@ -345,7 +356,7 @@ export default function UpdateUserForm({ initialUser }: { initialUser: any }) {
           </form>
         </div>
 
-        <div className="px-8 py-6 bg-gradient-to-r from-gray-50 to-white border-t border-gray-100">
+        <div className="px-8 py-6 bg-linear-to-r from-gray-50 to-white border-t border-gray-100">
           <div className="flex items-center justify-between text-sm">
             <div className="text-gray-600">
               <span className="font-medium">Last updated:</span>{" "}

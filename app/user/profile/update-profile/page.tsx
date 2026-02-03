@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import { handleGetUser } from "@/lib/actions/auth-action";
-import UpdateProfile from "../../_component/UpdateProfile";
+import UpdateProfile from "../../../_components/UpdateProfile";
 
 export default async function Profile() {
   const result = await handleGetUser();

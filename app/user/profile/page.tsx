@@ -1,4 +1,4 @@
-import ViewProfile from "../_component/ViewProfile";
+import ViewProfile from "@/app/_components/ViewProfile";
 
 export default async function Profile() {
   return (

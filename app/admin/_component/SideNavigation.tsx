@@ -20,7 +20,7 @@ import {
   UsersIcon as UsersSolid,
   UserIcon as UserSolid,
 } from "@heroicons/react/24/solid";
-import ThemeSwitch from "./ThemeSwitch";
+import ThemeSwitch from "@/app/_components/ThemeSwitch";
 import { LogOutIcon, Menu, AlertTriangle } from "lucide-react";
 import { useAuth } from "@/context/authContext";
 import { toast, Toaster } from "sonner";
@@ -139,8 +139,8 @@ export default function SideNavigation() {
                 href={link.href}
                 className={`flex items-center gap-2 px-3 py-4 rounded-lg text-md font-regular transition-all duration-200 ${
                   isActive(link.href)
-                    ? "bg-gradient-to-r from-purple-100 to-pink-50 text-purple-700 border-l-4 border-purple-500 shadow-sm"
-                    : "hover:text-purple-700 hover:bg-gradient-to-r hover:from-purple-50 hover:to-pink-50"
+                    ? "bg-linear-to-r from-purple-100 to-pink-50 text-purple-700 border-l-4 border-purple-500 shadow-sm"
+                    : "hover:text-purple-700 hover:bg-linear-to-r hover:from-purple-50 hover:to-pink-50"
                 }`}
                 onClick={() => setIsOpen(false)}
               >
@@ -161,7 +161,7 @@ export default function SideNavigation() {
           {/* Logout Button */}
           <button
             onClick={handleLogoutClick}
-            className="w-full flex items-center justify-center gap-3 p-3 rounded-xl text-white bg-gradient-to-r from-red-500 to-rose-500 hover:from-red-600 hover:to-rose-600 transition-all duration-300 shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
+            className="w-full flex items-center justify-center gap-3 p-3 rounded-xl text-white bg-linear-to-r from-red-500 to-rose-500 hover:from-red-600 hover:to-rose-600 transition-all duration-300 shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
           >
             <LogOutIcon size={18} />
             <span className="font-semibold">Logout</span>
@@ -178,12 +178,12 @@ export default function SideNavigation() {
         <>
           {/* Backdrop */}
           <div
-            className="fixed inset-0 bg-black/50 z-[60] backdrop-blur-sm"
+            className="fixed inset-0 bg-black/50 z-60 backdrop-blur-sm"
             onClick={cancelLogout}
           />
 
           {/* Modal */}
-          <div className="fixed left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 z-[70] w-full max-w-md px-4">
+          <div className="fixed left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 z-70 w-full max-w-md px-4">
             <div className="bg-white rounded-2xl shadow-2xl overflow-hidden animate-in zoom-in duration-200">
               {/* Header */}
               <div className="p-6">
@@ -211,7 +211,7 @@ export default function SideNavigation() {
                 </button>
                 <button
                   onClick={confirmLogout}
-                  className="flex-1 px-6 py-3 bg-gradient-to-r from-red-600 to-rose-500 text-white font-semibold rounded-xl hover:from-red-700 hover:to-rose-600 transition-all duration-200 shadow-md hover:shadow-lg"
+                  className="flex-1 px-6 py-3 bg-linear-to-r from-red-600 to-rose-500 text-white font-semibold rounded-xl hover:from-red-700 hover:to-rose-600 transition-all duration-200 shadow-md hover:shadow-lg"
                 >
                   Yes, Logout
                 </button>
