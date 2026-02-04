@@ -70,7 +70,7 @@ export default function ViewProfile() {
   };
 
   return (
-    <div className="max-w-8xl mx-auto ">
+    <div className="max-w-8xl mx-auto my-5 ">
       <div className="bg-linear-to-br from-white to-gray-50 shadow-2xl rounded-3xl overflow-hidden border border-gray-100">
         <div className="relative h-48 bg-[linear-gradient(to_left,#BDDCFF_0%,#BCC2FB_13%,#BA7BF0_50%,#B846E8_78%,#B61BE1_100%)]">
           <div className="absolute inset-0 bg-black/10"></div>
@@ -214,7 +214,7 @@ export default function ViewProfile() {
                       <p className="text-sm text-gray-600">Last Updated</p>
                       <p className="text-lg font-bold text-gray-900">
                         {user?.updatedAt
-                          ? format(new Date(user.updatedAt), "MMM dd")
+                          ? format(new Date(user.updatedAt), "MMM dd, yyyy")
                           : "Today"}
                       </p>
                     </div>
@@ -227,7 +227,7 @@ export default function ViewProfile() {
               <div className="bg-linear-to-br from-gray-900 to-gray-800 rounded-2xl p-6 text-white shadow-xl">
                 <h3 className="text-xl font-bold mb-2">Profile Actions</h3>
                 <p className="text-gray-300 text-sm mb-6">
-                  Manage your account settings and preferences
+                  Edit your account details{" "}
                 </p>
 
                 <div className="space-y-4">
@@ -262,38 +262,7 @@ export default function ViewProfile() {
           <div className="flex flex-col md:flex-row justify-between items-center">
             <p className="text-gray-600 text-sm">
               User ID:{" "}
-              <span className="font-mono text-gray-800">
-                {user?._id?.substring(0, 20)}...
-              </span>
-            </p>
-          </div>
-        </div>
-      </div>
-
-      {/* Tips Section */}
-      <div className="mt-8 bg-linear-to-r from-blue-50 to-cyan-50 border border-blue-100 rounded-2xl p-6">
-        <div className="flex items-start gap-4">
-          <div className="p-3 bg-blue-100 rounded-xl">
-            <svg
-              className="w-6 h-6 text-blue-600"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-              ></path>
-            </svg>
-          </div>
-          <div>
-            <h4 className="font-semibold text-gray-900 mb-1">Profile Tips</h4>
-            <p className="text-sm text-gray-600">
-              Keep your profile updated with a recent photo and accurate contact
-              information. This helps organizations recognize you and improves
-              your networking experience.
+              <span className="font-mono text-gray-800">{user?._id}</span>
             </p>
           </div>
         </div>

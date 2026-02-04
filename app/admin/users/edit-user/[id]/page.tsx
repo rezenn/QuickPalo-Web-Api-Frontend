@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Image from "next/image";
-import { getOneUser } from "@/lib/api/auth";
+import { getOneUser } from "@/lib/api/admin/user";
 import { useAuth } from "@/context/authContext";
 import { AlertCircle, ArrowLeft, Save } from "lucide-react";
 import Link from "next/link";
@@ -58,7 +58,7 @@ export default function EditUserPage() {
       </div>
     );
   }
-// 
+  //
   if (error) {
     return (
       <div className="p-6">
@@ -87,7 +87,7 @@ export default function EditUserPage() {
     <div className="max-w-3xl mx-auto mt-10 px-4">
       <div className="pb-5">
         <Link
-          className=" w-20 h-10 px-2 flex flex-row justify-center items-center gap-2 rounded-2xl bg-fuchsia-100 border border-fuchsia-300 hover:bg-fuchsia-300"
+          className=" w-20 h-10 px-2 flex flex-row justify-center items-center gap-2 rounded-2xl bg-fuchsia-100 hover:bg-fuchsia-300"
           href="/admin/users"
         >
           <ArrowLeft />
@@ -118,7 +118,6 @@ export default function EditUserPage() {
                   type="text"
                   defaultValue={userData.fullName}
                   className="w-full bg-linear-to-r from-gray-50 to-white border-2 border-gray-200 rounded-xl px-4 py-3.5 focus:border-purple-500 focus:ring-4 focus:ring-purple-100 outline-none transition-all duration-300 group-hover:border-purple-300"
-                  style={{ textTransform: "capitalize" }}
                   placeholder="Enter your full name"
                 />
               </div>

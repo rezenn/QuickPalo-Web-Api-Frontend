@@ -94,15 +94,6 @@ export default function SideNavigation() {
 
   return (
     <>
-      {/* Toaster Component */}
-      <Toaster
-        position="top-right"
-        richColors
-        closeButton
-        expand={false}
-        theme="light"
-      />
-
       {/* Toggle button for small screens */}
       <button
         className="md:hidden fixed top-4 left-4 z-50 p-2 rounded bg-white hover:bg-fuchsia-700 hover:text-white shadow-md"

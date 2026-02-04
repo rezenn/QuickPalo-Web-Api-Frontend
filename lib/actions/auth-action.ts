@@ -5,9 +5,8 @@ import {
   login,
   updateProfile,
   getUser,
-  getAllUsers,
-  getOneUser,
-  createUser,
+  requestPasswordReset,
+  resetPassword,
 } from "../api/auth";
 import { setAuthToken, setUserData } from "../cookie";
 
@@ -66,44 +65,6 @@ export async function handleGetUser() {
   }
 }
 
-export async function handleGetAllUsers() {
-  try {
-    const result = await getAllUsers();
-    if (result.success) {
-      return {
-        success: true,
-        message: "all user data fetched successful",
-        data: result.data,
-      };
-    }
-    return {
-      success: false,
-      message: result.message || "all user data fetch failed",
-      data: result.data,
-    };
-  } catch (err: Error | any) {
-    return { success: false, message: err.message };
-  }
-}
-export async function handleGetOneUser(userId: string) {
-  try {
-    const result = await getOneUser(userId);
-    if (result.success) {
-      return {
-        success: true,
-        message: "user data fetched successful",
-        data: result.data,
-      };
-    }
-    return {
-      success: false,
-      message: result.message || "user data fetch failed",
-      data: result.data,
-    };
-  } catch (err: Error | any) {
-    return { success: false, message: err.message };
-  }
-}
 
 export async function handleUpdateProfile(profileData: any) {
   try {
@@ -146,39 +107,48 @@ export async function handleUpdateProfile(profileData: any) {
   }
 }
 
-export async function handleCreateUser(userData: FormData) {
+
+export const handleRequestPasswordReset = async (email: string) => {
   try {
-    const fullName = userData.get("fullName") as string;
-    const email = userData.get("email") as string;
-    const phoneNumber = userData.get("phoneNumber") as string;
-    const password = userData.get("password") as string;
-    const confirmPassword = userData.get("confirmPassword") as string;
-
-    if (!fullName || !email || !phoneNumber || !password || !confirmPassword) {
-      return {
-        success: false,
-        message: "All fields are required",
-      };
-    }
-    const result = await createUser(userData);
-
-    if (result.success) {
-      revalidatePath("admin/users");
+    const response = await requestPasswordReset(email);
+    if (response.success) {
       return {
         success: true,
-        message: "User created successfully",
-        data: result.data,
+        message: "Password reset email sent successfully",
       };
     }
     return {
       success: false,
-      message: result.message || "Failed to create user",
+      message: response.message || "Request password reset failed",
     };
   } catch (error: Error | any) {
-    console.error("Create user error:", error);
     return {
       success: false,
-      message: error.message || "An error occurred while creating user",
+      message: error.message || "Request password reset action failed",
     };
   }
-}
+};
+
+export const handleResetPassword = async (
+  token: string,
+  newPassword: string,
+) => {
+  try {
+    const response = await resetPassword(token, newPassword);
+    if (response.success) {
+      return {
+        success: true,
+        message: "Password has been reset successfully",
+      };
+    }
+    return {
+      success: false,
+      message: response.message || "Reset password failed",
+    };
+  } catch (error: Error | any) {
+    return {
+      success: false,
+      message: error.message || "Reset password action failed",
+    };
+  }
+};

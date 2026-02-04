@@ -36,26 +36,6 @@ export const getUser = async () => {
   }
 };
 
-export const getAllUsers = async () => {
-  try {
-    const response = await axiosInstance.get(API.ADMIN.AUTH.GETALLUSERS);
-    return response.data;
-  } catch (err: Error | any) {
-    throw new Error(
-      err.response?.data?.message || err.message || "Failed to fetch users",
-    );
-  }
-};
-export const getOneUser = async (userId: string) => {
-  try {
-    const response = await axiosInstance.get(`auth/${userId}`);
-    return response.data;
-  } catch (err: Error | any) {
-    throw new Error(
-      err.response?.data?.message || err.message || "Failed to fetch user",
-    );
-  }
-};
 
 export const updateProfile = async (profileData: any) => {
   try {
@@ -76,40 +56,32 @@ export const updateProfile = async (profileData: any) => {
   }
 };
 
-export const createUser = async (profileData: any) => {
+
+
+export const requestPasswordReset = async (email: string) => {
   try {
-    const response = await axiosInstance.post(
-      API.ADMIN.AUTH.CREATEUSER,
-      profileData,
-      {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      },
-    );
+    const response = await axiosInstance.post(API.AUTH.REQUEST_PASSWORD_RESET, {
+      email,
+    });
     return response.data;
-  } catch (err: Error | any) {
+  } catch (error: Error | any) {
     throw new Error(
-      err.response?.data?.message || err.message || "new user not created",
+      error.response?.data?.message ||
+        error.message ||
+        "Request password reset failed",
     );
   }
 };
 
-export const updateUserAsAdmin = async (userId: string, userData: FormData) => {
+export const resetPassword = async (token: string, newPassword: string) => {
   try {
-    const response = await axiosInstance.put(
-      API.ADMIN.AUTH.UPDATEUSERASADMIN,
-      userData,
-      {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      },
-    );
+    const response = await axiosInstance.post(API.AUTH.RESET_PASSWORD(token), {
+      newPassword: newPassword,
+    });
     return response.data;
-  } catch (err: Error | any) {
+  } catch (error: Error | any) {
     throw new Error(
-      err.response?.data?.message || err.message || "Failed to update user",
+      error.response?.data?.message || error.message || "Reset password failed",
     );
   }
 };
