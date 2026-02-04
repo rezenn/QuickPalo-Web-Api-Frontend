@@ -307,7 +307,7 @@ export default function UpdateUserForm({ initialUser }: { initialUser: any }) {
               </div>
               <p className="text-sm text-gray-500 mt-2 flex items-center gap-2">
                 <AlertCircle size={14} />
-                Email address cannot be changed for security reasons
+                Email address cannot be changed
               </p>
             </div>
 
@@ -366,9 +366,7 @@ export default function UpdateUserForm({ initialUser }: { initialUser: any }) {
             </div>
             <div className="text-gray-500">
               <span className="font-medium">User ID:</span>{" "}
-              <span className="font-mono">
-                {user?._id?.substring(0, 20)}...
-              </span>
+              <span className="font-mono">{user?._id}</span>
             </div>
           </div>
         </div>

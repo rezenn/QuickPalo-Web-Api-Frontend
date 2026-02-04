@@ -107,7 +107,7 @@ export default function EditUserPage() {
       </div>
 
       <div className="bg-linear-to-br from-white via-white to-purple-50 shadow-2xl rounded-3xl overflow-hidden border border-purple-100">
-        <div className="bg-white rounded-lg shadow p-6">
+        <div className="bg-white rounded-lg rounded-b-none shadow p-6">
           <form className="mt-6 space-y-4">
             <div className="relative group">
               <label className="block text-sm font-semibold mb-2 text-gray-700">
@@ -139,7 +139,7 @@ export default function EditUserPage() {
             </div>
             <p className="text-sm text-gray-500 mt-2 flex items-center gap-2">
               <AlertCircle size={14} />
-              Email address cannot be changed for security reasons
+              Email address cannot be changed
             </p>
             <div className="relative group">
               <label className="block text-sm font-semibold mb-2 text-gray-700">
@@ -175,6 +175,22 @@ export default function EditUserPage() {
             </div>
           </form>
         </div>
+        <footer>
+          <div className="px-8 py-6 bg-linear-to-r from-gray-50 to-white border-t border-gray-100">
+            <div className="flex items-center justify-between text-sm">
+              <div className="text-gray-600">
+                <span className="font-medium">Last updated:</span>{" "}
+                {userData?.updatedAt
+                  ? new Date(userData.updatedAt).toLocaleDateString()
+                  : "Never"}
+              </div>
+              <div className="text-gray-500">
+                <span className="font-medium">User ID:</span>{" "}
+                <span className="font-mono">{userData?._id}</span>
+              </div>
+            </div>
+          </div>
+        </footer>
       </div>
     </div>
   );
