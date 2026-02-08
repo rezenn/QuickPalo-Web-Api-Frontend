@@ -11,6 +11,7 @@ export const API = {
     GETALLUSERS: "/admin/auth/users",
     CREATEUSER: "/admin/auth/create-user",
     GETUSERBYID: (id: string) => `/auth/${id}`,
-    UPDATEUSERASADMIN: (id: string) => `/auth/${id}`,
+    UPDATEUSERASADMIN: (id: string) => `/admin/auth/${id}`,
+    DELETEUSERASADMIN: (id: string) => `/admin/auth/${id}`,
   },
 };

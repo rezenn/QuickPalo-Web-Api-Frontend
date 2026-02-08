@@ -1,6 +1,11 @@
 "use server";
 import { revalidatePath } from "next/cache";
-import { getAllUsers, getOneUser, createUser } from "../../api/admin/user";
+import {
+  getAllUsers,
+  getOneUser,
+  createUser,
+  deleteUser,
+} from "../../api/admin/user";
 import { setAuthToken, setUserData } from "../../cookie";
 
 export async function handleGetAllUsers() {
@@ -39,6 +44,28 @@ export async function handleGetOneUser(userId: string) {
     };
   } catch (err: Error | any) {
     return { success: false, message: err.message };
+  }
+}
+
+export async function handleDeleteUser(userId: string) {
+  try {
+    const result = await deleteUser(userId);
+    if (result.success) {
+      revalidatePath("/admin/users");
+      return {
+        success: true,
+        message: "user deleted successful",
+      };
+    }
+    return {
+      success: false,
+      message: result.message || "failed to delete user",
+    };
+  } catch (err: Error | any) {
+    return {
+      success: false,
+      message: err.message || "An error occurred while deleting user",
+    };
   }
 }
 

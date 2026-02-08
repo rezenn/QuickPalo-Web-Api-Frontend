@@ -36,6 +36,18 @@ export const getUser = async () => {
   }
 };
 
+export const deleteUser = async (id: string) => {
+  try {
+    const response = await axiosInstance.delete(
+      API.ADMIN.DELETEUSERASADMIN(id),
+    );
+    return response.data;
+  } catch (err: Error | any) {
+    throw new Error(
+      err.response?.data?.message || err.message || "Failed to delete user",
+    );
+  }
+};
 
 export const updateProfile = async (profileData: any) => {
   try {
@@ -55,8 +67,6 @@ export const updateProfile = async (profileData: any) => {
     );
   }
 };
-
-
 
 export const requestPasswordReset = async (email: string) => {
   try {

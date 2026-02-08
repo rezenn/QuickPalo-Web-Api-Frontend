@@ -39,6 +39,19 @@ export const updateUserAsAdmin = async (userId: string, userData: FormData) => {
   }
 };
 
+export const deleteUser = async (id: string) => {
+  try {
+    const response = await axiosInstance.delete(
+      API.ADMIN.DELETEUSERASADMIN(id),
+    );
+    return response.data;
+  } catch (err: Error | any) {
+    throw new Error(
+      err.response?.data?.message || err.message || "Failed to delete user",
+    );
+  }
+};
+
 export const getAllUsers = async () => {
   try {
     const response = await axiosInstance.get(API.ADMIN.GETALLUSERS);
