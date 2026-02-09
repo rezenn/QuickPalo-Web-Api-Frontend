@@ -5,8 +5,9 @@ import {
   getOneUser,
   createUser,
   deleteUser,
+  updateUserAsAdmin,
 } from "../../api/admin/user";
-import { setAuthToken, setUserData } from "../../cookie";
+import { updateProfile } from "@/lib/api/auth";
 
 export async function handleGetAllUsers() {
   try {
@@ -44,6 +45,39 @@ export async function handleGetOneUser(userId: string) {
     };
   } catch (err: Error | any) {
     return { success: false, message: err.message };
+  }
+}
+
+export async function handleUpdateProfile(userId: string, userData: FormData) {
+  try {
+    const result = await updateUserAsAdmin(userId, userData);
+
+    if (result.success) {
+      const updatedUserData = {
+        _id: result.data._id,
+        fullName: result.data.fullName,
+        email: result.data.email,
+        phoneNumber: result.data.phoneNumber,
+        role: result.data.role,
+        profilePicture: result.data.profilePicture,
+        imageUrl: result.data.imageUrl,
+        createdAt: result.data.createdAt,
+        updatedAt: result.data.updatedAt,
+      };
+      revalidatePath("/admin/users");
+      return {
+        success: true,
+        message: "user updated successfully",
+        data: updatedUserData,
+      };
+    }
+    return {
+      success: false,
+      message: result.message || "failed to update user",
+    };
+  } catch (error: Error | any) {
+    console.error("Update profile error:", error);
+    return { success: false, message: error.message };
   }
 }
 

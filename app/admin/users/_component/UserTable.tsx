@@ -37,6 +37,35 @@ export default function UserTable() {
     fetchUsers();
   }, []);
 
+  // Add this function in your UserTable component
+  const calculateStats = (usersArray: any[]) => {
+    const total = usersArray.length;
+
+    const now = new Date();
+    const currentYear = now.getFullYear();
+    const currentMonth = now.getMonth();
+
+    const newThisMonth = usersArray.filter((user: any) => {
+      const userDate = new Date(user.createdAt);
+      const userYear = userDate.getFullYear();
+      const userMonth = userDate.getMonth();
+      return userYear === currentYear && userMonth === currentMonth;
+    }).length;
+
+    const lastMonthDate = new Date();
+    lastMonthDate.setMonth(lastMonthDate.getMonth() - 1);
+    const lastMonthYear = lastMonthDate.getFullYear();
+    const lastMonth = lastMonthDate.getMonth();
+
+    const newLastMonth = usersArray.filter((user: any) => {
+      const userDate = new Date(user.createdAt);
+      const userYear = userDate.getFullYear();
+      const userMonth = userDate.getMonth();
+      return userYear === lastMonthYear && userMonth === lastMonth;
+    }).length;
+
+    return { total, newThisMonth, newLastMonth };
+  };
   const fetchUsers = async () => {
     try {
       setIsLoading(true);
@@ -90,32 +119,61 @@ export default function UserTable() {
       const result = await handleDeleteUser(userId);
       if (result.success) {
         const updatedUsers = users.filter((user) => user._id !== userId);
+
+        // Update users state
         setUsers(updatedUsers);
         setFilteredUsers(updatedUsers);
-        setTotalUsers(updatedUsers.length);
-        const now = new Date();
-        const currentYear = now.getFullYear();
-        const currentMonth = now.getMonth();
 
-        const updatedThisMonth = updatedUsers.filter((user: any) => {
-          const userDate = new Date(user.createdAt);
-          const userYear = userDate.getFullYear();
-          const userMonth = userDate.getMonth();
-          return userYear === currentYear && userMonth === currentMonth;
-        }).length;
-        setNewUsersThisMonth(updatedThisMonth);
+        // Recalculate stats from updated users
+        const stats = calculateStats(updatedUsers);
+        setTotalUsers(stats.total);
+        setNewUsersThisMonth(stats.newThisMonth);
+        setNewUsersLastMonth(stats.newLastMonth);
 
-        toast.success("User delete successfully");
+        toast.success("User deleted successfully");
         setDeleteId(null);
       } else {
         toast.error(result.message || "Failed to delete user");
       }
     } catch (err: Error | any) {
-      console.error(err.message || "Failed to delete blog");
+      console.error(err.message || "Failed to delete user");
+      toast.error("Failed to delete user");
     } finally {
       setDeleteId(null);
     }
   };
+
+  // const handleConfirmDelete = async (userId: string) => {
+  //   try {
+  //     const result = await handleDeleteUser(userId);
+  //     if (result.success) {
+  //       const updatedUsers = users.filter((user) => user._id !== userId);
+  //       setUsers(updatedUsers);
+  //       setFilteredUsers(updatedUsers);
+  //       setTotalUsers(updatedUsers.length);
+  //       const now = new Date();
+  //       const currentYear = now.getFullYear();
+  //       const currentMonth = now.getMonth();
+
+  //       const updatedThisMonth = updatedUsers.filter((user: any) => {
+  //         const userDate = new Date(user.createdAt);
+  //         const userYear = userDate.getFullYear();
+  //         const userMonth = userDate.getMonth();
+  //         return userYear === currentYear && userMonth === currentMonth;
+  //       }).length;
+  //       setNewUsersThisMonth(updatedThisMonth);
+
+  //       toast.success("User delete successfully");
+  //       setDeleteId(null);
+  //     } else {
+  //       toast.error(result.message || "Failed to delete user");
+  //     }
+  //   } catch (err: Error | any) {
+  //     console.error(err.message || "Failed to delete blog");
+  //   } finally {
+  //     setDeleteId(null);
+  //   }
+  // };
 
   // handle search
   useEffect(() => {

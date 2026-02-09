@@ -1,4 +1,3 @@
-// app/_components/DeleteModal.tsx
 interface DeleteModalProps {
   isOpen: boolean;
   onClose: () => void;
