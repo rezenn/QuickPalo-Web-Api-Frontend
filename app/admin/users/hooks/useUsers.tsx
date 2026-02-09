@@ -73,7 +73,7 @@ export const useUsers = () => {
     users,
     isLoading,
     stats,
-    fetchUsers: refreshUsers, // Export refresh function
+    fetchUsers: refreshUsers,
     setUsers,
   };
 };

@@ -2,16 +2,14 @@
 
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import Image from "next/image";
-import { getOneUser } from "@/lib/api/admin/user";
-import { useAuth } from "@/context/authContext";
-import { AlertCircle, ArrowLeft, Save } from "lucide-react";
 import Link from "next/link";
+import { ArrowLeft } from "lucide-react";
+import EditUserForm from "@/app/admin/_component/UpdateUserForm";
+import { handleGetOneUser } from "@/lib/actions/admin/user-action";
 
-export default function EditUserPage() {
+export default function AdminEditUserPage() {
   const params = useParams();
   const router = useRouter();
-  const { user: currentAdmin, loading } = useAuth();
   const [userData, setUserData] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -35,8 +33,7 @@ export default function EditUserPage() {
       setIsLoading(true);
       setError(null);
 
-      // Fetch user data by ID from your API
-      const result = await getOneUser(userId);
+      const result = await handleGetOneUser(userId);
 
       if (result.success) {
         setUserData(result.data);
@@ -51,14 +48,18 @@ export default function EditUserPage() {
     }
   };
 
+  const handleUpdateSuccess = () => {
+    fetchUserData();
+  };
+
   if (isLoading) {
     return (
-      <div className="flex justify-center items-center min-h-100">
+      <div className="flex justify-center items-center min-h-[60vh]">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-600"></div>
       </div>
     );
   }
-  //
+
   if (error) {
     return (
       <div className="p-6">
@@ -84,104 +85,45 @@ export default function EditUserPage() {
   }
 
   return (
-    <div className="max-w-3xl mx-auto mt-10 px-4">
+    <div className="max-w-4xl mx-auto mt-10 px-4">
       <div className="pb-5">
         <Link
-          className=" w-20 h-10 px-2 flex flex-row justify-center items-center gap-2 rounded-2xl bg-fuchsia-100 hover:bg-fuchsia-300"
+          className="w-20 h-10 px-2 flex flex-row justify-center items-center gap-2 rounded-2xl bg-fuchsia-100 hover:bg-fuchsia-300 transition-colors"
           href="/admin/users"
         >
           <ArrowLeft />
           <p>Back</p>
         </Link>
       </div>
+
       <div className="text-center mb-8">
-        <h1 className="text-3xl font-bold bg-linear-to-r from-purple-600 to-pink-500 bg-clip-text text-transparent">
+        <h1 className="text-3xl font-bold bg-gradient-to-r from-purple-600 to-pink-500 bg-clip-text text-transparent">
           Edit User
         </h1>
         <p className="text-gray-600 mt-2">
-          Update the the information of{" "}
-          <span style={{ textTransform: "capitalize" }}>
+          Update the information of{" "}
+          <span className="capitalize font-medium text-purple-600">
             {userData.fullName}
           </span>
         </p>
       </div>
 
-      <div className="bg-linear-to-br from-white via-white to-purple-50 shadow-2xl rounded-3xl overflow-hidden border border-purple-100">
-        <div className="bg-white rounded-lg rounded-b-none shadow p-6">
-          <form className="mt-6 space-y-4">
-            <div className="relative group">
-              <label className="block text-sm font-semibold mb-2 text-gray-700">
-                Full Name
-              </label>{" "}
-              <div className="relative">
-                <input
-                  type="text"
-                  defaultValue={userData.fullName}
-                  className="w-full bg-linear-to-r from-gray-50 to-white border-2 border-gray-200 rounded-xl px-4 py-3.5 focus:border-purple-500 focus:ring-4 focus:ring-purple-100 outline-none transition-all duration-300 group-hover:border-purple-300"
-                  placeholder="Enter your full name"
-                />
-              </div>
-            </div>
+      <div className="bg-gradient-to-br from-white via-white to-purple-50 shadow-2xl rounded-3xl overflow-hidden border border-purple-100">
+        <EditUserForm initialUser={userData} onSuccess={handleUpdateSuccess} />
 
-            <div className="relative group">
-              <label className="block text-sm font-semibold mb-2 text-gray-700">
-                Email
-              </label>
-              <div className="relative">
-                <input
-                  type="email"
-                  defaultValue={userData.email}
-                  disabled
-                  className="w-full bg-linear-to-r from-gray-50 to-gray-100 border-2 border-gray-200 rounded-xl px-4 py-3.5 text-gray-500 cursor-not-allowed"
-                  placeholder="Enter your email"
-                />
-              </div>
-            </div>
-            <p className="text-sm text-gray-500 mt-2 flex items-center gap-2">
-              <AlertCircle size={14} />
-              Email address cannot be changed
-            </p>
-            <div className="relative group">
-              <label className="block text-sm font-semibold mb-2 text-gray-700">
-                Phone Number
-              </label>
-              <div className="relative">
-                <input
-                  type="phoneNumber"
-                  defaultValue={userData.phoneNumber}
-                  className="w-full bg-linear-to-r from-gray-50 to-white border-2 border-gray-200 rounded-xl px-4 py-3.5 focus:border-purple-500 focus:ring-4 focus:ring-purple-100 outline-none transition-all duration-300 group-hover:border-purple-300"
-                  placeholder="Enter your phone number"
-                />
-              </div>
-            </div>
-            <div className="flex flex-col sm:flex-row gap-4">
-              <button
-                type="submit"
-                // disabled={isSubmittingState || !hasChanges}
-                className="flex-1 bg-[#B61BE1] text-white font-semibold py-3.5 px-6 rounded-xl flex items-center justify-center gap-3 transition-all duration-300 transform hover:-translate-y-0.5 hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
-              >
-                {/* {isSubmittingState ? (
-                    <>
-                      <Loader2 className="animate-spin" size={18} />
-                      Updating...
-                    </>
-                  ) : ( */}
-                <>
-                  <Save size={18} />
-                  Update Profile
-                </>
-                {/* )} */}
-              </button>
-            </div>
-          </form>
-        </div>
         <footer>
-          <div className="px-8 py-6 bg-linear-to-r from-gray-50 to-white border-t border-gray-100">
+          <div className="px-8 py-6 bg-gradient-to-r from-gray-50 to-white border-t border-gray-100">
             <div className="flex items-center justify-between text-sm">
               <div className="text-gray-600">
                 <span className="font-medium">Last updated:</span>{" "}
                 {userData?.updatedAt
-                  ? new Date(userData.updatedAt).toLocaleDateString()
+                  ? new Date(userData.updatedAt).toLocaleDateString("en-US", {
+                      year: "numeric",
+                      month: "long",
+                      day: "numeric",
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })
                   : "Never"}
               </div>
               <div className="text-gray-500">

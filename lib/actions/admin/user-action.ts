@@ -34,7 +34,7 @@ export async function handleGetOneUser(userId: string) {
     if (result.success) {
       return {
         success: true,
-        message: "user data fetched successful",
+        message: "user data fetched successfully",
         data: result.data,
       };
     }
@@ -48,7 +48,10 @@ export async function handleGetOneUser(userId: string) {
   }
 }
 
-export async function handleUpdateProfile(userId: string, userData: FormData) {
+export async function handleUpdateUserAsAdmin(
+  userId: string,
+  userData: FormData,
+) {
   try {
     const result = await updateUserAsAdmin(userId, userData);
 
@@ -65,10 +68,12 @@ export async function handleUpdateProfile(userId: string, userData: FormData) {
         updatedAt: result.data.updatedAt,
       };
       revalidatePath("/admin/users");
+      revalidatePath(`/admin/users/${userId}/edit`);
+
       return {
         success: true,
         message: "user updated successfully",
-        data: updatedUserData,
+        data: result.data,
       };
     }
     return {
