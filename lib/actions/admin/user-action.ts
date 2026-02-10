@@ -9,20 +9,28 @@ import {
 } from "../../api/admin/user";
 import { updateProfile } from "@/lib/api/auth";
 
-export async function handleGetAllUsers() {
+export async function handleGetAllUsers(
+  page: number,
+  size: number,
+  search?: string,
+  role?: string,
+) {
   try {
-    const result = await getAllUsers();
-    if (result.success) {
+    const response = await getAllUsers(page, size, search, role);
+    if (response.success) {
       return {
         success: true,
         message: "all user data fetched successful",
-        data: result.data,
+        users: response.data.users,
+        pagination: response.data.pagination,
       };
     }
     return {
+      users: [],
+      pagination: null,
       success: false,
-      message: result.message || "all user data fetch failed",
-      data: result.data,
+      message: response.message || "all user data fetch failed",
+      // data: response.data,
     };
   } catch (err: Error | any) {
     return { success: false, message: err.message };

@@ -52,9 +52,16 @@ export const deleteUser = async (id: string) => {
   }
 };
 
-export const getAllUsers = async () => {
+export const getAllUsers = async (
+  page: number,
+  size: number,
+  search?: string,
+  role?: string,
+) => {
   try {
-    const response = await axiosInstance.get(API.ADMIN.GETALLUSERS);
+    const response = await axiosInstance.get(API.ADMIN.GETALLUSERS, {
+      params: { page, size, search, role },
+    });
     return response.data;
   } catch (err: Error | any) {
     throw new Error(

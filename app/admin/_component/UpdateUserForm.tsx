@@ -1,4 +1,3 @@
-// app/components/admin/EditUserForm.tsx
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -57,14 +56,12 @@ export default function EditUserForm({
   const hasChanges = isDirty || previewImage;
   const profileImage = watch("profileImage");
 
-  // Get profile image URL for display
   const getProfileImageUrl = () => {
     if (previewImage) return previewImage;
 
     if (initialUser?.imageUrl) return initialUser.imageUrl;
 
     if (initialUser?.profilePicture) {
-      // Check if it's already a full URL
       if (initialUser.profilePicture.startsWith("http")) {
         return initialUser.profilePicture;
       }
@@ -88,7 +85,6 @@ export default function EditUserForm({
       formData.append("email", data.email);
       formData.append("phoneNumber", data.phoneNumber);
 
-      // Only append profile image if it exists
       if (data.profileImage) {
         formData.append("profilePicture", data.profileImage);
       }
@@ -100,28 +96,23 @@ export default function EditUserForm({
       }
 
       if (res.data) {
-        // Clear preview and show success
         setPreviewImage(null);
         setSuccess("User updated successfully!");
 
-        // Reset form with updated data
         reset({
           fullName: res.data.fullName,
           email: res.data.email,
           phoneNumber: res.data.phoneNumber,
         });
 
-        // Clear file input
         if (fileInputRef.current) {
           fileInputRef.current.value = "";
         }
 
-        // Call onSuccess callback if provided
         if (onSuccess) {
           onSuccess();
         }
 
-        // Auto-hide success message after 3 seconds
         setTimeout(() => {
           setSuccess(null);
         }, 3000);

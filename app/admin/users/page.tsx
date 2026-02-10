@@ -41,12 +41,12 @@ export default function AdminUsersPage() {
   const fetchUsers = async () => {
     try {
       setIsLoading(true);
-      const result = await getAllUsers();
+      const result = await getAllUsers(1, 100, "", "user");
 
       if (result.success) {
-        const normalUsers = result.data.filter(
-          (user: any) => user.role === "user",
-        );
+        const normalUsers = Array.isArray(result.data?.users)
+          ? result.data.users.filter((user: any) => user.role === "user")
+          : [];
         setUsers(normalUsers);
         setFilteredUsers(normalUsers);
         setTotalUsers(normalUsers.length);

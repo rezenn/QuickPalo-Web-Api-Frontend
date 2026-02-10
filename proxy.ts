@@ -3,6 +3,18 @@ import { getAuthToken, getUserData } from "./lib/cookie";
 
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
+
+  const staticAssets = [
+    "/favicon.ico",
+    "/icon",
+    "/apple-icon",
+    "/images/",
+    "/uploads/",
+  ];
+  if (staticAssets.some((asset) => pathname.startsWith(asset))) {
+    return NextResponse.next();
+  }
+
   const token = await getAuthToken();
   const user = token ? await getUserData() : null;
 

@@ -1,17 +1,17 @@
 export const API = {
   AUTH: {
-    LOGIN: "/auth/login",
-    REGISTER: "/auth/register",
-    GETUSER: "/auth/get-user",
-    UPDATEPROFILE: "/auth/update-user",
-    REQUEST_PASSWORD_RESET: "/auth/request-password-reset",
-    RESET_PASSWORD: (token: string) => `/auth/reset-password/${token}`,
+    LOGIN: "/api/auth/login",
+    REGISTER: "/api/auth/register",
+    GETUSER: "/api/auth/get-user",
+    UPDATEPROFILE: "/api/auth/update-user",
+    REQUEST_PASSWORD_RESET: "/api/auth/request-password-reset",
+    RESET_PASSWORD: (token: string) => `/api/auth/reset-password/${token}`,
   },
   ADMIN: {
-    GETALLUSERS: "/admin/auth/users",
-    CREATEUSER: "/admin/auth/create-user",
-    GETUSERBYID: (id: string) => `/auth/${id}`,
-    UPDATEUSERASADMIN: (id: string) => `/admin/auth/${id}`,
-    DELETEUSERASADMIN: (id: string) => `/admin/auth/${id}`,
+    GETALLUSERS: "/api/admin/auth/users",
+    CREATEUSER: "/api/admin/auth/create-user",
+    GETUSERBYID: (id: string) => `/api/auth/${id}`,
+    UPDATEUSERASADMIN: (id: string) => `/api/admin/auth/${id}`,
+    DELETEUSERASADMIN: (id: string) => `/api/admin/auth/${id}`,
   },
 };
