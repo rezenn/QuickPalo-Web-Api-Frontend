@@ -129,7 +129,7 @@ export default function EditUserForm({
     <div className="bg-white rounded-lg shadow p-6">
       {success && (
         <div className="mb-6 animate-in slide-in-from-top duration-500">
-          <div className="flex items-center gap-3 bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 rounded-2xl p-4">
+          <div className="flex items-center gap-3 bg-linear-to-r from-green-50 to-emerald-50 border border-green-200 rounded-2xl p-4">
             <div className="p-2 bg-green-100 rounded-full">
               <CheckCircle className="text-green-600" size={20} />
             </div>
@@ -145,7 +145,7 @@ export default function EditUserForm({
 
       {error && (
         <div className="mb-6 animate-in slide-in-from-top duration-500">
-          <div className="flex items-center gap-3 bg-gradient-to-r from-red-50 to-rose-50 border border-red-200 rounded-2xl p-4">
+          <div className="flex items-center gap-3 bg-linear-to-r from-red-50 to-rose-50 border border-red-200 rounded-2xl p-4">
             <div className="p-2 bg-red-100 rounded-full">
               <AlertCircle className="text-red-600" size={20} />
             </div>
@@ -163,7 +163,7 @@ export default function EditUserForm({
           onMouseEnter={() => setImageHover(true)}
           onMouseLeave={() => setImageHover(false)}
         >
-          <div className="relative h-48 w-48 rounded-full border-4 border-purple-400 shadow-lg overflow-hidden bg-gradient-to-br from-purple-100 to-pink-100">
+          <div className="relative h-48 w-48 rounded-full border-4 border-purple-400 shadow-lg overflow-hidden bg-linear-to-br from-purple-100 to-pink-100">
             {profileImageUrl ? (
               <Image
                 src={profileImageUrl}
@@ -240,7 +240,7 @@ export default function EditUserForm({
           <div className="relative">
             <input
               {...register("fullName")}
-              className="w-full bg-gradient-to-r from-gray-50 to-white border-2 border-gray-200 rounded-xl px-4 py-3.5 focus:border-purple-500 focus:ring-4 focus:ring-purple-100 outline-none transition-all duration-300 group-hover:border-purple-300"
+              className="w-full bg-linear-to-r from-gray-50 to-white border-2 border-gray-200 rounded-xl px-4 py-3.5 focus:border-purple-500 focus:ring-4 focus:ring-purple-100 outline-none transition-all duration-300 group-hover:border-purple-300"
               placeholder="Enter user's full name"
             />
           </div>
@@ -261,7 +261,7 @@ export default function EditUserForm({
             <input
               {...register("email")}
               disabled
-              className="w-full bg-gradient-to-r from-gray-50 to-gray-100 border-2 border-gray-200 rounded-xl px-4 py-3.5 text-gray-500 cursor-not-allowed"
+              className="w-full bg-linear-to-r from-gray-50 to-gray-100 border-2 border-gray-200 rounded-xl px-4 py-3.5 text-gray-500 cursor-not-allowed"
               placeholder="User email address"
             />
           </div>
@@ -279,7 +279,7 @@ export default function EditUserForm({
           <div className="relative">
             <input
               {...register("phoneNumber")}
-              className="w-full bg-gradient-to-r from-gray-50 to-white border-2 border-gray-200 rounded-xl px-4 py-3.5 focus:border-purple-500 focus:ring-4 focus:ring-purple-100 outline-none transition-all duration-300 group-hover:border-purple-300"
+              className="w-full bg-linear-to-r from-gray-50 to-white border-2 border-gray-200 rounded-xl px-4 py-3.5 focus:border-purple-500 focus:ring-4 focus:ring-purple-100 outline-none transition-all duration-300 group-hover:border-purple-300"
               placeholder="Enter user's phone number"
             />
           </div>

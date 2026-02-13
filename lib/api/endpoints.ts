@@ -14,4 +14,8 @@ export const API = {
     UPDATEUSERASADMIN: (id: string) => `/api/admin/auth/${id}`,
     DELETEUSERASADMIN: (id: string) => `/api/admin/auth/${id}`,
   },
+  ORGANIZATION: {
+    GETORGANIZATIONS: "/api/organizations/details",
+    POSTORGANIZATIONDETAILS: "/api/organizations/details"
+  }
 };

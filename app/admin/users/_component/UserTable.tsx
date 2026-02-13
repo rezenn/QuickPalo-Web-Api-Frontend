@@ -1,6 +1,5 @@
 "use client";
 
-import profile from "@/app/assets/images/profile.png";
 import {
   Search,
   Mail,
@@ -24,8 +23,6 @@ export default function UserTable() {
   const { user, loading } = useAuth();
   const [imageError, setImageError] = useState(false);
   const [users, setUsers] = useState<any[]>([]);
-  const [filteredUsers, setFilteredUsers] = useState<any[]>([]);
-  const [searchQuery, setSearchQuery] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [deleteId, setDeleteId] = useState(null);
   const [newUsersThisMonth, setNewUsersThisMonth] = useState(0);
@@ -34,59 +31,36 @@ export default function UserTable() {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [totalUsers, setTotalUsers] = useState(0);
+  const [pagination, setPagination] = useState<any>(null);
   const USERS_PER_PAGE = 10;
 
   const router = useRouter();
 
   useEffect(() => {
-    fetchUsers(1, searchQuery);
+    fetchUsers(1);
   }, []);
 
-  const calculateStats = (usersArray: any[]) => {
-    const total = usersArray.length;
-
-    const now = new Date();
-    const currentYear = now.getFullYear();
-    const currentMonth = now.getMonth();
-
-    const newThisMonth = usersArray.filter((user: any) => {
-      const userDate = new Date(user.createdAt);
-      const userYear = userDate.getFullYear();
-      const userMonth = userDate.getMonth();
-      return userYear === currentYear && userMonth === currentMonth;
-    }).length;
-
-    const lastMonthDate = new Date();
-    lastMonthDate.setMonth(lastMonthDate.getMonth() - 1);
-    const lastMonthYear = lastMonthDate.getFullYear();
-    const lastMonth = lastMonthDate.getMonth();
-
-    const newLastMonth = usersArray.filter((user: any) => {
-      const userDate = new Date(user.createdAt);
-      const userYear = userDate.getFullYear();
-      const userMonth = userDate.getMonth();
-      return userYear === lastMonthYear && userMonth === lastMonth;
-    }).length;
-
-    return { total, newThisMonth, newLastMonth };
-  };
-  const fetchUsers = async (page = 1, search = "") => {
+  const fetchUsers = async (page = 1) => {
     try {
       setIsLoading(true);
-      const result = await getAllUsers(page, USERS_PER_PAGE, search);
+      const result = await getAllUsers(
+        page,
+        USERS_PER_PAGE,
+        searchQuery,
+        "user",
+      );
 
-      if (result.success && result.data?.users) {
-        const onlyNormalUsers = result.data.users.filter(
-          (user: any) => user.role === "user",
-        );
-        setUsers(onlyNormalUsers);
-        setFilteredUsers(onlyNormalUsers);
-        setTotalPages(Math.ceil(onlyNormalUsers.length / USERS_PER_PAGE));
-        setTotalUsers(onlyNormalUsers.length);
-        setCurrentPage(1);
+      if (result.success && result.data) {
+        setUsers(result.data.users || []);
+
+        if (result.data.pagination) {
+          setPagination(result.data.pagination);
+          setCurrentPage(result.data.pagination.page);
+          setTotalPages(result.data.pagination.totalPages);
+          setTotalUsers(result.data.pagination.total);
+        }
       } else {
         setUsers([]);
-        setFilteredUsers([]);
         setTotalPages(1);
         setTotalUsers(0);
       }
@@ -98,9 +72,11 @@ export default function UserTable() {
     }
   };
 
+  const [searchQuery, setSearchQuery] = useState("");
+
   useEffect(() => {
     const timeoutId = setTimeout(() => {
-      fetchUsers(1, searchQuery);
+      fetchUsers(1); 
     }, 300);
     return () => clearTimeout(timeoutId);
   }, [searchQuery]);
@@ -110,7 +86,7 @@ export default function UserTable() {
       const result = await handleDeleteUser(userId);
       if (result.success) {
         toast.success("User deleted successfully");
-        fetchUsers(currentPage, searchQuery);
+        fetchUsers(currentPage); 
         setDeleteId(null);
       } else {
         toast.error(result.message || "Failed to delete user");
@@ -122,13 +98,12 @@ export default function UserTable() {
     }
   };
 
-  // format date
   const formatDate = (dateString: string) => {
     if (!dateString) return "N/A";
     try {
       return format(new Date(dateString), "yyyy-MM-dd");
     } catch (error) {
-      return "Invaild Date";
+      return "Invalid Date";
     }
   };
 
@@ -153,8 +128,12 @@ export default function UserTable() {
   };
 
   const handlePageChange = (page: number) => {
-    fetchUsers(page, searchQuery);
+    if (page >= 1 && page <= totalPages) {
+      setCurrentPage(page);
+      fetchUsers(page);
+    }
   };
+
   return (
     <div>
       <DeleteModal
@@ -162,10 +141,9 @@ export default function UserTable() {
         onClose={() => setDeleteId(null)}
         onConfirm={() => deleteId && handleConfirmDelete(deleteId)}
         title="Confirm Delete User"
-        description="Are you sure you want to delete this user? Once deleted user cannot be retrived."
+        description="Are you sure you want to delete this user? Once deleted user cannot be retrieved."
       />
       <div className="space-y-6 p-6">
-        {/* Control Bar */}
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4">
           <div className="flex flex-col md:flex-row gap-5">
             <div className="flex-1">
@@ -187,6 +165,7 @@ export default function UserTable() {
             </div>
           </div>
         </div>
+
         {/* Users Table */}
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
           {isLoading ? (
@@ -199,9 +178,6 @@ export default function UserTable() {
                 <table className="w-full">
                   <thead className="bg-gray-200 border-b border-gray-200">
                     <tr>
-                      {/* <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase whitespace-nowrap">
-                    S.N
-                  </th> */}
                       <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase whitespace-nowrap">
                         User
                       </th>
@@ -223,7 +199,7 @@ export default function UserTable() {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-200">
-                    {filteredUsers.length === 0 ? (
+                    {users.length === 0 ? (
                       <tr>
                         <td
                           colSpan={6}
@@ -233,68 +209,20 @@ export default function UserTable() {
                         </td>
                       </tr>
                     ) : (
-                      filteredUsers.map((user, index) => (
+                      users.map((user) => (
                         <tr
                           key={user._id}
                           className="hover:bg-gray-100 transition-colors"
                         >
                           <td className="px-6 py-4 align-middle">
                             <div className="flex items-center gap-2">
-                              <div className="h-12 w-12 shrink-0 relative rounded-full overflow-hidden  ">
-                                {/* {getProfileImageUrl(user) ? (
-                                  <Image
-                                    src={getProfileImageUrl(user)}
-                                    alt={user.fullName}
-                                    fill
-                                    className="object-cover"
-                                    unoptimized
-                                    priority
-                                    onError={(e) => {
-                                      e.currentTarget.src = "none";
-                                    }}
-                                  />
-                                ) : (
-                                  <div className="w-full h-full flex items-center justify-center bg-linear-to-br from-purple-100 to-pink-100  rounded-full border-2 border-fuchsia-400">
-                                    <UserIcon
-                                      className="text-purple-400"
-                                      size={32}
-                                    />
-                                  </div>
-                                )} */}
-
-                                {/* {user.imageUrl || user.profilePicture ? (
-                                  <Image
-                                    src={getProfileImageUrl(user)}
-                                    alt={user.fullName || "User"}
-                                    fill
-                                    className="object-cover"
-                                    unoptimized
-                                    priority
-                                    onError={(e) => {
-                                      console.error(
-                                        `Image failed to load: ${getProfileImageUrl(user)}`,
-                                      );
-                                      setImageError(true);
-                                      e.currentTarget.style.display = "none";
-                                    }}
-                                  />
-                                ) : (
-                                  <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-purple-100 to-pink-100 rounded-full border-2 border-fuchsia-400">
-                                    <UserIcon
-                                      className="text-purple-400"
-                                      size={32}
-                                    />
-                                  </div>
-                                )} */}
-                                {/* ✅ Always show fallback first */}
-                                <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-purple-100 to-pink-100 rounded-full border-2 border-fuchsia-400">
+                              <div className="h-12 w-12 shrink-0 relative rounded-full overflow-hidden">
+                                <div className="absolute inset-0 flex items-center justify-center bg-linear-to-br from-purple-100 to-pink-100 rounded-full border-2 border-fuchsia-400">
                                   <UserIcon
                                     className="text-purple-400"
                                     size={28}
                                   />
                                 </div>
-
-                                {/* ✅ Image on top - hides fallback if loads */}
                                 {getProfileImageUrl(user) && (
                                   <Image
                                     src={getProfileImageUrl(user)!}
@@ -303,16 +231,10 @@ export default function UserTable() {
                                     className="object-cover rounded-full"
                                     unoptimized
                                     sizes="64px"
-                                    onLoadingComplete={() =>
-                                      console.log(
-                                        `✅ LOADED: ${getProfileImageUrl(user)}`,
-                                      )
-                                    }
                                     onError={(e) => {
                                       console.error(
-                                        `❌ 404: ${getProfileImageUrl(user)}`,
+                                        `404: ${getProfileImageUrl(user)}`,
                                       );
-                                      // Image hides itself on error, fallback stays visible
                                       e.currentTarget.style.display = "none";
                                     }}
                                   />
@@ -335,7 +257,7 @@ export default function UserTable() {
                           <td className="px-6 py-4 align-middle whitespace-nowrap">
                             <div className="flex items-center text-sm">
                               <Mail className="h-4 w-4 mr-2 text-gray-400 shrink-0" />
-                              <span className="text-gray-900 truncate w-30">
+                              <span className="text-gray-900 truncate w-35">
                                 {user.email}
                               </span>
                             </div>
@@ -344,7 +266,7 @@ export default function UserTable() {
                           <td className="px-6 py-4 align-middle whitespace-nowrap">
                             <div className="flex items-center text-sm">
                               <Phone className="h-4 w-4 mr-2 text-gray-400 shrink-0" />
-                              <span className="text-gray-600">
+                              <span className="text-gray-900 truncate w-40">
                                 {user.phoneNumber || "N/A"}
                               </span>
                             </div>
@@ -391,41 +313,44 @@ export default function UserTable() {
                   </tbody>
                 </table>
               </div>
-              {/* pagination */}
-              <div className="px-6 py-4 bg-gray-50 border-t border-gray-200">
-                <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-                  <div className="text-sm text-gray-700">
-                    Showing{" "}
-                    <span className="font-medium">
-                      {(currentPage - 1) * USERS_PER_PAGE + 1}
-                    </span>{" "}
-                    to{" "}
-                    <span className="font-medium">
-                      {Math.min(currentPage * USERS_PER_PAGE, totalUsers)}
-                    </span>{" "}
-                    of <span className="font-medium">{totalUsers}</span> users
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <button
-                      onClick={() => handlePageChange(currentPage - 1)}
-                      disabled={currentPage === 1}
-                      className="px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                    >
-                      Previous
-                    </button>
-                    <span className="px-3 py-2 text-sm font-medium text-gray-900">
-                      Page {currentPage} of {totalPages}
-                    </span>
-                    <button
-                      onClick={() => handlePageChange(currentPage + 1)}
-                      disabled={currentPage === totalPages}
-                      className="px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                    >
-                      Next
-                    </button>
+
+              {/* Pagination - Using backend data */}
+              {totalUsers > 0 && (
+                <div className="px-6 py-4 bg-gray-50 border-t border-gray-200">
+                  <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+                    <div className="text-sm text-gray-700">
+                      Showing{" "}
+                      <span className="font-medium">
+                        {(currentPage - 1) * USERS_PER_PAGE + 1}
+                      </span>{" "}
+                      to{" "}
+                      <span className="font-medium">
+                        {Math.min(currentPage * USERS_PER_PAGE, totalUsers)}
+                      </span>{" "}
+                      of <span className="font-medium">{totalUsers}</span> users
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={() => handlePageChange(currentPage - 1)}
+                        disabled={currentPage === 1}
+                        className="px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                      >
+                        Previous
+                      </button>
+                      <span className="px-3 py-2 text-sm font-medium text-gray-900">
+                        Page {currentPage} of {totalPages}
+                      </span>
+                      <button
+                        onClick={() => handlePageChange(currentPage + 1)}
+                        disabled={currentPage === totalPages}
+                        className="px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                      >
+                        Next
+                      </button>
+                    </div>
                   </div>
                 </div>
-              </div>{" "}
+              )}
             </>
           )}
         </div>

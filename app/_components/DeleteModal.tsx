@@ -53,7 +53,7 @@ export default function DeleteModal({
             onClick={onConfirm}
             className="flex-1 px-6 py-3 bg-linear-to-r from-red-600 to-rose-500 text-white font-semibold rounded-xl hover:from-red-700 hover:to-rose-600 transition-all duration-200 shadow-md hover:shadow-lg"
           >
-            Yes, Logout
+            Yes, Delete
           </button>
         </div>
       </div>
