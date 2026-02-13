@@ -37,7 +37,7 @@ export default function AdminUsersPage() {
         setUsers(normalUsers);
         setTotalUsers(result.data.pagination?.total || normalUsers.length);
 
-        // Calculate stats using all fetched users
+        // Calculate stats using all the fetched users
         const now = new Date();
         const currentYear = now.getFullYear();
         const currentMonth = now.getMonth();
