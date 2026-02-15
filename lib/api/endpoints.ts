@@ -15,7 +15,11 @@ export const API = {
     DELETEUSERASADMIN: (id: string) => `/api/admin/auth/${id}`,
   },
   ORGANIZATION: {
-    GETORGANIZATIONS: "/api/organizations/details",
-    POSTORGANIZATIONDETAILS: "/api/organizations/details"
-  }
+    GETORGANIZATIONS: "/api/organizations",
+    GETORGANIZATIONByYID: (id: string) => `/api/organizations/${id}`,
+    POSTORGANIZATIONDETAILS: "/api/organizations/details",
+    GETORGANIZATIONDETAILS: "/api/organizations/details",
+    UPDATEORGANIZATIONDETAILS: "/api/organizations/details",
+    DELETEORGANIZATIONDETAILS: "/api/organizations/details",
+  },
 };

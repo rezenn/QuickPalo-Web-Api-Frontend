@@ -8,14 +8,14 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
   HomeIcon as HomeOutline,
-  BuildingOffice2Icon as BuildingOfficeOutline,
+  AdjustmentsHorizontalIcon as AdjustmentsHorizontalOutline,
   CalendarDaysIcon as CalendarDaysOutline,
   ClockIcon as ClockOutline,
   UserIcon as UserOutline,
 } from "@heroicons/react/24/outline";
 import {
   HomeIcon as HomeSolid,
-  BuildingOffice2Icon as BuildingOfficeSoild,
+  AdjustmentsHorizontalIcon as AdjustmentsHorizontalSoild,
   CalendarDaysIcon as CalendarDaysSolid,
   ClockIcon as ClockSolid,
   UserIcon as UserSolid,
@@ -41,10 +41,10 @@ const NavLinks = [
     icon: CalendarDaysOutline,
   },
   {
-    href: "/organization/organizations",
-    label: "Organizations",
-    filledIcon: BuildingOfficeSoild,
-    icon: BuildingOfficeOutline,
+    href: "/organization/details",
+    label: "Details",
+    filledIcon: AdjustmentsHorizontalSoild,
+    icon: AdjustmentsHorizontalOutline,
   },
   {
     href: "/organization/history",
