@@ -29,7 +29,7 @@ export interface WorkingHour {
 
 export interface Department {
   name: string;
-  description: string;
+  description?: string;  
   _id?: string;
 }
 
@@ -54,12 +54,12 @@ export interface OrganizationData {
   userId?: string;
   organizationName: string;
   organizationType: OrganizationType;
-  description: string;
+  description?: string;  
   street: string;
   city: string;
-  state?: string;
+  state?: string; 
   contactEmail: string;
-  contactPhone: string;
+  contactPhone?: string; 
   workingHours: WorkingHour[];
   departments: Department[];
   appointmentDuration: number;

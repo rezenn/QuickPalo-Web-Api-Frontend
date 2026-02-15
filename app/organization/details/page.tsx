@@ -3,207 +3,81 @@
 import { useEffect, useState } from "react";
 import {
   handleGetMyOrganizationDetails,
-  handleUpdateOrganizationDetails,
 } from "../../../lib/actions/organization/organization-action";
 import OrganizationProfile from "./_components/OrganizationProfile";
-import { ArrowLeft, Edit } from "lucide-react";
 import Link from "next/link";
-const sampleData = {
-  _id: "698ec78d74ef78a1654a1005",
-  userId: "698ec72274ef78a1654a1000",
-  organizationName: "ABC Hospital",
-  organizationType: "Hospital",
-  description: "24/7 emergency service for the people",
-  street: "Gyaneshwor",
-  city: "Kathmandu",
-  state: "Bagmati",
-  contactEmail: "info@abchospital.com",
-  contactPhone: "9844648395",
-  workingHours: [
-    {
-      day: "sunday",
-      openingTime: "08:00",
-      closingTime: "18:00",
-      isWorking: true,
-      _id: "69901055ade5c3de34303f74",
-    },
-    {
-      day: "monday",
-      openingTime: "08:00",
-      closingTime: "18:00",
-      isWorking: true,
-      _id: "69901055ade5c3de34303f75",
-    },
-    {
-      day: "tuesday",
-      openingTime: "08:00",
-      closingTime: "18:00",
-      isWorking: true,
-      _id: "69901055ade5c3de34303f76",
-    },
-    {
-      day: "wednesday",
-      openingTime: "08:00",
-      closingTime: "18:00",
-      isWorking: true,
-      _id: "69901055ade5c3de34303f77",
-    },
-    {
-      day: "thursday",
-      openingTime: "08:00",
-      closingTime: "18:00",
-      isWorking: true,
-      _id: "69901055ade5c3de34303f78",
-    },
-    {
-      day: "friday",
-      openingTime: "08:00",
-      closingTime: "18:00",
-      isWorking: true,
-      _id: "69901055ade5c3de34303f79",
-    },
-    {
-      day: "saturday",
-      openingTime: "00:00",
-      closingTime: "00:00",
-      isWorking: false,
-      _id: "69901055ade5c3de34303f7a",
-    },
-  ],
-  departments: [
-    {
-      name: "ER",
-      description: "for emergency patients only",
-      _id: "69901055ade5c3de34303f7b",
-    },
-    {
-      name: "General",
-      _id: "69901055ade5c3de34303f7c",
-    },
-    {
-      name: "Neuro",
-      description: "for neurologist only",
-      _id: "69901055ade5c3de34303f7d",
-    },
-  ],
-  appointmentDuration: 20,
-  advanceBookingDays: 7,
-  timeSlots: [
-    {
-      startTime: "08:00",
-      endTime: "08:30",
-      isAvailable: true,
-      _id: "69901055ade5c3de34303f7e",
-    },
-    {
-      startTime: "08:30",
-      endTime: "09:00",
-      isAvailable: true,
-      _id: "69901055ade5c3de34303f7f",
-    },
-    {
-      startTime: "09:00",
-      endTime: "09:30",
-      isAvailable: true,
-      _id: "69901055ade5c3de34303f80",
-    },
-    {
-      startTime: "09:30",
-      endTime: "10:00",
-      isAvailable: true,
-      _id: "69901055ade5c3de34303f81",
-    },
-    {
-      startTime: "10:00",
-      endTime: "10:30",
-      isAvailable: true,
-      _id: "69901055ade5c3de34303f82",
-    },
-    {
-      startTime: "10:30",
-      endTime: "11:00",
-      isAvailable: true,
-      _id: "69901055ade5c3de34303f83",
-    },
-    {
-      startTime: "11:00",
-      endTime: "11:30",
-      isAvailable: true,
-      _id: "69901055ade5c3de34303f84",
-    },
-    {
-      startTime: "11:30",
-      endTime: "12:00",
-      isAvailable: true,
-      _id: "69901055ade5c3de34303f85",
-    },
-    {
-      startTime: "14:00",
-      endTime: "14:30",
-      isAvailable: true,
-      _id: "69901055ade5c3de34303f86",
-    },
-    {
-      startTime: "14:30",
-      endTime: "15:00",
-      isAvailable: true,
-      _id: "69901055ade5c3de34303f87",
-    },
-    {
-      startTime: "15:00",
-      endTime: "15:30",
-      isAvailable: true,
-      _id: "69901055ade5c3de34303f88",
-    },
-    {
-      startTime: "15:30",
-      endTime: "16:00",
-      isAvailable: true,
-      _id: "69901055ade5c3de34303f89",
-    },
-    {
-      startTime: "16:00",
-      endTime: "16:30",
-      isAvailable: true,
-      _id: "69901055ade5c3de34303f8a",
-    },
-    {
-      startTime: "16:30",
-      endTime: "17:00",
-      isAvailable: true,
-      _id: "69901055ade5c3de34303f8b",
-    },
-    {
-      startTime: "17:00",
-      endTime: "17:30",
-      isAvailable: false,
-      _id: "69901055ade5c3de34303f8c",
-    },
-    {
-      startTime: "17:30",
-      endTime: "18:00",
-      isAvailable: false,
-      _id: "69901055ade5c3de34303f8d",
-    },
-  ],
-  isActive: true,
-  isVerified: false,
-  createdAt: "2026-02-13T06:41:17.555Z",
-  updatedAt: "2026-02-14T06:04:05.529Z",
-  user: {
-    _id: "698ec72274ef78a1654a1000",
-    fullName: "ABC Hospital",
-    email: "info@abchospital.com",
-    phoneNumber: "+9779895230782",
-    role: "organization",
-    profilePicture: "f97933a8-8273-4dcc-b534-a21db23b78df.jpg",
-  },
-};
+import { OrganizationData } from "@/types/organization.types"; 
 
 export default function OrganizationDashboard() {
+  const [data, setData] = useState<OrganizationData | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    fetchOrganizationDetails();
+  }, []);
+
+  const fetchOrganizationDetails = async () => {
+    try {
+      const result = await handleGetMyOrganizationDetails();
+      if (result.success && result.data) {
+        setData(result.data);
+      } else {
+        setError(result.message || "Failed to fetch organization details");
+      }
+    } catch (err) {
+      setError("An error occurred while fetching data");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-center">
+          <div className="w-16 h-16 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading organization details...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-center bg-red-50 p-8 rounded-xl">
+          <p className="text-red-600 mb-4">{error}</p>
+          <button
+            onClick={fetchOrganizationDetails}
+            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+          >
+            Try Again
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  if (!data) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-center">
+          <p className="text-gray-600 mb-4">No organization details found</p>
+          <Link
+            href="/organization/details/create"
+            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+          >
+            Create Organization Details
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div>
-      <OrganizationProfile data={sampleData} />{" "}
+      <OrganizationProfile data={data} />
     </div>
   );
 }

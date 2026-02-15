@@ -1,4 +1,3 @@
-// components/organization/OrganizationProfile.tsx
 import {
   Building2,
   MapPin,
@@ -13,62 +12,39 @@ import {
 import Link from "next/link";
 import Image from "next/image";
 import building from "@/app/assets/images/clinicsFeatures.jpg";
-
-interface WorkingHour {
-  day: string;
-  openingTime: string;
-  closingTime: string;
-  isWorking: boolean;
-  _id: string;
-}
-
-interface Department {
-  name: string;
-  description?: string;
-  _id: string;
-}
-
-interface TimeSlot {
-  startTime: string;
-  endTime: string;
-  isAvailable: boolean;
-  _id: string;
-}
-
-interface OrganizationData {
-  _id: string;
-  organizationName: string;
-  organizationType: string;
-  description: string;
-  street: string;
-  city: string;
-  state: string;
-  contactEmail: string;
-  contactPhone: string;
-  workingHours: WorkingHour[];
-  departments: Department[];
-  appointmentDuration: number;
-  advanceBookingDays: number;
-  timeSlots: TimeSlot[];
-  isActive: boolean;
-  isVerified: boolean;
-  createdAt: string;
-  updatedAt: string;
-  user: {
-    _id: string;
-    fullName: string;
-    email: string;
-    phoneNumber: string;
-    role: string;
-    profilePicture: string;
-  };
-}
+import { OrganizationData } from "@/types/organization.types";
+import { useAuth } from "@/context/authContext";
+import { useEffect, useState } from "react";
 
 export default function OrganizationProfile({
   data,
 }: {
   data: OrganizationData;
 }) {
+  const { user, loading } = useAuth();
+  const [imageError, setImageError] = useState(false);
+
+  useEffect(() => {
+    setImageError(false);
+  }, [user]);
+
+  if (loading) return null;
+  const getProfileImageUrl = () => {
+    if (!user) return null;
+
+    // Check imageUrl first
+    if (user.imageUrl) {
+      return user.imageUrl;
+    }
+
+    if (user.profilePicture) {
+      return `${process.env.NEXT_PUBLIC_API_BASE_URL?.replace("/api", "")}/uploads/profile/${user.profilePicture}`;
+    }
+
+    return null;
+  };
+
+  const profileImageUrl = getProfileImageUrl();
   const daysOrder = [
     "sunday",
     "monday",
@@ -91,13 +67,13 @@ export default function OrganizationProfile({
         <div className="flex items-start justify-between ">
           <div className="flex items-center gap-4">
             <div className="relative w-25 h-25 bg-blue-100 rounded-full flex items-center justify-center overflow-hidden">
-              {data.user?.profilePicture ? (
+              {profileImageUrl && !imageError ? (
                 <div className="relative w-full h-full rounded-full border-3 border-fuchsia-400 shadow-2xl overflow-hidden bg-linear-to-br from-purple-100 to-pink-100">
                   <Image
-                    src={building}
+                    src={profileImageUrl}
                     alt={data.organizationName}
                     fill
-                    className="object-cover transition-transform duration-500 hover:scale-110"
+                    className="object-cover "
                     unoptimized
                     sizes="80px"
                     priority
