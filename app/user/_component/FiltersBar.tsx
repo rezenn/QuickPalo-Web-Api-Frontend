@@ -12,7 +12,7 @@ export default function FilterBar({
   filters,
   activeFilter,
   onChange,
-  rounded = "md",
+  rounded = "full",
   disabled = false,
 }: FilterBarProps) {
   const roundedClasses = {

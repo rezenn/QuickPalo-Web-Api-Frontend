@@ -161,8 +161,9 @@ export default function OrganizationSidebar({
       </div>
 
       {(filterDepartment || filterTimeslot) && (
-        <div className="mt-6 p-3 bg-fuchsia-50 rounded-lg">
-          <h3 className="font-semibold text-[#B61BE1] mb-2">Your Selection:</h3>
+        <div className="mt-6 p-3 bg-fuchsia-50 rounded-lg ">
+          <h3 className="font-semibold text-[#B61BE1] mb-2">Your Selection</h3>
+          <div className=" mb-1 rounded-full border bg-[#B61BE1] "></div>
           {filterDepartment && (
             <p className="text-sm text-gray-700">
               <span className="font-medium">Department: </span>

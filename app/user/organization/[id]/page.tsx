@@ -8,16 +8,22 @@ import { ClockIcon } from "@heroicons/react/24/outline";
 import OrganizationSidebar from "../../_component/OrganizationSidebar";
 import { handleGetOrganizationById } from "@/lib/actions/organization/organization-action";
 import { notFound } from "next/navigation";
-import building from "@/app/assets/images/clinicsFeatures.jpg";
+import building from "@/app/assets/images/buildingPlaceholder.jpg";
 import Link from "next/link";
 import { ArrowLeft, ChevronLeft } from "lucide-react";
 
 interface PageProps {
   params: Promise<{ id: string }> | { id: string };
+  searchParams?: Promise<{ returnTo?: string }> | { returnTo?: string };
 }
 
-export default async function OrganizationDetail({ params }: PageProps) {
+export default async function OrganizationDetail({
+  params,
+  searchParams,
+}: PageProps) {
   const resolvedParams = await params;
+  const resolvedSearchParams = await (searchParams || {});
+  const returnTo = resolvedSearchParams.returnTo || "/user/organizations";
   const organizationId = resolvedParams.id;
   if (!organizationId) {
     notFound();
@@ -77,7 +83,7 @@ export default async function OrganizationDetail({ params }: PageProps) {
       <div className="max-w-157 mx-2 ">
         <div className="w-157 h-85 relative rounded-xl overflow-hidden mb-4">
           <Link
-            href="/user/organizations"
+            href={returnTo}
             className="absolute top-2 left-2 z-10 bg-black/70 hover:bg-black/50 text-white p-2 rounded-full transition-colors  "
           >
             <ChevronLeft />

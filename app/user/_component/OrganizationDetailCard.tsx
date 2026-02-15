@@ -7,15 +7,15 @@ import { useState, useEffect } from "react";
 import { handleGetAllOrganizations } from "@/lib/actions/organization/organization-action";
 import Link from "next/link";
 import { OrganizationData } from "@/types/organization.types";
-import building from "@/app/assets/images/clinicsFeatures.jpg"; // Default fallback image
-
-const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:3000";
+import building from "@/app/assets/images/buildingPlaceholder.jpg";
+import { usePathname } from "next/navigation";
 
 export default function OrganizationsDetailsCard() {
   const [organizations, setOrganizations] = useState<OrganizationData[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const pathname = usePathname();
+
   const [imageErrors, setImageErrors] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
@@ -54,7 +54,7 @@ export default function OrganizationsDetailsCard() {
     }
 
     // Construct the URL
-    return `${API_BASE_URL}/uploads/profile/${profilePicture}`;
+    return `${process.env.NEXT_PUBLIC_API_BASE_URL}/uploads/profile/${profilePicture}`;
   };
 
   const handleImageError = (organizationId: string) => {
@@ -91,7 +91,7 @@ export default function OrganizationsDetailsCard() {
   if (loading) {
     return (
       <div className="flex justify-center items-center p-8">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-600"></div>
+        <div className="flex justify-center items-center animate-spin rounded-full  h-8 w-8 border-b-2 border-purple-600"></div>
       </div>
     );
   }
@@ -126,10 +126,10 @@ export default function OrganizationsDetailsCard() {
         return (
           <Link
             key={organization._id}
-            href={`/user/organization/${organization._id}`}
-            className="w-full h-[375px] bg-black/10 rounded-xl p-2 shadow-lg flex flex-col items-center hover:shadow-2xl"
+            href={`/user/organization/${organization._id}?returnTo=${encodeURIComponent(pathname)}`}
+            className="w-full h-93.75 bg-gray-10 border border-black/5 rounded-xl p-2 shadow-lg flex flex-col items-center hover:shadow-xl"
           >
-            <div className="w-full h-[202px] relative rounded-xl overflow-hidden border border-gray-500">
+            <div className="w-full h-50.5 relative rounded-xl overflow-hidden border  ">
               {profileImageUrl ? (
                 <Image
                   src={profileImageUrl}
@@ -155,13 +155,13 @@ export default function OrganizationsDetailsCard() {
                 {organization.organizationName}
               </h1>
               <div className="flex flex-row gap-1">
-                <MapPinIcon className="w-5 text-red-600 flex-shrink-0" />
+                <MapPinIcon className="w-5 text-red-600 shrink-0" />
                 <p className="line-clamp-1">
                   {organization.street}, {organization.city}
                 </p>
               </div>
               <div className="flex flex-row gap-1">
-                <ClockIcon className="w-5 text-gray-600 flex-shrink-0" />
+                <ClockIcon className="w-5 text-gray-600 shrink-0" />
                 <p className="line-clamp-1">
                   {getWorkingHoursDisplay(organization.workingHours)}
                 </p>
