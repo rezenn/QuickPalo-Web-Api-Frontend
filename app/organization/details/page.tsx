@@ -1,12 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import {
-  handleGetMyOrganizationDetails,
-} from "../../../lib/actions/organization/organization-action";
+import { handleGetMyOrganizationDetails } from "../../../lib/actions/organization/organization-action";
 import OrganizationProfile from "./_components/OrganizationProfile";
 import Link from "next/link";
-import { OrganizationData } from "@/types/organization.types"; 
+import { OrganizationData } from "@/types/organization.types";
 
 export default function OrganizationDashboard() {
   const [data, setData] = useState<OrganizationData | null>(null);
@@ -35,11 +33,12 @@ export default function OrganizationDashboard() {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <div className="text-center">
-          <div className="w-16 h-16 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <div className="flex justify-center items-center p-8 text-center">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-600"></div>
+          </div>
           <p className="text-gray-600">Loading organization details...</p>
         </div>
-      </div>
+      
     );
   }
 

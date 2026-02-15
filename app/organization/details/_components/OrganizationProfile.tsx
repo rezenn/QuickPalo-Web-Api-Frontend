@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Building2,
   MapPin,
@@ -5,8 +7,6 @@ import {
   Phone,
   Clock,
   Calendar,
-  CheckCircle,
-  XCircle,
   Edit,
 } from "lucide-react";
 import Link from "next/link";
@@ -21,30 +21,46 @@ export default function OrganizationProfile({
 }: {
   data: OrganizationData;
 }) {
-  const { user, loading } = useAuth();
+  const { loading } = useAuth();
   const [imageError, setImageError] = useState(false);
+  const [imageUrl, setImageUrl] = useState<string | null>(null);
 
   useEffect(() => {
     setImageError(false);
-  }, [user]);
+
+    // Check if data exists
+    if (!data) return;
+
+    // Look for profile picture in different possible locations
+    let profilePicture = null;
+
+    // Try to get from data.user (if populated)
+    if (data.user?.profilePicture) {
+      profilePicture = data.user.profilePicture;
+    }
+    // Try to get from userId if it's an object with profilePicture
+    else if (
+      data.userId &&
+      typeof data.userId === "object" &&
+      "profilePicture" in data.userId
+    ) {
+      profilePicture = (data.userId as any).profilePicture;
+    }
+
+    if (profilePicture) {
+      if (profilePicture.startsWith("http")) {
+        setImageUrl(profilePicture);
+      } else {
+        const imageUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}/uploads/profile/${profilePicture}`;
+        setImageUrl(imageUrl);
+      }
+    } else {
+      setImageUrl(null);
+    }
+  }, [data]);
 
   if (loading) return null;
-  const getProfileImageUrl = () => {
-    if (!user) return null;
 
-    // Check imageUrl first
-    if (user.imageUrl) {
-      return user.imageUrl;
-    }
-
-    if (user.profilePicture) {
-      return `${process.env.NEXT_PUBLIC_API_BASE_URL?.replace("/api", "")}/uploads/profile/${user.profilePicture}`;
-    }
-
-    return null;
-  };
-
-  const profileImageUrl = getProfileImageUrl();
   const daysOrder = [
     "sunday",
     "monday",
@@ -55,7 +71,7 @@ export default function OrganizationProfile({
     "saturday",
   ];
 
-  const sortedWorkingHours = [...data.workingHours].sort(
+  const sortedWorkingHours = [...(data?.workingHours || [])].sort(
     (a, b) => daysOrder.indexOf(a.day) - daysOrder.indexOf(b.day),
   );
 
@@ -67,10 +83,10 @@ export default function OrganizationProfile({
         <div className="flex items-start justify-between ">
           <div className="flex items-center gap-4">
             <div className="relative w-25 h-25 bg-blue-100 rounded-full flex items-center justify-center overflow-hidden">
-              {profileImageUrl && !imageError ? (
+              {imageUrl && !imageError ? (
                 <div className="relative w-full h-full rounded-full border-3 border-fuchsia-400 shadow-2xl overflow-hidden bg-linear-to-br from-purple-100 to-pink-100">
                   <Image
-                    src={profileImageUrl}
+                    src={imageUrl}
                     alt={data.organizationName}
                     fill
                     className="object-cover "

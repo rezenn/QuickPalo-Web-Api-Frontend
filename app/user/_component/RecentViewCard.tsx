@@ -11,9 +11,9 @@ export default function SmallCard() {
         <Link
           key={organization.id}
           href={`/organization/${encodeURIComponent(organization.title)}`}
-          className="w-[200px] h-[180px] bg-black/10 rounded-xl p-2 my-2 shadow-lg flex flex-col items-start hover:shadow-2xl"
+          className="w-50 h-45 bg-black/10 rounded-xl p-2 my-2 shadow-lg flex flex-col items-start hover:shadow-2xl"
         >
-          <div className="w-[180px] h-[135px] relative rounded-xl overflow-hidden border border-gray-500">
+          <div className="w-45 h-33.75 relative rounded-xl overflow-hidden border border-gray-500">
             <Image
               src={organization.image}
               alt={organization.title}

@@ -20,7 +20,7 @@ export async function handleGetAllOrganizations() {
       data: response.data,
     };
   } catch (err: Error | any) {
-    return { success: false, message: err.message };
+    return { success: false, message: err.message, data:[] };
   }
 }
 export async function handleGetOrganizationById(organizationId: string) {
