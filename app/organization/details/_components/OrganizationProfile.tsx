@@ -28,17 +28,12 @@ export default function OrganizationProfile({
   useEffect(() => {
     setImageError(false);
 
-    // Check if data exists
     if (!data) return;
-
-    // Look for profile picture in different possible locations
     let profilePicture = null;
 
-    // Try to get from data.user (if populated)
     if (data.user?.profilePicture) {
       profilePicture = data.user.profilePicture;
     }
-    // Try to get from userId if it's an object with profilePicture
     else if (
       data.userId &&
       typeof data.userId === "object" &&
