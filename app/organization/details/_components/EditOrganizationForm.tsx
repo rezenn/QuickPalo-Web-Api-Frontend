@@ -69,7 +69,6 @@ export default function SimpleEditForm({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     onSave(formData);
-    // Optional: Show success message or notification here
   };
 
   const days = [

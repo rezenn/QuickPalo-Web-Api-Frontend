@@ -50,7 +50,7 @@ export interface UserInfo {
 }
 
 export interface OrganizationData {
-  _id: string; // Make this required since it comes from DB
+  _id: string;
   userId?: string;
   organizationName: string;
   organizationType: OrganizationType;

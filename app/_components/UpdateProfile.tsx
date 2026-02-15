@@ -139,11 +139,9 @@ export default function UpdateUserForm({ initialUser }: { initialUser: any }) {
   const changesCount = [isDirty, previewImage].filter(Boolean).length;
 
   return (
-    <div className="max-w-3xl mx-auto mt-10 px-4">
-      {" "}
+    <div className="max-w-3xl mx-auto mt-10 px-1">
       <Link
-        className=" w-20 h-10 px-2 flex flex-row justify-center items-center gap-2 rounded-2xl bg-fuchsia-100 "
-        // href="/user/profile"
+        className="w-25 bg-[#B61BE1] text-white font-semibold py-3 px-4 rounded-xl flex items-center justify-center gap-2 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg"
         href={getRoleBasedRoute("/profile", user?.role)}
       >
         <ArrowLeft />

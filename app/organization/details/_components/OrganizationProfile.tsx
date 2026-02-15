@@ -87,67 +87,6 @@ export default function OrganizationProfile({
 
   return (
     <div className="max-w-6xl mx-auto p-6 min-h-screen">
-      {/* Header Section */}
-      {/* <div className="bg-white rounded-xl shadow-lg p-8 mb-6">
-        <div className="flex items-start justify-between">
-          <div className="flex items-center gap-4">
-            <div className="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center">
-              {data.user.profilePicture ? (
-                <div className="relative h-30 w-90 rounded-full border-4 border-fuchsia-400 shadow-2xl overflow-hidden bg-linear-to-br from-purple-100 to-pink-100">
-                  <Image
-                    src={`http://localhost:3000/uploads/profile/${data.user.profilePicture}`}
-                    alt={data.organizationName}
-                    fill
-                    className="object-cover transition-transform duration-500 group-hover:scale-110"
-                    unoptimized
-                    sizes="160px"
-                    priority
-                  />
-                </div>
-              ) : (
-                <Building2 className="w-10 h-10 text-blue-600" />
-              )}
-            </div>
-            <div>
-              <h1 className="text-3xl font-bold text-gray-900">
-                {data.organizationName}
-              </h1>
-              <div className="flex items-center gap-3 mt-2">
-                <span className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-medium">
-                  {data.organizationType
-                    .split("_")
-                    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-                    .join(" ")}
-                </span>
-
-                {data.isActive ? (
-                  <span className="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm">
-                    Active
-                  </span>
-                ) : (
-                  <span className="px-3 py-1 bg-red-100 text-red-800 rounded-full text-sm">
-                    Inactive
-                  </span>
-                )}
-              </div>
-            </div>
-          </div>
-          <div className="flex justify-end p-5 pt-0">
-            <Link
-              href="/organization/my_details/edit"
-              className=" bg-[#B61BE1] text-white font-semibold py-3 px-4 rounded-xl flex items-center justify-center gap-2 transition-all duration-300 transform hover:-translate-y-0.5 hover:shadow-lg"
-            >
-              <Edit size={18} />
-              <span>Edit Details</span>
-            </Link>
-          </div>
-        </div>
-
-        {data.description && (
-          <p className="mt-4 text-gray-600 border-t pt-4">{data.description}</p>
-        )}
-      </div> */}
-
       <div className="bg-white rounded-xl shadow-lg p-8 mb-6 border border-gray-100">
         <div className="flex items-start justify-between ">
           <div className="flex items-center gap-4">

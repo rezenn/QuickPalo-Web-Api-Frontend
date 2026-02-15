@@ -1,21 +1,3 @@
-// import OrganizationsDetailsCard from "../_component/OrganizationDetailCard";
-// import OrganizationFilter from "../_component/OrganizationFilter";
-
-// export default function Organizations() {
-//   return (
-//     <div>
-//       {/* <h1 className=" px-2 pb-3 text-2xl font-semibold ">Organizations</h1> */}
-//       <div className="flex flex-row overflow-x-auto pb-5">
-//         <OrganizationFilter />
-//       </div>
-//       <div className="flex flow-col overflow-y-auto pb-5">
-//         <OrganizationsDetailsCard />
-//       </div>
-//     </div>
-//   );
-// }
-
-// app/dashboard/organization/page.tsx
 "use client";
 
 import { useEffect, useState } from "react";
@@ -26,12 +8,11 @@ import {
 import OrganizationProfile from "./_components/OrganizationProfile";
 import { ArrowLeft, Edit } from "lucide-react";
 import Link from "next/link";
-// Sample data based on your JSON
 const sampleData = {
   _id: "698ec78d74ef78a1654a1005",
   userId: "698ec72274ef78a1654a1000",
   organizationName: "ABC Hospital",
-  organizationType: "hospital",
+  organizationType: "Hospital",
   description: "24/7 emergency service for the people",
   street: "Gyaneshwor",
   city: "Kathmandu",
