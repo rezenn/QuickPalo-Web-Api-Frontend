@@ -19,6 +19,7 @@ import { handleUpdateProfile } from "@/lib/actions/auth-action";
 import { UpdateUserData, updateUserSchema } from "../schema/update-user.schema";
 import { useAuth } from "@/context/authContext";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export default function UpdateUserForm({ initialUser }: { initialUser: any }) {
   const { user, refreshUser, updateUserData } = useAuth();
@@ -44,6 +45,7 @@ export default function UpdateUserForm({ initialUser }: { initialUser: any }) {
   const [isUploading, setIsUploading] = useState(false);
   const [imageHover, setImageHover] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const router = useRouter();
 
   const hasChanges = isDirty || previewImage;
 
@@ -100,7 +102,8 @@ export default function UpdateUserForm({ initialUser }: { initialUser: any }) {
 
       setTimeout(() => {
         setSuccess(null);
-      }, 3000);
+        router.push(getRoleBasedRoute("/profile", user?.role));
+      }, 2000);
 
       // Reset form
       reset({

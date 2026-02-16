@@ -16,7 +16,9 @@ export default function Page() {
   const [data, setData] = useState<OrganizationData | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const [error, setError] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
+
   const router = useRouter();
 
   useEffect(() => {
@@ -26,6 +28,7 @@ export default function Page() {
   const fetchOrganizationData = async () => {
     try {
       setLoading(true);
+      setError(null);
       const result = await handleGetMyOrganizationDetails();
       if (result.success && result.data) {
         setData(result.data);
@@ -45,12 +48,13 @@ export default function Page() {
       const result = await handleUpdateOrganizationDetails(updateData);
 
       if (result.success) {
-        toast("Organization details updated successfully!");
+        toast.success("Organization details updated successfully!");
         router.push("/organization/details");
       } else {
-        toast(result.message || "Failed to update organization");
+        toast.error(result.message || "Failed to update organization");
       }
     } catch (err) {
+      toast.error("Update failed. Please try again.");
       setError("Update failed. Please try again.");
     } finally {
       setSaving(false);

@@ -81,9 +81,8 @@ export default function CreateUserForm() {
         reset();
         setPreviewImage(null);
 
-        // Redirect after 2 seconds
         setTimeout(() => {
-          router.push("/admin/users"); // Change this to your admin users list page
+          router.push("/admin/users");
         }, 2000);
       } else {
         setError(result.message || "Failed to create user");
@@ -109,7 +108,7 @@ export default function CreateUserForm() {
     <div className="max-w-3xl mx-auto mt-10 px-4">
       <Link
         className="w-20 h-10 px-2 flex flex-row justify-center items-center gap-2 rounded-2xl bg-fuchsia-100 hover:bg-fuchsia-200 transition-colors"
-        href="/admin/users" // Change this to your admin users list page
+        href="/admin/users" 
       >
         <ArrowLeft size={16} />
         <p>Back</p>

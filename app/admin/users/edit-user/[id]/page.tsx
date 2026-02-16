@@ -6,6 +6,7 @@ import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import EditUserForm from "@/app/admin/_component/UpdateUserForm";
 import { handleGetOneUser } from "@/lib/actions/admin/user-action";
+import { toast } from "sonner";
 
 export default function AdminEditUserPage() {
   const params = useParams();
@@ -50,6 +51,10 @@ export default function AdminEditUserPage() {
 
   const handleUpdateSuccess = () => {
     fetchUserData();
+    toast.success("User data updated successfully!");
+    setTimeout(() => {
+      router.push("/admin/users");
+    }, 2000);
   };
 
   if (isLoading) {

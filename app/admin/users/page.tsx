@@ -1,5 +1,3 @@
-
-
 "use client";
 
 import profile from "@/app/assets/images/profile.png";
