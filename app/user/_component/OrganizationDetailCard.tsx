@@ -53,7 +53,6 @@ export default function OrganizationsDetailsCard() {
       return profilePicture;
     }
 
-    // Construct the URL
     return `${process.env.NEXT_PUBLIC_API_BASE_URL}/uploads/profile/${profilePicture}`;
   };
 
@@ -138,7 +137,7 @@ export default function OrganizationsDetailsCard() {
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                   style={{ objectFit: "cover" }}
                   onError={() => handleImageError(organization._id)}
-                  unoptimized // Add this if images are from external domain
+                  unoptimized 
                 />
               ) : (
                 <Image

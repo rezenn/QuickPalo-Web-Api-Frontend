@@ -84,7 +84,6 @@ export default function SideNavigation() {
       setShowLogoutConfirm(false);
     } catch (error) {
       toast.error("Failed to logout");
-      // console.error("Logout failed:", error);
     }
   };
 

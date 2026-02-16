@@ -90,7 +90,7 @@ export default function Header() {
               <BellDot size={20} className="sm:w-6 sm:h-6" />
             </button>
 
-            <div className="relative">
+            
               <div className="relative h-12 w-12 sm:h-14 sm:w-14 rounded-full overflow-hidden border-2 border-fuchsia-400 hover:border-purple-600 transition-colors">
                 <Link
                   // href="/admin/profile"
@@ -113,7 +113,7 @@ export default function Header() {
                   )}
                 </Link>
               </div>
-            </div>
+          
           </div>
         </header>
       </div>

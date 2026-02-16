@@ -11,50 +11,55 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
-import building from "@/app/assets/images/clinicsFeatures.jpg";
+import building from "@/app/assets/images/buildingPlaceholder.jpg";
 import { OrganizationData } from "@/types/organization.types";
+import { useState, useEffect } from "react";
+import { handleGetMyOrganizationDetails } from "@/lib/actions/organization/organization-action";
 import { useAuth } from "@/context/authContext";
-import { useEffect, useState } from "react";
 
-export default function OrganizationProfile({
-  data,
-}: {
-  data: OrganizationData;
-}) {
-  const { loading } = useAuth();
+export default function OrganizationProfile() {
+  const [organization, setOrganization] = useState<OrganizationData | null>(
+    null,
+  );
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const { user } = useAuth();
+
   const [imageError, setImageError] = useState(false);
-  const [imageUrl, setImageUrl] = useState<string | null>(null);
-
   useEffect(() => {
-    setImageError(false);
+    fetchOrganization();
+  }, []);
 
-    if (!data) return;
-    let profilePicture = null;
-
-    if (data.user?.profilePicture) {
-      profilePicture = data.user.profilePicture;
-    }
-    else if (
-      data.userId &&
-      typeof data.userId === "object" &&
-      "profilePicture" in data.userId
-    ) {
-      profilePicture = (data.userId as any).profilePicture;
-    }
-
-    if (profilePicture) {
-      if (profilePicture.startsWith("http")) {
-        setImageUrl(profilePicture);
+  const fetchOrganization = async () => {
+    try {
+      const result = await handleGetMyOrganizationDetails();
+      if (result.success && result.data) {
+        setOrganization(result.data);
       } else {
-        const imageUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}/uploads/profile/${profilePicture}`;
-        setImageUrl(imageUrl);
+        setError(result.message || "Failed to fetch organizations");
       }
-    } else {
-      setImageUrl(null);
+    } catch (err) {
+      setError("An error occurred while fetching data");
+    } finally {
+      setLoading(false);
     }
-  }, [data]);
+  };
 
-  if (loading) return null;
+  const getProfileImageUrl = () => {
+    if (!user) return null;
+
+    if (user.imageUrl) {
+      return user.imageUrl;
+    }
+
+    if (user.profilePicture) {
+      return `${process.env.NEXT_PUBLIC_API_BASE_URL?.replace("/api", "")}/uploads/profile/${user.profilePicture}`;
+    }
+
+    return null;
+  };
+
+  const formatDay = (day: string) => day.charAt(0).toUpperCase() + day.slice(1);
 
   const daysOrder = [
     "sunday",
@@ -66,11 +71,40 @@ export default function OrganizationProfile({
     "saturday",
   ];
 
-  const sortedWorkingHours = [...(data?.workingHours || [])].sort(
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center p-8">
+        <div className="flex justify-center items-center animate-spin rounded-full  h-8 w-8 border-b-2 border-purple-600"></div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="w-full text-center py-10">
+        <p className="text-red-600">{error}</p>
+        <button
+          onClick={fetchOrganization}
+          className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+        >
+          Try Again
+        </button>
+      </div>
+    );
+  }
+
+  if (!organization) {
+    return (
+      <div className="w-full text-center py-10">
+        <p className="text-gray-600">No organization found</p>
+      </div>
+    );
+  }
+
+  const profileImageUrl = getProfileImageUrl();
+  const sortedWorkingHours = [...organization.workingHours].sort(
     (a, b) => daysOrder.indexOf(a.day) - daysOrder.indexOf(b.day),
   );
-
-  const formatDay = (day: string) => day.charAt(0).toUpperCase() + day.slice(1);
 
   return (
     <div className="max-w-6xl mx-auto p-6 min-h-screen">
@@ -78,36 +112,43 @@ export default function OrganizationProfile({
         <div className="flex items-start justify-between ">
           <div className="flex items-center gap-4">
             <div className="relative w-25 h-25 bg-blue-100 rounded-full flex items-center justify-center overflow-hidden">
-              {imageUrl && !imageError ? (
-                <div className="relative w-full h-full rounded-full border-3 border-fuchsia-400 shadow-2xl overflow-hidden bg-linear-to-br from-purple-100 to-pink-100">
+              <div className="relative w-full h-full rounded-full border-3 border-fuchsia-400 shadow-2xl overflow-hidden bg-gradient-to-br from-purple-100 to-pink-100">
+                {profileImageUrl && !imageError ? (
                   <Image
-                    src={imageUrl}
-                    alt={data.organizationName}
+                    src={profileImageUrl}
+                    alt={organization.organizationName}
                     fill
-                    className="object-cover "
-                    unoptimized
                     sizes="80px"
-                    priority
+                    className="object-cover rounded-full"
+                    unoptimized
+                    onError={() => setImageError(true)}
                   />
-                </div>
-              ) : (
-                <Building2 className="w-10 h-10 text-blue-600" />
-              )}
+                ) : (
+                  <Image
+                    src={building}
+                    alt={organization.organizationName}
+                    fill
+                    sizes="80px"
+                    className="object-cover rounded-full"
+                    loading="eager"
+                  />
+                )}
+              </div>
             </div>
 
             <div>
               <h1 className="text-3xl font-bold text-gray-900">
-                {data.organizationName}
+                {organization.organizationName}
               </h1>
               <div className="flex items-center gap-3 mt-2">
                 <span className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-medium">
-                  {data.organizationType
+                  {organization.organizationType
                     .split("_")
                     .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
                     .join(" ")}
                 </span>
 
-                {data.isActive ? (
+                {organization.isActive ? (
                   <span className="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm">
                     Active
                   </span>
@@ -129,12 +170,13 @@ export default function OrganizationProfile({
           </Link>
         </div>
 
-        {data.description && (
-          <p className="mt-6 text-gray-600 border-t pt-4">{data.description}</p>
+        {organization.description && (
+          <p className="mt-6 text-gray-600 border-t pt-4">
+            {organization.description}
+          </p>
         )}
       </div>
 
-      {/* Contact and Location Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6 ">
         {/* Contact Information */}
         <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-100 ">
@@ -145,11 +187,13 @@ export default function OrganizationProfile({
           <div className="space-y-3">
             <div className="flex items-center gap-3 text-gray-600">
               <Mail className="w-4 h-4" />
-              <span>{data.contactEmail}</span>
+              <span>{organization.contactEmail}</span>
             </div>
             <div className="flex items-center gap-3 text-gray-600">
               <Phone className="w-4 h-4" />
-              <span>{data.contactPhone || data.user.phoneNumber}</span>
+              <span>
+                {organization.contactPhone || organization.user.phoneNumber}
+              </span>
             </div>
           </div>
         </div>
@@ -161,9 +205,9 @@ export default function OrganizationProfile({
             Location
           </h2>
           <div className="space-y-2 text-gray-600">
-            <p>{data.street}</p>
+            <p>{organization.street}</p>
             <p>
-              {data.city}, {data.state}
+              {organization.city}, {organization.state}
             </p>
           </div>
         </div>
@@ -199,17 +243,22 @@ export default function OrganizationProfile({
       </div>
 
       {/* Departments */}
-      {data.departments.length > 0 && (
+      {organization.departments.length > 0 && (
         <div className="bg-white rounded-xl shadow-lg p-6 mb-6 border border-gray-100">
           <h2 className="text-xl font-semibold mb-4">Departments</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {data.departments.map((dept) => (
-              <div key={dept._id} className="border rounded-lg p-4">
+            {organization.departments.map((dept) => (
+              <div
+                key={dept._id}
+                className="border border-gray-300 bg-blue-50 rounded-lg px-4 py-2"
+              >
                 <h3 className="font-semibold text-gray-900">{dept.name}</h3>
                 {dept.description && (
-                  <p className="text-sm text-gray-600 mt-1">
-                    {dept.description}
-                  </p>
+                  <div>
+                    <p className="text-sm text-gray-600 mt-1">
+                      {dept.description}
+                    </p>
+                  </div>
                 )}
               </div>
             ))}
@@ -228,13 +277,13 @@ export default function OrganizationProfile({
             <div className="flex justify-between items-center border-b pb-2">
               <span className="text-gray-600">Duration:</span>
               <span className="font-medium">
-                {data.appointmentDuration} minutes
+                {organization.appointmentDuration} minutes
               </span>
             </div>
             <div className="flex justify-between items-center">
               <span className="text-gray-600">Advance Booking:</span>
               <span className="font-medium">
-                {data.advanceBookingDays} days
+                {organization.advanceBookingDays} days
               </span>
             </div>
           </div>
@@ -246,17 +295,24 @@ export default function OrganizationProfile({
           <div className="space-y-3">
             <div className="flex justify-between items-center border-b pb-2">
               <span className="text-gray-600">Total Time Slots:</span>
-              <span className="font-medium">{data.timeSlots.length}</span>
+              <span className="font-medium">
+                {organization.timeSlots.length}
+              </span>
             </div>
             <div className="flex justify-between items-center border-b pb-2">
               <span className="text-gray-600">Available Slots:</span>
               <span className="font-medium text-green-600">
-                {data.timeSlots.filter((slot) => slot.isAvailable).length}
+                {
+                  organization.timeSlots.filter((slot) => slot.isAvailable)
+                    .length
+                }
               </span>
             </div>
             <div className="flex justify-between items-center">
               <span className="text-gray-600">Total Departments:</span>
-              <span className="font-medium">{data.departments.length}</span>
+              <span className="font-medium">
+                {organization.departments.length}
+              </span>
             </div>
           </div>
         </div>
@@ -266,7 +322,7 @@ export default function OrganizationProfile({
       <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-100">
         <h2 className="text-xl font-semibold mb-4">Available Time Slots</h2>
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3">
-          {data.timeSlots.map((slot) => (
+          {organization.timeSlots.map((slot) => (
             <div
               key={slot._id}
               className={`p-2 text-center rounded-lg text-sm ${

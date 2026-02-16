@@ -1,8 +1,7 @@
-// app/edit/page.tsx
 "use client";
 
 import { useState } from "react";
-import SimpleEditForm from "../_components/EditOrganizationForm";
+import EditOrganizationForm from "../_components/EditOrganizationForm";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 
@@ -92,17 +91,6 @@ export default function Page() {
       <div style={{ padding: "20px 20px 0 20px" }}>
         <Link
           href="/organization/details"
-          // style={{
-          //   display: "inline-flex",
-          //   alignItems: "center",
-          //   gap: "8px",
-          //   padding: "8px 16px",
-          //   backgroundColor: "#f5f5f5",
-          //   borderRadius: "9999px",
-          //   textDecoration: "none",
-          //   color: "#333",
-          //   fontSize: "14px",
-          // }}
           className="w-25 bg-[#B61BE1] text-white font-semibold py-3 px-4 rounded-xl flex items-center justify-center gap-2 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg"
         >
           <ArrowLeft size={20} />
@@ -111,7 +99,7 @@ export default function Page() {
       </div>
 
       {/* Edit Form */}
-      <SimpleEditForm
+      <EditOrganizationForm
         initialData={data}
         onSave={handleSave}
         onCancel={() => console.log("cancel")}
