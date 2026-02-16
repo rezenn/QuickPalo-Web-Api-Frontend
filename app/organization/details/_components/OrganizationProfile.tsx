@@ -112,7 +112,7 @@ export default function OrganizationProfile() {
         <div className="flex items-start justify-between ">
           <div className="flex items-center gap-4">
             <div className="relative w-25 h-25 bg-blue-100 rounded-full flex items-center justify-center overflow-hidden">
-              <div className="relative w-full h-full rounded-full border-3 border-fuchsia-400 shadow-2xl overflow-hidden bg-gradient-to-br from-purple-100 to-pink-100">
+              <div className="relative w-full h-full rounded-full border-3 border-fuchsia-400 shadow-2xl overflow-hidden bg-linear-to-br from-purple-100 to-pink-100">
                 {profileImageUrl && !imageError ? (
                   <Image
                     src={profileImageUrl}

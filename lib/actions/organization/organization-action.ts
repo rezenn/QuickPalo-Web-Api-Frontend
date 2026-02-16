@@ -20,7 +20,7 @@ export async function handleGetAllOrganizations() {
       data: response.data,
     };
   } catch (err: Error | any) {
-    return { success: false, message: err.message, data:[] };
+    return { success: false, message: err.message, data: [] };
   }
 }
 export async function handleGetOrganizationById(organizationId: string) {
@@ -44,6 +44,8 @@ export async function handlePostOrganizationDetails(
     if (response.success) {
       revalidatePath("/organizations");
       revalidatePath("/dashboard/organization");
+      revalidatePath("/organization/details");
+
       return {
         success: true,
         message: "organization data posted successfully",

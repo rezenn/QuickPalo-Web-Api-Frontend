@@ -1,93 +1,94 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import EditOrganizationForm from "../_components/EditOrganizationForm";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
-
-const sampleData = {
-  organizationName: "ABC Hospital",
-  organizationType: "hospital",
-  description: "24/7 emergency",
-  street: "Gyaneshwor",
-  city: "Kathmandu",
-  state: "Bagmati",
-  contactEmail: "info@abchospital.com",
-  contactPhone: "9844648395",
-  workingHours: [
-    {
-      day: "sunday",
-      openingTime: "08:00",
-      closingTime: "18:00",
-      isWorking: true,
-    },
-    {
-      day: "monday",
-      openingTime: "08:00",
-      closingTime: "18:00",
-      isWorking: true,
-    },
-    {
-      day: "tuesday",
-      openingTime: "08:00",
-      closingTime: "18:00",
-      isWorking: true,
-    },
-    {
-      day: "wednesday",
-      openingTime: "08:00",
-      closingTime: "18:00",
-      isWorking: true,
-    },
-    {
-      day: "thursday",
-      openingTime: "08:00",
-      closingTime: "18:00",
-      isWorking: true,
-    },
-    {
-      day: "friday",
-      openingTime: "08:00",
-      closingTime: "18:00",
-      isWorking: true,
-    },
-    {
-      day: "saturday",
-      openingTime: "00:00",
-      closingTime: "00:00",
-      isWorking: false,
-    },
-  ],
-  departments: [
-    { name: "ER", description: "for emergency patients only" },
-    { name: "General" },
-    { name: "Neuro", description: "for neurologist only" },
-  ],
-  appointmentDuration: 20,
-  advanceBookingDays: 7,
-  timeSlots: [
-    { startTime: "08:00", endTime: "08:30", isAvailable: true },
-    { startTime: "08:30", endTime: "09:00", isAvailable: true },
-    { startTime: "09:00", endTime: "09:30", isAvailable: true },
-    { startTime: "09:30", endTime: "10:00", isAvailable: true },
-    { startTime: "10:00", endTime: "10:30", isAvailable: true },
-    { startTime: "14:00", endTime: "14:30", isAvailable: true },
-    { startTime: "14:30", endTime: "15:00", isAvailable: true },
-    { startTime: "17:30", endTime: "18:00", isAvailable: false },
-  ],
-};
+import {
+  handleGetMyOrganizationDetails,
+  handleUpdateOrganizationDetails,
+} from "@/lib/actions/organization/organization-action";
+import { OrganizationData } from "@/types/organization.types";
+import { toast } from "sonner";
 
 export default function Page() {
-  const [data, setData] = useState(sampleData);
+  const [data, setData] = useState<OrganizationData | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState("");
+  const router = useRouter();
 
-  const handleSave = (updatedData: any) => {
-    setData(updatedData);
-    console.log("Saved:", updatedData);
+  useEffect(() => {
+    fetchOrganizationData();
+  }, []);
+
+  const fetchOrganizationData = async () => {
+    try {
+      setLoading(true);
+      const result = await handleGetMyOrganizationDetails();
+      if (result.success && result.data) {
+        setData(result.data);
+      } else {
+        setError(result.message || "Failed to fetch organization data");
+      }
+    } catch (err) {
+      setError("Failed to load organization data");
+    } finally {
+      setLoading(false);
+    }
   };
+
+  const handleSave = async (updateData: any) => {
+    try {
+      setLoading(true);
+      const result = await handleUpdateOrganizationDetails(updateData);
+
+      if (result.success) {
+        toast("Organization details updated successfully!");
+        router.push("/organization/details");
+      } else {
+        toast(result.message || "Failed to update organization");
+      }
+    } catch (err) {
+      setError("Update failed. Please try again.");
+    } finally {
+      setSaving(false);
+    }
+  };
+  const handleCancel = () => {
+    router.push("/organization/details");
+  };
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600 mx-auto"></div>
+          <p className="mt-4 text-gray-600">Loading organization details...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <div className="text-center">
+          <p className="text-red-600 mb-4">{error}</p>
+          <Link
+            href="/organization/details"
+            className="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700"
+          >
+            Go Back
+          </Link>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div>
-      {/* Back button at the top */}
       <div style={{ padding: "20px 20px 0 20px" }}>
         <Link
           href="/organization/details"
@@ -102,7 +103,7 @@ export default function Page() {
       <EditOrganizationForm
         initialData={data}
         onSave={handleSave}
-        onCancel={() => console.log("cancel")}
+        onCancel={handleCancel}
       />
     </div>
   );
