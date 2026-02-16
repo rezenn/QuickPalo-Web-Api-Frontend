@@ -13,37 +13,18 @@ import Link from "next/link";
 import Image from "next/image";
 import building from "@/app/assets/images/buildingPlaceholder.jpg";
 import { OrganizationData } from "@/types/organization.types";
-import { useState, useEffect } from "react";
-import { handleGetMyOrganizationDetails } from "@/lib/actions/organization/organization-action";
+import { useState } from "react";
 import { useAuth } from "@/context/authContext";
 
-export default function OrganizationProfile() {
-  const [organization, setOrganization] = useState<OrganizationData | null>(
-    null,
-  );
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
-  const { user } = useAuth();
+interface OrganizationProfileProps {
+  data: OrganizationData;
+}
 
+export default function OrganizationProfile({
+  data,
+}: OrganizationProfileProps) {
   const [imageError, setImageError] = useState(false);
-  useEffect(() => {
-    fetchOrganization();
-  }, []);
-
-  const fetchOrganization = async () => {
-    try {
-      const result = await handleGetMyOrganizationDetails();
-      if (result.success && result.data) {
-        setOrganization(result.data);
-      } else {
-        setError(result.message || "Failed to fetch organizations");
-      }
-    } catch (err) {
-      setError("An error occurred while fetching data");
-    } finally {
-      setLoading(false);
-    }
-  };
+  const { user } = useAuth();
 
   const getProfileImageUrl = () => {
     if (!user) return null;
@@ -71,38 +52,8 @@ export default function OrganizationProfile() {
     "saturday",
   ];
 
-  if (loading) {
-    return (
-      <div className="flex justify-center items-center p-8">
-        <div className="flex justify-center items-center animate-spin rounded-full  h-8 w-8 border-b-2 border-purple-600"></div>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="w-full text-center py-10">
-        <p className="text-red-600">{error}</p>
-        <button
-          onClick={fetchOrganization}
-          className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
-        >
-          Try Again
-        </button>
-      </div>
-    );
-  }
-
-  if (!organization) {
-    return (
-      <div className="w-full text-center py-10">
-        <p className="text-gray-600">No organization found</p>
-      </div>
-    );
-  }
-
   const profileImageUrl = getProfileImageUrl();
-  const sortedWorkingHours = [...organization.workingHours].sort(
+  const sortedWorkingHours = [...data.workingHours].sort(
     (a, b) => daysOrder.indexOf(a.day) - daysOrder.indexOf(b.day),
   );
 
@@ -116,7 +67,7 @@ export default function OrganizationProfile() {
                 {profileImageUrl && !imageError ? (
                   <Image
                     src={profileImageUrl}
-                    alt={organization.organizationName}
+                    alt={data.organizationName}
                     fill
                     sizes="80px"
                     className="object-cover rounded-full"
@@ -126,7 +77,7 @@ export default function OrganizationProfile() {
                 ) : (
                   <Image
                     src={building}
-                    alt={organization.organizationName}
+                    alt={data.organizationName}
                     fill
                     sizes="80px"
                     className="object-cover rounded-full"
@@ -138,17 +89,17 @@ export default function OrganizationProfile() {
 
             <div>
               <h1 className="text-3xl font-bold text-gray-900">
-                {organization.organizationName}
+                {data.organizationName}
               </h1>
               <div className="flex items-center gap-3 mt-2">
                 <span className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-medium">
-                  {organization.organizationType
+                  {data.organizationType
                     .split("_")
                     .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
                     .join(" ")}
                 </span>
 
-                {organization.isActive ? (
+                {data.isActive ? (
                   <span className="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm">
                     Active
                   </span>
@@ -170,10 +121,8 @@ export default function OrganizationProfile() {
           </Link>
         </div>
 
-        {organization.description && (
-          <p className="mt-6 text-gray-600 border-t pt-4">
-            {organization.description}
-          </p>
+        {data.description && (
+          <p className="mt-6 text-gray-600 border-t pt-4">{data.description}</p>
         )}
       </div>
 
@@ -187,13 +136,11 @@ export default function OrganizationProfile() {
           <div className="space-y-3">
             <div className="flex items-center gap-3 text-gray-600">
               <Mail className="w-4 h-4" />
-              <span>{organization.contactEmail}</span>
+              <span>{data.contactEmail}</span>
             </div>
             <div className="flex items-center gap-3 text-gray-600">
               <Phone className="w-4 h-4" />
-              <span>
-                {organization.contactPhone || organization.user.phoneNumber}
-              </span>
+              <span>{data.contactPhone || data.user.phoneNumber}</span>
             </div>
           </div>
         </div>
@@ -205,9 +152,9 @@ export default function OrganizationProfile() {
             Location
           </h2>
           <div className="space-y-2 text-gray-600">
-            <p>{organization.street}</p>
+            <p>{data.street}</p>
             <p>
-              {organization.city}, {organization.state}
+              {data.city}, {data.state}
             </p>
           </div>
         </div>
@@ -243,11 +190,11 @@ export default function OrganizationProfile() {
       </div>
 
       {/* Departments */}
-      {organization.departments.length > 0 && (
+      {data.departments.length > 0 && (
         <div className="bg-white rounded-xl shadow-lg p-6 mb-6 border border-gray-100">
           <h2 className="text-xl font-semibold mb-4">Departments</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {organization.departments.map((dept) => (
+            {data.departments.map((dept) => (
               <div
                 key={dept._id}
                 className="border border-gray-300 bg-blue-50 rounded-lg px-4 py-2"
@@ -277,13 +224,13 @@ export default function OrganizationProfile() {
             <div className="flex justify-between items-center border-b pb-2">
               <span className="text-gray-600">Duration:</span>
               <span className="font-medium">
-                {organization.appointmentDuration} minutes
+                {data.appointmentDuration} minutes
               </span>
             </div>
             <div className="flex justify-between items-center">
               <span className="text-gray-600">Advance Booking:</span>
               <span className="font-medium">
-                {organization.advanceBookingDays} days
+                {data.advanceBookingDays} days
               </span>
             </div>
           </div>
@@ -295,24 +242,17 @@ export default function OrganizationProfile() {
           <div className="space-y-3">
             <div className="flex justify-between items-center border-b pb-2">
               <span className="text-gray-600">Total Time Slots:</span>
-              <span className="font-medium">
-                {organization.timeSlots.length}
-              </span>
+              <span className="font-medium">{data.timeSlots.length}</span>
             </div>
             <div className="flex justify-between items-center border-b pb-2">
               <span className="text-gray-600">Available Slots:</span>
               <span className="font-medium text-green-600">
-                {
-                  organization.timeSlots.filter((slot) => slot.isAvailable)
-                    .length
-                }
+                {data.timeSlots.filter((slot) => slot.isAvailable).length}
               </span>
             </div>
             <div className="flex justify-between items-center">
               <span className="text-gray-600">Total Departments:</span>
-              <span className="font-medium">
-                {organization.departments.length}
-              </span>
+              <span className="font-medium">{data.departments.length}</span>
             </div>
           </div>
         </div>
@@ -322,7 +262,7 @@ export default function OrganizationProfile() {
       <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-100">
         <h2 className="text-xl font-semibold mb-4">Available Time Slots</h2>
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3">
-          {organization.timeSlots.map((slot) => (
+          {data.timeSlots.map((slot) => (
             <div
               key={slot._id}
               className={`p-2 text-center rounded-lg text-sm ${

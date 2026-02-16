@@ -50,7 +50,6 @@ export default function ThemeToggle() {
       onClick={cycle}
       className="inline-flex h-9 w-9 items-center justify-center rounded-md border border-black/10 dark:border-white/15 hover:bg-foreground/5 transition-colors"
     >
-      {/* Icon changes with theme label; simple shapes to avoid extra deps */}
       {theme === "dark" ? (
         // Moon
         <svg

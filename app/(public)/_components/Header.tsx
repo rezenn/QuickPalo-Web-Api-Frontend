@@ -7,12 +7,6 @@ import Image from "next/image";
 import Logo from "@/app/assets/images/quickpalo_logo.png";
 import { XIcon, Menu } from "lucide-react";
 
-// const NavLinks = [
-//   { href: "/", label: "Home" },
-//   { href: "/about", label: "About" },
-//   { href: "/features", label: "Feature" },
-// ];
-
 export default function Header() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);

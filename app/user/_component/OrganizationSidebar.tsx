@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from "react";
 import FilterBar from "./FiltersBar";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/context/authContext";
 
 const generateDates = () => {
   const dates = [];
@@ -13,7 +15,16 @@ const generateDates = () => {
     date.setDate(today.getDate() + i);
     const dayName = days[date.getDay()];
     const dayNumber = date.getDate();
-    dates.push(`${dayName}\n${dayNumber}`);
+    const month = date.getMonth() + 1;
+    const year = date.getFullYear();
+    dates.push({
+      display: `${dayName}\n${dayNumber}`,
+      fullDate: `${year}-${month.toString().padStart(2, "0")}-${dayNumber.toString().padStart(2, "0")}`,
+      dayName,
+      dayNumber,
+      month,
+      year,
+    });
   }
   return dates;
 };
@@ -43,15 +54,22 @@ type TimeSlotProp = TimeSlot[] | SimpleTimeSlot[];
 interface OrganizationSidebarProps {
   departments: Department[];
   timeSlots: TimeSlotProp;
+  organizationId?: string;
+  organizationName?: string;
 }
 
 export default function OrganizationSidebar({
   departments,
   timeSlots,
+  organizationId,
+  organizationName,
 }: OrganizationSidebarProps) {
+  const router = useRouter();
+  const { user } = useAuth();
   const [filterDepartment, setFilterDepartment] = useState<string>("");
   const [filterDate, setFilterDate] = useState(DATES[0]);
   const [filterTimeslot, setFilterTimeslot] = useState<string>("");
+  const [isBooking, setIsBooking] = useState(false);
 
   const processedTimeSlots = (timeSlots || []).map((slot) => {
     if ("time" in slot) {
@@ -84,12 +102,58 @@ export default function OrganizationSidebar({
   }, [departments, processedTimeSlots, filterDepartment, filterTimeslot]);
 
   const departmentNames = departments.map((dept) => dept.name);
-
   const formattedTimeSlots = processedTimeSlots.map((slot) => slot.display);
-
   const availableTimeSlots = processedTimeSlots
     .filter((slot) => slot.isAvailable)
     .map((slot) => slot.display);
+
+  const handleBookAppointment = () => {
+    if (!user) {
+      router.push(`/auth/login?redirect=/organization/${organizationId}`);
+      return;
+    }
+
+    if (!filterDepartment || !filterTimeslot) {
+      alert("Please select both department and time slot");
+      return;
+    }
+
+    setIsBooking(true);
+
+    const selectedSlot = processedTimeSlots.find(
+      (slot) => slot.display === filterTimeslot,
+    );
+
+    const bookingData = {
+      organizationId,
+      organizationName,
+      department: filterDepartment,
+      date: {
+        display: filterDate.display,
+        fullDate: filterDate.fullDate,
+        dayName: filterDate.dayName,
+        dayNumber: filterDate.dayNumber,
+        month: filterDate.month,
+        year: filterDate.year,
+      },
+      timeSlot: {
+        display: filterTimeslot,
+        startTime: selectedSlot?.startTime,
+        endTime: selectedSlot?.endTime,
+      },
+      user: {
+        id: user._id,
+        fullName: user.fullName,
+        email: user.email,
+        phoneNumber: user.phoneNumber,
+      },
+      bookingTime: new Date().toISOString(),
+    };
+
+    sessionStorage.setItem("bookingData", JSON.stringify(bookingData));
+
+    router.push("/user/appointment");
+  };
 
   if (departments.length === 0 && processedTimeSlots.length === 0) {
     return (
@@ -124,9 +188,14 @@ export default function OrganizationSidebar({
           </h3>
           <FilterBar
             rounded="lg"
-            filters={DATES}
-            activeFilter={filterDate}
-            onChange={setFilterDate}
+            filters={DATES.map((d) => d.display)}
+            activeFilter={filterDate.display}
+            onChange={(selected) => {
+              const selectedDateObj = DATES.find((d) => d.display === selected);
+              if (selectedDateObj) {
+                setFilterDate(selectedDateObj);
+              }
+            }}
           />
         </div>
 
@@ -173,16 +242,31 @@ export default function OrganizationSidebar({
           {filterDate && (
             <p className="text-sm text-gray-700">
               <span className="font-medium">Date: </span>{" "}
-              {filterDate.replace("\n", " ")}
+              {filterDate.display.replace("\n", " ")}
             </p>
           )}
           {filterTimeslot && availableTimeSlots.length > 0 && (
-            <p className="text-sm text-gary-700">
+            <p className="text-sm text-gray-700">
               <span className="font-medium">Time: </span> {filterTimeslot}
             </p>
           )}
         </div>
       )}
+
+      <div className="my-5 flex items-center justify-center">
+        <button
+          onClick={handleBookAppointment}
+          disabled={
+            isBooking ||
+            !filterDepartment ||
+            !filterTimeslot ||
+            availableTimeSlots.length === 0
+          }
+          className="flex-1 bg-[#B61BE1] text-white font-semibold py-3.5 px-6 rounded-xl flex items-center justify-center gap-3 transition-all duration-300 transform hover:-translate-y-0.5 hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+        >
+          {isBooking ? "Processing..." : "Book an Appointment"}
+        </button>
+      </div>
     </div>
   );
 }

@@ -46,7 +46,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               <Image
                 src={logo}
                 alt="logo"
-                className="w-[170px] h-auto rounded-bl-2xl rounded-tr-2xl"
+                className="w-42.5 h-auto rounded-bl-2xl rounded-tr-2xl"
               />
               <div>{children}</div>
             </div>

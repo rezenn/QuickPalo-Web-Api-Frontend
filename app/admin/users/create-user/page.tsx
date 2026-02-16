@@ -68,12 +68,10 @@ export default function CreateUserForm() {
       formData.append("password", data.password);
       formData.append("confirmPassword", data.confirmPassword);
 
-      // Append profile image if exists
       if (data.profileImage && data.profileImage instanceof File) {
         formData.append("profilePicture", data.profileImage);
       }
 
-      // Call server action
       const result = await handleCreateUser(formData);
 
       if (result.success) {

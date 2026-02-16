@@ -10,8 +10,7 @@ import { handleGetOrganizationById } from "@/lib/actions/organization/organizati
 import { notFound } from "next/navigation";
 import building from "@/app/assets/images/buildingPlaceholder.jpg";
 import Link from "next/link";
-import { ArrowLeft, ChevronLeft } from "lucide-react";
-
+import {ChevronLeft } from "lucide-react";
 interface PageProps {
   params: Promise<{ id: string }> | { id: string };
   searchParams?: Promise<{ returnTo?: string }> | { returnTo?: string };
@@ -146,11 +145,6 @@ export default async function OrganizationDetail({
               isAvailable: slot.isAvailable,
             }))}
           />
-        </div>
-        <div className="my-5 flex items-center justify-center">
-          <button className="flex-1 bg-[#B61BE1] text-white font-semibold py-3.5 px-6 rounded-xl flex items-center justify-center gap-3 transition-all duration-300 transform hover:-translate-y-0.5 hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none">
-            Book an Appointment
-          </button>
         </div>
       </div>
     </div>

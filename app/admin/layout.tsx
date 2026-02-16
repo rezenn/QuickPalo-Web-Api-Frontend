@@ -9,7 +9,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
       {/* Main content area */}
       <div className="flex-1 flex flex-col overflow-hidden">
-        {/* Header - Now on the right side of sidebar */}
+        {/* Header */}
         <Header />
 
         {/* Divider line */}

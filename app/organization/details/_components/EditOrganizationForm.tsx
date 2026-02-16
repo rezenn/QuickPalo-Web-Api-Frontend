@@ -24,6 +24,12 @@ export default function SimpleEditForm({
     setFormData({ ...formData, [name]: value });
   };
 
+  const handleNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    // Convert to number, default to 0 if empty or invalid
+    const numericValue = value === "" ? 0 : Number(value);
+    setFormData({ ...formData, [name]: numericValue });
+  };
   const handleWorkingHourChange = (
     index: number,
     field: string,
@@ -409,7 +415,7 @@ export default function SimpleEditForm({
                 type="number"
                 name="appointmentDuration"
                 value={formData.appointmentDuration}
-                onChange={handleChange}
+                onChange={handleNumberChange}
                 className="w-full bg-linear-to-r from-gray-50 to-white border-2 border-gray-200 rounded-xl px-4 py-3.5 focus:border-purple-500 focus:ring-4 focus:ring-purple-100 outline-none transition-all duration-300 group-hover:border-purple-300"
               />
             </div>
@@ -421,7 +427,7 @@ export default function SimpleEditForm({
                 type="number"
                 name="advanceBookingDays"
                 value={formData.advanceBookingDays}
-                onChange={handleChange}
+                onChange={handleNumberChange}
                 className="w-full bg-linear-to-r from-gray-50 to-white border-2 border-gray-200 rounded-xl px-4 py-3.5 focus:border-purple-500 focus:ring-4 focus:ring-purple-100 outline-none transition-all duration-300 group-hover:border-purple-300"
               />
             </div>

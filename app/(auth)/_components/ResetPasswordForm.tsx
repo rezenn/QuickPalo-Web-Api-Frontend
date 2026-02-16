@@ -33,13 +33,11 @@ export default function ResetPasswordForm({ token }: { token: string }) {
       const response = await handleResetPassword(token, data.password);
       if (response.success) {
         toast.success("Password reset successfully");
-        // Redirect to login page
         router.replace("/login");
       } else {
         toast.error(response.message || "Failed to reset password");
       }
     } catch (error) {
-      // Handle error
       toast.error("An unexpected error occurred");
     }
   };
