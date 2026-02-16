@@ -15,14 +15,15 @@ const generateDates = () => {
     date.setDate(today.getDate() + i);
     const dayName = days[date.getDay()];
     const dayNumber = date.getDate();
-    const month = date.getMonth() + 1;
+    const monthName = date.toLocaleString("default", { month: "short" });
     const year = date.getFullYear();
     dates.push({
       display: `${dayName}\n${dayNumber}`,
-      fullDate: `${year}-${month.toString().padStart(2, "0")}-${dayNumber.toString().padStart(2, "0")}`,
+      fullDate: `${year}-${(date.getMonth() + 1).toString().padStart(2, "0")}-${dayNumber.toString().padStart(2, "0")}`,
       dayName,
       dayNumber,
-      month,
+      month: monthName,
+      monthNumber: date.getMonth() + 1,
       year,
     });
   }
@@ -56,6 +57,7 @@ interface OrganizationSidebarProps {
   timeSlots: TimeSlotProp;
   organizationId?: string;
   organizationName?: string;
+  organizationType?: string;
 }
 
 export default function OrganizationSidebar({
@@ -63,6 +65,7 @@ export default function OrganizationSidebar({
   timeSlots,
   organizationId,
   organizationName,
+  organizationType,
 }: OrganizationSidebarProps) {
   const router = useRouter();
   const { user } = useAuth();
@@ -127,6 +130,7 @@ export default function OrganizationSidebar({
     const bookingData = {
       organizationId,
       organizationName,
+      organizationType,
       department: filterDepartment,
       date: {
         display: filterDate.display,
@@ -149,7 +153,6 @@ export default function OrganizationSidebar({
       },
       bookingTime: new Date().toISOString(),
     };
-
     sessionStorage.setItem("bookingData", JSON.stringify(bookingData));
 
     router.push("/user/appointment");
@@ -184,7 +187,7 @@ export default function OrganizationSidebar({
       <div className="flex flex-col gap-4">
         <div>
           <h3 className="text-sm font-medium text-gray-600 mb-2">
-            Select Date
+            Select Date for {filterDate.month}
           </h3>
           <FilterBar
             rounded="lg"
@@ -242,7 +245,7 @@ export default function OrganizationSidebar({
           {filterDate && (
             <p className="text-sm text-gray-700">
               <span className="font-medium">Date: </span>{" "}
-              {filterDate.display.replace("\n", " ")}
+              {filterDate.display.replace("\n", " ")}, {filterDate.month}
             </p>
           )}
           {filterTimeslot && availableTimeSlots.length > 0 && (

@@ -144,6 +144,9 @@ export default async function OrganizationDetail({
               time: `${slot.startTime} - ${slot.endTime}`,
               isAvailable: slot.isAvailable,
             }))}
+            organizationId={organization._id}
+            organizationName={organization.organizationName}
+            organizationType ={organization.organizationType}
           />
         </div>
       </div>

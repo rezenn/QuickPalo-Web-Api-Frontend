@@ -93,7 +93,7 @@ export default function AdminEditUserPage() {
     <div className="max-w-4xl mx-auto mt-10 px-4">
       <div className="pb-5">
         <Link
-          className="w-20 h-10 px-2 flex flex-row justify-center items-center gap-2 rounded-2xl bg-fuchsia-100 hover:bg-fuchsia-300 transition-colors"
+          className="w-25 bg-[#B61BE1] text-white font-semibold py-3 px-4 rounded-xl flex items-center justify-center gap-2 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg"
           href="/admin/users"
         >
           <ArrowLeft />
