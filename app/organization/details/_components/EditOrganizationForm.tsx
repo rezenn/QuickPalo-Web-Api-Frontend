@@ -421,6 +421,18 @@ export default function SimpleEditForm({
             </div>
             <div>
               <label className="block text-sm font-semibold mb-2 text-gray-700">
+                Fees (Rs)
+              </label>
+              <input
+                type="number"
+                name="fees"
+                value={formData.fees}
+                onChange={handleNumberChange}
+                className="w-full bg-linear-to-r from-gray-50 to-white border-2 border-gray-200 rounded-xl px-4 py-3.5 focus:border-purple-500 focus:ring-4 focus:ring-purple-100 outline-none transition-all duration-300 group-hover:border-purple-300"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-semibold mb-2 text-gray-700">
                 Advance Booking (days)
               </label>
               <input

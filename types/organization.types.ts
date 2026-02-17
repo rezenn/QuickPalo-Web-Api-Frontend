@@ -62,6 +62,7 @@ export interface OrganizationData {
   contactPhone?: string;
   workingHours: WorkingHour[];
   departments: Department[];
+  fees: number;
   appointmentDuration: number;
   advanceBookingDays: number;
   timeSlots: TimeSlot[];

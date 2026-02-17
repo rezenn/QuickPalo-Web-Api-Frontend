@@ -216,15 +216,18 @@ export default function OrganizationProfile({
       {/* Appointment Settings */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6 ">
         <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-100 ">
-          <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
-            <Calendar className="w-5 h-5 text-blue-600" />
-            Appointment Settings
-          </h2>
+          <h2 className="text-xl font-semibold mb-4 ">Appointment Settings</h2>
           <div className="space-y-3">
             <div className="flex justify-between items-center border-b pb-2">
               <span className="text-gray-600">Duration:</span>
               <span className="font-medium">
                 {data.appointmentDuration} minutes
+              </span>
+            </div>
+            <div className="flex justify-between items-center">
+              <span className="text-gray-600">Fees:</span>
+              <span className="font-medium">
+                Rs. <span className="text-green-600">{data.fees}</span>
               </span>
             </div>
             <div className="flex justify-between items-center">

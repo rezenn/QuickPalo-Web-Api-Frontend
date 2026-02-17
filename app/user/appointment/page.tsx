@@ -54,7 +54,7 @@ export default function BookingConfirmation() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    // Access sessionStorage only on the client side
+    // Access sessionStorage 
     const storedData = sessionStorage.getItem("bookingData");
     if (storedData) {
       setBookingData(JSON.parse(storedData));
@@ -70,7 +70,6 @@ export default function BookingConfirmation() {
     setError(null);
 
     try {
-      // Prepare the complete booking data
       const completeBookingData = {
         ...bookingData,
         note,
@@ -79,7 +78,6 @@ export default function BookingConfirmation() {
         createdAt: new Date().toISOString(),
       };
 
-      // Here you would typically make an API call to save the booking
       // const response = await fetch('/api/appointments', {
       //   method: 'POST',
       //   headers: { 'Content-Type': 'application/json' },
@@ -91,7 +89,6 @@ export default function BookingConfirmation() {
       // Simulate API call
       await new Promise((resolve) => setTimeout(resolve, 1500));
 
-      // Clear session storage and redirect to success page
       sessionStorage.removeItem("bookingData");
       router.push("/user/appointment/success");
     } catch (err) {
@@ -103,7 +100,6 @@ export default function BookingConfirmation() {
     }
   };
 
-  // Show loading state while checking sessionStorage
   if (isLoading) {
     return (
       <div className="min-h-screen bg-purple-50 flex items-center justify-center">
@@ -248,7 +244,6 @@ export default function BookingConfirmation() {
               </div>
             </div>
 
-            {/* Additional Options */}
             <div className="space-y-6 mb-8">
               {/* Notes */}
               <div>

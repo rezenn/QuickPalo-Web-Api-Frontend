@@ -1,4 +1,3 @@
-// app/user/appointment/success/page.tsx
 "use client";
 
 import { useEffect } from "react";
@@ -10,7 +9,7 @@ export default function AppointmentSuccess() {
   const router = useRouter();
 
   useEffect(() => {
-    // Clear any leftover booking data
+    // Clear booking data
     sessionStorage.removeItem("bookingData");
   }, []);
 
