@@ -55,7 +55,7 @@ export const getOrganizationById = async (
 ): Promise<ApiResponse<OrganizationData>> => {
   try {
     const response = await axiosInstance.get(
-      API.ORGANIZATION.GETORGANIZATIONByYID(organizationId),
+      API.ORGANIZATION.GETORGANIZATIONBYID(organizationId),
     );
     return response.data;
   } catch (err: Error | any) {

@@ -16,10 +16,14 @@ export const API = {
   },
   ORGANIZATION: {
     GETORGANIZATIONS: "/api/organizations",
-    GETORGANIZATIONByYID: (id: string) => `/api/organizations/${id}`,
+    GETORGANIZATIONBYID: (id: string) => `/api/organizations/${id}`,
     POSTORGANIZATIONDETAILS: "/api/organizations/details",
     GETORGANIZATIONDETAILS: "/api/organizations/details",
     UPDATEORGANIZATIONDETAILS: "/api/organizations/details",
     DELETEORGANIZATIONDETAILS: "/api/organizations/details",
+  },
+  MESSAGE: {
+    SENDTOORG: "/api/message/send-to-org",
+    STREAMTOKEN: "/api/message/stream-token",
   },
 };

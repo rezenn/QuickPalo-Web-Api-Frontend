@@ -45,9 +45,12 @@ export default function ChatInterface({
           return;
         }
 
-        const res = await fetch("http://localhost:5050/api/auth/stream-token", {
-          headers: { Authorization: `Bearer ${authToken}` },
-        });
+        const res = await fetch(
+          "http://localhost:5050/api/message/stream-token",
+          {
+            headers: { Authorization: `Bearer ${authToken}` },
+          },
+        );
 
         if (!res.ok) {
           throw new Error(`HTTP error! status: ${res.status}`);

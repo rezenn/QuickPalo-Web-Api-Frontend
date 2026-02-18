@@ -28,14 +28,11 @@ export default function OrganizationsList() {
       try {
         const token = await getAuthToken();
 
-        const res = await fetch(
-          "http://localhost:5050/api/auth/organizations",
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
+        const res = await fetch("http://localhost:5050/api/organizations", {
+          headers: {
+            Authorization: `Bearer ${token}`,
           },
-        );
+        });
 
         const data = await res.json();
         if (data.success) {
@@ -60,7 +57,7 @@ export default function OrganizationsList() {
       const token = await getAuthToken();
 
       const response = await fetch(
-        "http://localhost:5050/api/auth/send-to-org",
+        "http://localhost:5050/api/message/send-to-org",
         {
           method: "POST",
           headers: {
