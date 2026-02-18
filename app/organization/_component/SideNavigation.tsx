@@ -12,6 +12,7 @@ import {
   CalendarDaysIcon as CalendarDaysOutline,
   ClockIcon as ClockOutline,
   UserIcon as UserOutline,
+  ChatBubbleLeftRightIcon as ChatOutline,
 } from "@heroicons/react/24/outline";
 import {
   HomeIcon as HomeSolid,
@@ -19,6 +20,7 @@ import {
   CalendarDaysIcon as CalendarDaysSolid,
   ClockIcon as ClockSolid,
   UserIcon as UserSolid,
+  ChatBubbleLeftRightIcon as ChatSolid,
 } from "@heroicons/react/24/solid";
 import ThemeSwitch from "@/app/_components/ThemeSwitch";
 import { LogOutIcon, Menu, AlertTriangle } from "lucide-react";
@@ -47,11 +49,18 @@ const NavLinks = [
     icon: BuildingOfficeOutline,
   },
   {
+    href: "/organization/message",
+    label: "Message",
+    filledIcon: ChatSolid,
+    icon: ChatOutline,
+  },
+  {
     href: "/organization/history",
     label: "History",
     filledIcon: ClockSolid,
     icon: ClockOutline,
   },
+
   {
     href: "/organization/profile",
     label: "Profile",

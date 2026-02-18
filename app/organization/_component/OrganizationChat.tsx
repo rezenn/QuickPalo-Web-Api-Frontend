@@ -16,7 +16,7 @@ import type { Channel as StreamChannel } from "stream-chat";
 
 import "stream-chat-react/dist/css/v2/index.css";
 
-interface OrgChatProps {
+interface OrganizationChatProps {
   userId: string;
   userName: string;
   userImage?: string;
@@ -38,7 +38,11 @@ interface Message {
   [key: string]: any;
 }
 
-export default function OrgChat({ userId, userName, userImage }: OrgChatProps) {
+export default function OrganizationChat({
+  userId,
+  userName,
+  userImage,
+}: OrganizationChatProps) {
   const [chatClient, setChatClient] = useState<StreamChat | null>(null);
   const [activeChannel, setActiveChannel] = useState<StreamChannel | null>(
     null,

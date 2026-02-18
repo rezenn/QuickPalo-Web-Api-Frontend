@@ -1,9 +1,8 @@
-// app/chat/page.tsx
 "use client";
 
 import { useState, Suspense } from "react";
 import { useAuth } from "@/context/authContext";
-import OrgChat from "@/app/_components/OrgChat";
+import OrganizationChat from "@/app/organization/_component/OrganizationChat";
 
 function LoadingFallback() {
   return (
@@ -24,9 +23,9 @@ export default function ChatPage() {
 
   return (
     <div className="container mx-auto px-1 py-2 max-w-7xl">
-      <div className="h-[700px]">
+      <div className="min-h-[600px]">
         <Suspense fallback={<LoadingFallback />}>
-          <OrgChat
+          <OrganizationChat
             userId={user._id}
             userName={user.fullName}
             userImage={user.imageUrl}

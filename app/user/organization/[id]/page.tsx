@@ -10,7 +10,7 @@ import { handleGetOrganizationById } from "@/lib/actions/organization/organizati
 import { notFound } from "next/navigation";
 import building from "@/app/assets/images/buildingPlaceholder.jpg";
 import Link from "next/link";
-import {ChevronLeft } from "lucide-react";
+import { ChevronLeft } from "lucide-react";
 interface PageProps {
   params: Promise<{ id: string }> | { id: string };
   searchParams?: Promise<{ returnTo?: string }> | { returnTo?: string };
@@ -115,16 +115,6 @@ export default async function OrganizationDetail({
                   <p>{getTodayWorkingHours()}</p>
                 </div>
               </div>
-              <div className="flex items-center justify-between gap-2">
-                {/* <button className="m-2 p-2 h-13 flex flex-col items-center justify-center w-20 border border-gray-500 rounded-xl bg-gray-300 hover:bg-fuchsia-700 hover:text-white transition-colors">
-                  <PhoneIcon className="w-6 h-auto" />
-                  <span className="text-xs mt-1">Call</span>
-                </button> */}
-                <button className="m-2 p-2 h-13 flex flex-col items-center justify-center w-20 border border-gray-500 rounded-xl bg-gray-100 hover:bg-fuchsia-600 hover:text-white transition-colors">
-                  <ChatBubbleLeftEllipsisIcon className="w-6 h-auto" />
-                  <span className="text-xs mt-1">Message</span>
-                </button>
-              </div>
             </div>
             <div className="h-px w-full bg-gray-400"></div>
             <p className="line-clamp-3 overflow-hidden text-sm">
@@ -146,7 +136,7 @@ export default async function OrganizationDetail({
             }))}
             organizationId={organization._id}
             organizationName={organization.organizationName}
-            organizationType ={organization.organizationType}
+            organizationType={organization.organizationType}
           />
         </div>
       </div>

@@ -13,7 +13,6 @@ import {
 } from "stream-chat-react";
 import { StreamChat } from "stream-chat";
 import { getAuthToken } from "@/lib/auth-utils";
-import { useChannelStateContext } from "stream-chat-react";
 
 import "stream-chat-react/dist/css/v2/index.css";
 
@@ -93,7 +92,7 @@ export default function ChatInterface({
           onClick={() => window.location.reload()}
           className="mt-4 px-6 py-2 bg-red-500 text-white rounded-xl font-medium"
         >
-          🔄 Retry
+          Retry
         </button>
       </div>
     );
@@ -114,34 +113,28 @@ export default function ChatInterface({
   };
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between p-6 bg-white border-b border-gray-200 rounded-t-3xl">
-        <h2 className="text-2xl font-bold text-gray-900">Direct Messages</h2>
-      </div>
-
-      <div className="h-[500px] bg-white rounded-3xl shadow-2xl overflow-hidden border-4 border-gray-100">
-        <Chat client={chatClient} theme="messaging light">
-          <div className="flex h-full">
-            <div className="w-1/3 border-r border-gray-200 bg-gradient-to-b from-gray-50 to-white">
-              <ChannelList
-                filters={filters}
-                sort={{ last_message_at: -1 }}
-                options={{ limit: 20 }}
-              />
-            </div>
-            <div className="w-2/3 flex flex-col">
-              <Channel>
-                <Window>
-                  <ChannelHeader />
-                  <MessageList />
-                  <MessageInput />
-                </Window>
-                <Thread />
-              </Channel>
-            </div>
+    <div className="h-[550px] mt-5  bg-white rounded-3xl shadow-2xl overflow-hidden border-4 border-gray-100">
+      <Chat client={chatClient} theme="messaging light">
+        <div className="flex h-full">
+          <div className="w-1/3 border-r border-gray-200 bg-white">
+            <ChannelList
+              filters={filters}
+              sort={{ last_message_at: -1 }}
+              options={{ limit: 20 }}
+            />
           </div>
-        </Chat>
-      </div>
+          <div className="w-2/3 flex flex-col">
+            <Channel>
+              <Window>
+                <ChannelHeader />
+                <MessageList />
+                <MessageInput />
+              </Window>
+              <Thread />
+            </Channel>
+          </div>
+        </div>
+      </Chat>
     </div>
   );
 }
