@@ -227,7 +227,8 @@ export default function OrganizationProfile({
             <div className="flex justify-between items-center">
               <span className="text-gray-600">Fees:</span>
               <span className="font-medium">
-                Rs. <span className="text-green-600">{data.fees}</span>
+                Rs.{" "}
+                <span className="text-green-600 font-bold">{data.fees}</span>
               </span>
             </div>
             <div className="flex justify-between items-center">
@@ -249,7 +250,7 @@ export default function OrganizationProfile({
             </div>
             <div className="flex justify-between items-center border-b pb-2">
               <span className="text-gray-600">Available Slots:</span>
-              <span className="font-medium text-green-600">
+              <span className=" text-green-600 font-bold">
                 {data.timeSlots.filter((slot) => slot.isAvailable).length}
               </span>
             </div>
