@@ -20,13 +20,13 @@ import DeleteModal from "@/app/_components/DeleteModal";
 import { handleDeleteUser } from "@/lib/actions/admin/user-action";
 
 export default function UserTable() {
-  const { user, loading } = useAuth();
-  const [imageError, setImageError] = useState(false);
+  // const { user, loading } = useAuth();
+  // const [imageError, setImageError] = useState(false);
   const [users, setUsers] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [deleteId, setDeleteId] = useState(null);
-  const [newUsersThisMonth, setNewUsersThisMonth] = useState(0);
-  const [newUsersLastMonth, setNewUsersLastMonth] = useState(0);
+  // const [newUsersThisMonth, setNewUsersThisMonth] = useState(0);
+  // const [newUsersLastMonth, setNewUsersLastMonth] = useState(0);
 
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -76,7 +76,7 @@ export default function UserTable() {
 
   useEffect(() => {
     const timeoutId = setTimeout(() => {
-      fetchUsers(1); 
+      fetchUsers(1);
     }, 300);
     return () => clearTimeout(timeoutId);
   }, [searchQuery]);
@@ -86,7 +86,7 @@ export default function UserTable() {
       const result = await handleDeleteUser(userId);
       if (result.success) {
         toast.success("User deleted successfully");
-        fetchUsers(currentPage); 
+        fetchUsers(currentPage);
         setDeleteId(null);
       } else {
         toast.error(result.message || "Failed to delete user");
