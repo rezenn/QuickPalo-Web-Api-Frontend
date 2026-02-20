@@ -76,7 +76,7 @@ export default function UserTable() {
 
   useEffect(() => {
     const timeoutId = setTimeout(() => {
-      fetchUsers(1); 
+      fetchUsers(1);
     }, 300);
     return () => clearTimeout(timeoutId);
   }, [searchQuery]);
@@ -86,7 +86,7 @@ export default function UserTable() {
       const result = await handleDeleteUser(userId);
       if (result.success) {
         toast.success("User deleted successfully");
-        fetchUsers(currentPage); 
+        fetchUsers(currentPage);
         setDeleteId(null);
       } else {
         toast.error(result.message || "Failed to delete user");
@@ -98,6 +98,7 @@ export default function UserTable() {
     }
   };
 
+  // format date
   const formatDate = (dateString: string) => {
     if (!dateString) return "N/A";
     try {
@@ -176,6 +177,7 @@ export default function UserTable() {
             <>
               <div className="overflow-x-auto">
                 <table className="w-full">
+                  {/* Table head */}
                   <thead className="bg-gray-200 border-b border-gray-200">
                     <tr>
                       <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase whitespace-nowrap">
@@ -198,6 +200,7 @@ export default function UserTable() {
                       </th>
                     </tr>
                   </thead>
+                  {/* user details */}
                   <tbody className="divide-y divide-gray-200">
                     {users.length === 0 ? (
                       <tr>
