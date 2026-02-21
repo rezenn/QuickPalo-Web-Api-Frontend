@@ -6,7 +6,7 @@ export default function Login() {
       <h1 className="text-black/80 text-3xl font-extrabold text-center  ">
         Login
       </h1>
-      <LoginForm />
+      <LoginForm/>
     </div>
   );
 }

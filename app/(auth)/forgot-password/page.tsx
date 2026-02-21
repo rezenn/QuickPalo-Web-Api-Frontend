@@ -1,4 +1,3 @@
-
 "use client";
 import z from "zod";
 import { useForm } from "react-hook-form";
@@ -24,7 +23,9 @@ export default function Page() {
     try {
       const response = await requestPasswordReset(data.email);
       if (response.success) {
-        toast.success("Password reset link sent to your email.");
+        toast.success(
+          "Password reset link sent to your email. Please check your email",
+        );
       } else {
         toast.error(response.message || "Failed to request password reset.");
       }
@@ -35,18 +36,21 @@ export default function Page() {
     }
   };
   return (
-    <div>
-      <h1 className="text-2xl font-bold mb-4">Request Password Reset</h1>
-      <form onSubmit={handleSubmit(onSubmit)} className="max-w-md">
+    <div className="py-4">
+      <h1 className="text-black/80 text-3xl font-extrabold text-center  ">
+        Request Password Reset
+      </h1>
+      <form onSubmit={handleSubmit(onSubmit)} className="max-w-md py-4">
         <div className="mb-4">
-          <label className="block text-sm font-medium mb-1" htmlFor="email">
+          <label className="block text-md w-lg text-black/60 font-semibold mb-2">
             Email Address
           </label>
           <input
+            placeholder="youremail@mail.com"
             type="email"
             id="email"
             {...register("email")}
-            className="w-full border border-gray-300 p-2 rounded"
+            className="h-12 w-full rounded-md border border-black/30 bg-white px-4 text-black focus:outline-none focus:border-black/60"
           />
           {errors.email && (
             <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>
@@ -54,7 +58,7 @@ export default function Page() {
         </div>
         <button
           type="submit"
-          className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+          className=" h-12 w-full mt-2 text-xl bg-purple-700  rounded-xl text-white"
           disabled={isSubmitting}
         >
           {isSubmitting ? "Sending..." : "Send Reset Link"}
