@@ -386,6 +386,7 @@ export default function OrganizationSidebar({
       };
 
       sessionStorage.setItem("bookingData", JSON.stringify(bookingData));
+      console.log("Saved booking data:", sessionStorage.getItem("bookingData")); 
 
       // Navigate to confirmation page
       router.push("/user/appointment");

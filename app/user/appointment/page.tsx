@@ -71,7 +71,6 @@ export default function BookingConfirmation() {
     if (storedData) {
       try {
         const parsed = JSON.parse(storedData);
-        console.log("Loaded booking data:", parsed);
 
         setBookingData(parsed);
       } catch (e) {
@@ -119,7 +118,6 @@ export default function BookingConfirmation() {
 
       if (response.success) {
         toast.success("Appointment booked successfully!");
-        sessionStorage.removeItem("bookingData");
         router.push("/user/appointment/success");
       } else {
         setError(response.message || "Failed to book appointment");
