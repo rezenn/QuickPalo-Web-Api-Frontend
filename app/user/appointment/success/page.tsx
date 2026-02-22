@@ -104,8 +104,8 @@ export default function AppointmentSuccess() {
   }
 
   return (
-    <div className="min-h-screen bg-white-50 flex items-center justify-center px-4">
-      <div className="max-w-md w-full">
+    <div className="min-h-screen bg-white-50 flex items-center justify-center px-1">
+      <div className="max-w-2xl w-full">
         <div className="bg-white border border-gray-200 rounded-3xl shadow-xl p-8 text-center">
           <div className="inline-flex items-center justify-center w-20 h-20 bg-green-100 rounded-full mb-6">
             <CheckCircle className="w-10 h-10 text-green-600" />

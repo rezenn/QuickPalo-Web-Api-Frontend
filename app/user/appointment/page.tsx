@@ -172,7 +172,7 @@ export default function BookingConfirmation() {
 
   return (
     <div className="min-h-screen bg-white-500 py-8 px-4">
-      <div className="max-w-3xl mx-auto">
+      <div className="max-w-4xl mx-auto">
         {/* Back Button */}
         <Link
           href={`/user/organization/${bookingData.organizationId}`}
