@@ -27,6 +27,7 @@ interface BookingData {
   organizationId: string;
   organizationName: string;
   organizationType: string;
+  fees: number;
   department: {
     name: string;
     id: string;
@@ -86,7 +87,7 @@ export default function BookingConfirmation() {
     e.preventDefault();
     if (!bookingData) return;
 
-    // Validate that we have department ID
+    // Validate department ID
     if (!bookingData.department?.id) {
       toast.error(
         "Department ID is missing. Please go back and select a department again.",
@@ -110,6 +111,8 @@ export default function BookingConfirmation() {
         clientEmail: bookingData.user.email,
         clientPhoneNumber: bookingData.user.phoneNumber,
         notes: note || undefined,
+        paymentMethod: paymentMethod as "online" | "cash",
+        paymentAmount: bookingData.fees,
       };
 
       const response = await createAppointment(appointmentData);
@@ -298,6 +301,13 @@ export default function BookingConfirmation() {
 
               {/* Payment Method */}
               <div>
+                <div className="bg-yellow-50 rounded-xl p-4">
+                  <div className="flex items-center gap-3 mb-2">
+                    <Tag className="w-5 h-5 text-yellow-600" />
+                    <h3 className="font-semibold text-gray-900">Payment</h3>
+                  </div>
+                  <p className="text-gray-700 ml-8">Rs. {bookingData.fees}</p>
+                </div>
                 <h3 className="text-sm font-medium text-gray-700 mb-3">
                   Payment Method
                 </h3>

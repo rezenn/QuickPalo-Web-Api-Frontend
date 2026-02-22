@@ -46,7 +46,7 @@ export default async function OrganizationDetail({
 
   const profileImageUrl = getProfileImageUrl();
 
-  // Working hours & filtered slots — all at the top level
+  // Working hours & filtered slots
   const days = [
     "sunday",
     "monday",
@@ -148,6 +148,7 @@ export default async function OrganizationDetail({
             organizationId={organization._id?.toString()}
             organizationName={organization.organizationName}
             organizationType={organization.organizationType}
+            fees={organization.fees}
           />
         </div>
       </div>

@@ -13,6 +13,8 @@ export interface CreateAppointmentData {
   clientEmail?: string;
   clientPhoneNumber?: string;
   notes?: string;
+  paymentMethod?: "online" | "cash";
+  paymentAmount?: number;
 }
 
 export interface CheckAvailabilityData {

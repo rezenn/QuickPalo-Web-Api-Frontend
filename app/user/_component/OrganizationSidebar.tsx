@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/authContext";
 import { handleCheckAvailability } from "@/lib/actions/appointment/appointment";
 import { toast } from "sonner";
+import { FaMoneyBill } from "react-icons/fa";
 
 const generateDates = () => {
   const dates = [];
@@ -38,7 +39,7 @@ interface Department {
   name: string;
   description?: string;
   _id?: string;
-  id?: string; // Add id as fallback
+  id?: string;
 }
 
 interface TimeSlot {
@@ -61,6 +62,7 @@ interface OrganizationSidebarProps {
   organizationId?: string;
   organizationName?: string;
   organizationType?: string;
+  fees?: number;
 }
 
 export default function OrganizationSidebar({
@@ -69,6 +71,7 @@ export default function OrganizationSidebar({
   organizationId,
   organizationName,
   organizationType,
+  fees,
 }: OrganizationSidebarProps) {
   const router = useRouter();
   const { user } = useAuth();
@@ -124,19 +127,12 @@ export default function OrganizationSidebar({
     });
   }, [timeSlots]);
 
-  // Set initial department
   useEffect(() => {
     if (departments.length > 0 && !filterDepartment) {
       const firstDept = departments[0];
       const deptId = firstDept._id || firstDept.id;
 
       if (deptId) {
-        console.log(
-          "Setting initial department:",
-          firstDept.name,
-          "with ID:",
-          deptId,
-        );
         setFilterDepartment(firstDept.name);
         setSelectedDepartment({
           name: firstDept.name,
@@ -154,12 +150,6 @@ export default function OrganizationSidebar({
       const deptId = departmentMap.get(filterDepartment);
 
       if (deptId) {
-        console.log(
-          "Setting selected department:",
-          filterDepartment,
-          "with ID:",
-          deptId,
-        );
         setSelectedDepartment({
           name: filterDepartment,
           id: deptId,
@@ -167,12 +157,10 @@ export default function OrganizationSidebar({
       } else {
         console.error("No ID found for department:", filterDepartment);
 
-        // Try to find the department in the original array as fallback
         const dept = departments.find((d) => d.name === filterDepartment);
         if (dept) {
           const fallbackId = dept._id || dept.id;
           if (fallbackId) {
-            console.log("Found department ID using fallback:", fallbackId);
             setSelectedDepartment({
               name: dept.name,
               id: fallbackId,
@@ -183,7 +171,7 @@ export default function OrganizationSidebar({
     }
   }, [filterDepartment, departmentMap, departments]);
 
-  // Check availability when department or date changes
+  // Check availability when changes made
   useEffect(() => {
     const checkAllSlotAvailability = async () => {
       if (!selectedDepartment?.id) {
@@ -222,15 +210,9 @@ export default function OrganizationSidebar({
               departmentId: selectedDepartment.id,
             });
 
-            console.log(`Slot ${slot.display} availability:`, result);
-
             if (result.success && result.data) {
               availabilityMap[slot.display] = result.data.isAvailable === true;
             } else {
-              console.warn(
-                `Failed to check availability for slot ${slot.display}:`,
-                result.message,
-              );
               availabilityMap[slot.display] = slot.isAvailable;
             }
           } catch (slotError) {
@@ -241,7 +223,6 @@ export default function OrganizationSidebar({
 
         setAvailabilityStatus(availabilityMap);
       } catch (error) {
-        console.error("Error checking availability:", error);
         toast.error("Failed to check slot availability");
       } finally {
         setIsCheckingAvailability(false);
@@ -271,7 +252,6 @@ export default function OrganizationSidebar({
   useEffect(() => {
     if (availableTimeSlots.length > 0) {
       if (!filterTimeslot || !availableTimeSlots.includes(filterTimeslot)) {
-        console.log("Setting default timeslot to:", availableTimeSlots[0]);
         setFilterTimeslot(availableTimeSlots[0]);
       }
     } else {
@@ -282,7 +262,6 @@ export default function OrganizationSidebar({
   const departmentNames = departments.map((dept) => dept.name);
 
   const handleDepartmentChange = (deptName: string) => {
-    console.log("Department changed to:", deptName);
     setFilterDepartment(deptName);
     setAvailabilityStatus({});
 
@@ -297,37 +276,25 @@ export default function OrganizationSidebar({
   };
 
   const handleBookAppointment = async () => {
-    console.log("Book appointment clicked", {
-      user: !!user,
-      filterDepartment,
-      filterTimeslot,
-      selectedDepartment,
-      filterDate,
-      organizationId,
-    });
-
     if (!user) {
       router.push(`/auth/login?redirect=/organization/${organizationId}`);
       return;
     }
 
-    // Check if department is selected
     if (!filterDepartment) {
       toast.error("Please select a department");
       return;
     }
 
-    // Check if timeslot is selected
     if (!filterTimeslot) {
       toast.error("Please select a time slot");
       return;
     }
 
-    // Get department ID - either from selectedDepartment or from the map
+    // Get department ID
     let departmentId = selectedDepartment?.id;
 
     if (!departmentId) {
-      // Try to get it from the map as fallback
       departmentId = departmentMap.get(filterDepartment);
     }
 
@@ -338,7 +305,6 @@ export default function OrganizationSidebar({
         departmentMap: Array.from(departmentMap.entries()),
       });
 
-      // Last resort: try to find in original departments array
       const dept = departments.find((d) => d.name === filterDepartment);
       if (dept) {
         departmentId = dept._id || dept.id;
@@ -365,7 +331,6 @@ export default function OrganizationSidebar({
     setIsBooking(true);
 
     try {
-      // Final availability check before booking
       const availabilityCheck = await handleCheckAvailability({
         organizationId: organizationId!,
         date: filterDate.fullDate,
@@ -373,8 +338,6 @@ export default function OrganizationSidebar({
         endTime: selectedSlot.endTime,
         departmentId: departmentId,
       });
-
-      console.log("Final availability check:", availabilityCheck);
 
       if (!availabilityCheck.success || !availabilityCheck.data?.isAvailable) {
         toast.error(
@@ -390,11 +353,12 @@ export default function OrganizationSidebar({
         return;
       }
 
-      // Create booking data object with proper structure
+      // Create booking data
       const bookingData = {
         organizationId,
         organizationName,
         organizationType,
+        fees: fees || 0,
         department: {
           name: filterDepartment,
           id: departmentId,
@@ -421,9 +385,6 @@ export default function OrganizationSidebar({
         bookingTime: new Date().toISOString(),
       };
 
-      console.log("Saving booking data:", bookingData);
-
-      // Save to sessionStorage
       sessionStorage.setItem("bookingData", JSON.stringify(bookingData));
 
       // Navigate to confirmation page
@@ -513,6 +474,19 @@ export default function OrganizationSidebar({
           </div>
         )}
       </div>
+      <div className="mt-3 h-px w-full bg-gray-400" />
+
+      <div className="mt-1 text-sm text-gray-600">
+        <h2 className="py-2 font-bold text-xl text-gray-800">
+          {" "}
+          Appointment Fees
+        </h2>
+        <div className="flex items-center">
+          {" "}
+          <FaMoneyBill className="text-green-600 mr-2" />
+          <span className="font-medium">Rs {fees}</span>
+        </div>
+      </div>
 
       {(filterDepartment || filterTimeslot) && (
         <div className="mt-6 p-3 bg-fuchsia-50 rounded-lg ">
@@ -524,7 +498,7 @@ export default function OrganizationSidebar({
               {filterDepartment}
               {selectedDepartment?.id && (
                 <span className="text-xs text-gray-500 ml-2">
-                  (ID: {selectedDepartment.id.substring(0, 8)}...)
+                  (ID: {selectedDepartment.id.substring(0, 15)}...)
                 </span>
               )}
             </p>
@@ -542,7 +516,6 @@ export default function OrganizationSidebar({
           )}
         </div>
       )}
-
       <div className="my-5 flex items-center justify-center">
         <button
           onClick={handleBookAppointment}
