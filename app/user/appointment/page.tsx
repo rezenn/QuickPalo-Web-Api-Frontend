@@ -15,12 +15,22 @@ import {
   CheckCircle,
 } from "lucide-react";
 import Link from "next/link";
+import {
+  createAppointment,
+  CreateAppointmentData,
+} from "@/lib/api/appointment/appointment";
+import { toast } from "sonner";
+import { useAuth } from "@/context/authContext";
 
+// Update the BookingData interface
 interface BookingData {
   organizationId: string;
   organizationName: string;
   organizationType: string;
-  department: string;
+  department: {
+    name: string;
+    id: string;
+  };
   date: {
     display: string;
     fullDate: string;
@@ -45,6 +55,8 @@ interface BookingData {
 
 export default function BookingConfirmation() {
   const router = useRouter();
+  const { user } = useAuth();
+
   const [bookingData, setBookingData] =
     useSessionStorage<BookingData>("bookingData");
   const [isLoading, setIsLoading] = useState(true);
@@ -54,10 +66,18 @@ export default function BookingConfirmation() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    // Access sessionStorage 
     const storedData = sessionStorage.getItem("bookingData");
     if (storedData) {
-      setBookingData(JSON.parse(storedData));
+      try {
+        const parsed = JSON.parse(storedData);
+        console.log("Loaded booking data:", parsed);
+
+        setBookingData(parsed);
+      } catch (e) {
+        console.error("Failed to parse booking data", e);
+        toast.error("Invalid booking data");
+        router.push("/user/organizations");
+      }
     }
     setIsLoading(false);
   }, []);
@@ -66,35 +86,47 @@ export default function BookingConfirmation() {
     e.preventDefault();
     if (!bookingData) return;
 
+    // Validate that we have department ID
+    if (!bookingData.department?.id) {
+      toast.error(
+        "Department ID is missing. Please go back and select a department again.",
+      );
+      return;
+    }
+
     setIsSubmitting(true);
     setError(null);
 
     try {
-      const completeBookingData = {
-        ...bookingData,
-        note,
-        paymentMethod,
-        bookingStatus: "pending",
-        createdAt: new Date().toISOString(),
+      const appointmentData: CreateAppointmentData = {
+        organizationId: bookingData.organizationId,
+        departmentId: bookingData.department.id,
+        date: bookingData.date.fullDate,
+        timeslot: {
+          startTime: bookingData.timeSlot.startTime,
+          endTime: bookingData.timeSlot.endTime,
+        },
+        clientName: bookingData.user.fullName,
+        clientEmail: bookingData.user.email,
+        clientPhoneNumber: bookingData.user.phoneNumber,
+        notes: note || undefined,
       };
 
-      // const response = await fetch('/api/appointments', {
-      //   method: 'POST',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify(completeBookingData),
-      // });
+      const response = await createAppointment(appointmentData);
 
-      // if (!response.ok) throw new Error('Failed to book appointment');
-
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1500));
-
-      sessionStorage.removeItem("bookingData");
-      router.push("/user/appointment/success");
+      if (response.success) {
+        toast.success("Appointment booked successfully!");
+        sessionStorage.removeItem("bookingData");
+        router.push("/user/appointment/success");
+      } else {
+        setError(response.message || "Failed to book appointment");
+        toast.error(response.message || "Failed to book appointment");
+      }
     } catch (err) {
-      setError(
-        err instanceof Error ? err.message : "Failed to book appointment",
-      );
+      const errorMessage =
+        err instanceof Error ? err.message : "Failed to book appointment";
+      setError(errorMessage);
+      toast.error(errorMessage);
     } finally {
       setIsSubmitting(false);
     }
@@ -165,7 +197,6 @@ export default function BookingConfirmation() {
         {/* Main Card */}
         <div className="bg-white rounded-3xl shadow-xl overflow-hidden">
           {/* Organization Header */}
-
           <div className="bg-[linear-gradient(to_left,#BDDCFF_0%,#BCC2FB_13%,#BA7BF0_50%,#B846E8_78%,#B61BE1_100%)] px-8 py-6">
             <div className="flex items-center gap-4">
               <div className="bg-white/20 rounded-full p-3">
@@ -191,7 +222,9 @@ export default function BookingConfirmation() {
                   <Tag className="w-5 h-5 text-purple-600" />
                   <h3 className="font-semibold text-gray-900">Department</h3>
                 </div>
-                <p className="text-gray-700 ml-8">{bookingData.department}</p>
+                <p className="text-gray-700 ml-8">
+                  {bookingData.department.name}
+                </p>
               </div>
 
               <div className="bg-pink-50 rounded-xl p-4">

@@ -26,4 +26,15 @@ export const API = {
     SENDTOORG: "/api/message/send-to-org",
     STREAMTOKEN: "/api/message/stream-token",
   },
+  APPOINTMENT: {
+    CREATE: "/api/appointments",
+    GETUSERAPPOINTMENT: "/api/appointments/user",
+    GETBYID: (id: string) => `/api/appointments/${id}`,
+    UPDATE: (id: string) => `/api/appointments/${id}`,
+    CANCEL: (id: string) => `/api/appointments/${id}/cancel`,
+    COMPLETE: (id: string) => `/api/appointments/${id}/complete`,
+    CHECKAVAILABILITY: "/api/appointments/availability",
+    GETBYDATERANGE: "/api/appointments/date-range",
+    GETALL: "/api/appointments",
+  },
 };

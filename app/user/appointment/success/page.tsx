@@ -1,16 +1,22 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { CheckCircle, Calendar, ArrowRight } from "lucide-react";
+import { CheckCircle, Calendar } from "lucide-react";
 import Link from "next/link";
 
 export default function AppointmentSuccess() {
   const router = useRouter();
+  const [bookingReference, setBookingReference] = useState("");
 
   useEffect(() => {
     // Clear booking data
     sessionStorage.removeItem("bookingData");
+
+    // Generate random reference only on client side
+    setBookingReference(
+      Math.random().toString(36).substring(2, 10).toUpperCase(),
+    );
   }, []);
 
   return (
@@ -36,7 +42,7 @@ export default function AppointmentSuccess() {
               <span className="font-semibold">Booking Reference:</span>
             </div>
             <p className="text-2xl font-mono font-bold text-gray-900">
-              {Math.random().toString(36).substring(2, 10).toUpperCase()}
+              {bookingReference || "..."}
             </p>
           </div>
 
