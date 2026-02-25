@@ -6,6 +6,7 @@ import {
   createUser,
   deleteUser,
   updateUserAsAdmin,
+  createOrganization,
 } from "../../api/admin/user";
 import { updateProfile } from "@/lib/api/auth";
 
@@ -149,6 +150,42 @@ export async function handleCreateUser(userData: FormData) {
     return {
       success: false,
       message: error.message || "An error occurred while creating user",
+    };
+  }
+}
+export async function handleCreateOrganization(userData: FormData) {
+  try {
+    const fullName = userData.get("fullName") as string;
+    const email = userData.get("email") as string;
+    const phoneNumber = userData.get("phoneNumber") as string;
+    const password = userData.get("password") as string;
+    const confirmPassword = userData.get("confirmPassword") as string;
+
+    if (!fullName || !email || !phoneNumber || !password || !confirmPassword) {
+      return {
+        success: false,
+        message: "All fields are required",
+      };
+    }
+    const result = await createOrganization(userData);
+
+    if (result.success) {
+      revalidatePath("admin/organizations");
+      return {
+        success: true,
+        message: "Organization created successfully",
+        data: result.data,
+      };
+    }
+    return {
+      success: false,
+      message: result.message || "Failed to create organization",
+    };
+  } catch (error: Error | any) {
+    console.error("Create organization error:", error);
+    return {
+      success: false,
+      message: error.message || "An error occurred while creating organization",
     };
   }
 }

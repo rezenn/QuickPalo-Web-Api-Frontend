@@ -176,7 +176,7 @@ export default function AppointmentSuccess() {
 
           <div className="space-y-3">
             <Link
-              href="/user/appointments"
+              href="/user/history"
               className="block w-full bg-[#B61BE1] text-white font-semibold py-3 px-6 rounded-xl hover:opacity-90 transition-all duration-300"
             >
               View My Appointments

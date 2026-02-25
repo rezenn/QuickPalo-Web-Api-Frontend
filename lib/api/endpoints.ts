@@ -10,6 +10,7 @@ export const API = {
   ADMIN: {
     GETALLUSERS: "/api/admin/auth/users",
     CREATEUSER: "/api/admin/auth/create-user",
+    REGISTERORGANIZATION: "/api/admin/auth/register-organization",
     GETUSERBYID: (id: string) => `/api/auth/${id}`,
     UPDATEUSERASADMIN: (id: string) => `/api/admin/auth/${id}`,
     DELETEUSERASADMIN: (id: string) => `/api/admin/auth/${id}`,
