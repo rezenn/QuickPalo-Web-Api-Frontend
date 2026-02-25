@@ -12,6 +12,7 @@ import {
   CalendarDaysIcon as CalendarDaysOutline,
   UsersIcon as UsersOutline,
   UserIcon as UserOutline,
+  ClipboardDocumentListIcon as ClipboardOutline,
 } from "@heroicons/react/24/outline";
 import {
   HomeIcon as HomeSolid,
@@ -19,6 +20,7 @@ import {
   CalendarDaysIcon as CalendarDaysSolid,
   UsersIcon as UsersSolid,
   UserIcon as UserSolid,
+  ClipboardDocumentListIcon as ClipboardSolid,
 } from "@heroicons/react/24/solid";
 import ThemeSwitch from "@/app/_components/ThemeSwitch";
 import { LogOutIcon, Menu, AlertTriangle } from "lucide-react";
@@ -51,6 +53,12 @@ const NavLinks = [
     label: "Users",
     filledIcon: UsersSolid,
     icon: UsersOutline,
+  },
+  {
+    href: "/admin/appointments",
+    label: "Appointments",
+    filledIcon: ClipboardSolid,
+    icon: ClipboardOutline,
   },
   {
     href: "/admin/profile",
