@@ -90,7 +90,7 @@ export default function AdminOrganizationsPage() {
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div className="bg-gradient-to-br from-blue-50 to-blue-100 border border-blue-200 rounded-xl p-6">
+        <div className="bg-linear-to-br from-blue-50 to-blue-100 border border-blue-200 rounded-xl p-6">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-blue-700">
@@ -106,7 +106,7 @@ export default function AdminOrganizationsPage() {
           </div>
         </div>
 
-        <div className="bg-gradient-to-br from-purple-50 to-purple-100 border border-purple-200 rounded-xl p-6">
+        <div className="bg-linear-to-br from-purple-50 to-purple-100 border border-purple-200 rounded-xl p-6">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-purple-700">
@@ -122,7 +122,7 @@ export default function AdminOrganizationsPage() {
           </div>
         </div>
 
-        <div className="bg-gradient-to-br from-fuchsia-50 to-fuchsia-100 border border-fuchsia-200 rounded-xl p-6">
+        <div className="bg-linear-to-br from-fuchsia-50 to-fuchsia-100 border border-fuchsia-200 rounded-xl p-6">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-fuchsia-700">
@@ -141,8 +141,8 @@ export default function AdminOrganizationsPage() {
         <div
           className={`${
             growthRate >= 0
-              ? "bg-gradient-to-br from-green-50 to-green-100 border-green-200"
-              : "bg-gradient-to-br from-red-50 to-red-100 border-red-200"
+              ? "bg-linear-to-br from-green-50 to-green-100 border-green-200"
+              : "bg-linear-to-br from-red-50 to-red-100 border-red-200"
           } border rounded-xl p-6`}
         >
           <div className="flex items-center justify-between">

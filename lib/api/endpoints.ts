@@ -36,6 +36,6 @@ export const API = {
     COMPLETE: (id: string) => `/api/appointments/${id}/complete`,
     CHECKAVAILABILITY: "/api/appointments/availability",
     GETBYDATERANGE: "/api/appointments/date-range",
-    GETALL: "/api/appointments",
+    GETALL: "/api/appointments?limit=1000",
   },
 };

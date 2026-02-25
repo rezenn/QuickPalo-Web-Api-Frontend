@@ -222,12 +222,10 @@ export default function OrganizationTable() {
                     <tr>
                       {[
                         "Organization",
-                        "Account Owner",
                         "Email",
                         "Phone",
                         "Status",
                         "Registered Date",
-                        "Last Updated",
                         "Actions",
                       ].map((h) => (
                         <th
@@ -261,7 +259,7 @@ export default function OrganizationTable() {
                             <td className="px-6 py-4 align-middle">
                               <div className="flex items-center gap-3">
                                 <div className="h-12 w-12 shrink-0 relative rounded-full overflow-hidden">
-                                  <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-fuchsia-100 to-purple-100 rounded-full border-2 border-fuchsia-400">
+                                  <div className="absolute inset-0 flex items-center justify-center bg-linear-to-br from-fuchsia-100 to-purple-100 rounded-full border-2 border-fuchsia-400">
                                     <Building2
                                       className="text-fuchsia-400"
                                       size={22}
@@ -286,7 +284,7 @@ export default function OrganizationTable() {
                                     className="text-sm font-semibold text-gray-900"
                                     style={{ textTransform: "capitalize" }}
                                   >
-                                    {org.organizationName || (
+                                    {org.user?.fullName || (
                                       <span className="text-gray-400 italic">
                                         Not set
                                       </span>
@@ -296,13 +294,6 @@ export default function OrganizationTable() {
                                     ID: {org._id?.substring(0, 12)}...
                                   </div>
                                 </div>
-                              </div>
-                            </td>
-
-                            {/* Account Owner (user) */}
-                            <td className="px-6 py-4 align-middle whitespace-nowrap">
-                              <div className="text-sm font-medium text-gray-900 capitalize">
-                                {org.user?.fullName || "N/A"}
                               </div>
                             </td>
 
@@ -344,14 +335,6 @@ export default function OrganizationTable() {
                               <div className="flex items-center text-sm text-gray-900">
                                 <Calendar className="h-4 w-4 mr-2 text-gray-400 shrink-0" />
                                 {formatDate(org.createdAt)}
-                              </div>
-                            </td>
-
-                            {/* Updated */}
-                            <td className="px-6 py-4 align-middle whitespace-nowrap">
-                              <div className="flex items-center text-sm text-gray-900">
-                                <Calendar className="h-4 w-4 mr-2 text-gray-400 shrink-0" />
-                                {formatDate(org.updatedAt)}
                               </div>
                             </td>
 
