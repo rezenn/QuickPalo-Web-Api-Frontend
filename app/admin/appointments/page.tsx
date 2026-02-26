@@ -126,7 +126,7 @@ export default function AdminAppointmentsPage() {
   }>({ open: false, type: "complete", appointmentId: "", clientName: "" });
 
   const [page, setPage] = useState(1);
-  const PER_PAGE = 15;
+  const PER_PAGE = 10;
 
   useEffect(() => {
     loadData();
@@ -267,7 +267,7 @@ export default function AdminAppointmentsPage() {
         }
       />
 
-      <div className="max-w-7xl mx-auto px-4 py-8">
+      <div className="max-w-7xl mx-auto px-1 py-1">
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
           <div>

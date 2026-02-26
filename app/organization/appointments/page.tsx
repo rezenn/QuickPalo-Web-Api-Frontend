@@ -255,7 +255,7 @@ export default function OrganizationAppointmentsPage() {
         }
       />
 
-      <div className="max-w-6xl mx-auto px-4 py-8">
+      <div className="max-w-6xl mx-auto px-1 py-1">
         <div className="mb-6">
           <h1 className="text-2xl font-bold text-gray-900">Appointments</h1>
           <p className="text-sm text-gray-500 mt-1">
