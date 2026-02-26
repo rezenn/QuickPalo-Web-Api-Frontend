@@ -1,7 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useMemo } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { Calendar, dateFnsLocalizer } from "react-big-calendar";
 import { format, parse, startOfWeek, getDay } from "date-fns";
 import { enUS } from "date-fns/locale";
@@ -12,10 +11,11 @@ import {
   Clock,
   Building2,
   Loader2,
+  Phone,
+  RefreshCw,
 } from "lucide-react";
-import { handleGetUserAppointments } from "@/lib/actions/appointment/appointment";
+import { handleGetAllAppointments } from "@/lib/actions/appointment/appointment";
 
-// ─── Localizer ────────────────────────────────────────────────────────────────
 const localizer = dateFnsLocalizer({
   format,
   parse,
@@ -24,19 +24,20 @@ const localizer = dateFnsLocalizer({
   locales: { "en-US": enUS },
 });
 
-// ─── Types ────────────────────────────────────────────────────────────────────
 interface Appointment {
   _id: string;
   clientName: string;
   clientEmail: string;
+  clientPhoneNumber?: string;
   date: string;
-  status: "pending" | "confirmed" | "completed" | "cancelled";
+  status: "pending" | "confirmed" | "completed" | "cancelled" | "noShow";
   timeslot?: { startTime: string; endTime: string };
   departmentName?: string;
   organizationId?: any;
   notes?: string;
   paymentAmount?: number;
   paymentMethod?: string;
+  paymentStatus?: string;
 }
 
 interface CalendarEvent {
@@ -47,12 +48,12 @@ interface CalendarEvent {
   resource: Appointment;
 }
 
-// ─── Constants ────────────────────────────────────────────────────────────────
 const STATUS_COLORS: Record<string, string> = {
   pending: "#f59e0b",
   confirmed: "#3b82f6",
   completed: "#10b981",
   cancelled: "#ef4444",
+  noShow: "#6b7280",
 };
 
 const STATUS_BG: Record<string, string> = {
@@ -60,13 +61,12 @@ const STATUS_BG: Record<string, string> = {
   confirmed: "bg-blue-100 text-blue-800",
   completed: "bg-green-100 text-green-800",
   cancelled: "bg-red-100 text-red-800",
+  noShow: "bg-gray-100 text-gray-700",
 };
 
-// ─── Helpers ──────────────────────────────────────────────────────────────────
-function parseLocalDate(dateStr: string): Date {
-  const datePart = dateStr.split("T")[0];
-  const [year, month, day] = datePart.split("-").map(Number);
-  return new Date(year, month - 1, day);
+function parseDateToLocal(dateStr: string): Date {
+  const d = new Date(dateStr);
+  return new Date(d.getFullYear(), d.getMonth(), d.getDate());
 }
 
 function parseTime(base: Date, timeStr: string): Date {
@@ -76,19 +76,28 @@ function parseTime(base: Date, timeStr: string): Date {
   return d;
 }
 
+function getOrgName(orgId: any): string {
+  if (!orgId) return "";
+  if (typeof orgId === "object") return orgId.organizationName || "";
+  return "";
+}
+
 function toCalendarEvents(appointments: Appointment[]): CalendarEvent[] {
   if (!appointments?.length) return [];
   return appointments.map((a) => {
-    const base = parseLocalDate(a.date);
+    const base = parseDateToLocal(a.date);
     const start = a.timeslot?.startTime
       ? parseTime(base, a.timeslot.startTime)
       : new Date(new Date(base).setHours(9, 0));
     const end = a.timeslot?.endTime
       ? parseTime(base, a.timeslot.endTime)
       : new Date(new Date(base).setHours(9, 30));
+    const orgName = getOrgName(a.organizationId);
     return {
       id: a._id,
-      title: a.clientName || a.clientEmail || "Appointment",
+      title: orgName
+        ? `${a.clientName} · ${orgName}`
+        : a.clientName || "Appointment",
       start,
       end,
       resource: a,
@@ -96,7 +105,6 @@ function toCalendarEvents(appointments: Appointment[]): CalendarEvent[] {
   });
 }
 
-// ─── Event Modal ──────────────────────────────────────────────────────────────
 function EventModal({
   event,
   onClose,
@@ -106,10 +114,7 @@ function EventModal({
 }) {
   if (!event) return null;
   const appt = event.resource;
-  const orgName =
-    typeof appt.organizationId === "object"
-      ? appt.organizationId?.organizationName
-      : null;
+  const orgName = getOrgName(appt.organizationId);
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
@@ -129,7 +134,7 @@ function EventModal({
             </div>
             <div className="flex items-center gap-2">
               <span
-                className={`text-xs px-2 py-1 rounded-full font-medium ${STATUS_BG[appt.status]}`}
+                className={`text-xs px-2 py-1 rounded-full font-medium ${STATUS_BG[appt.status] || "bg-gray-100 text-gray-700"}`}
               >
                 {appt.status}
               </span>
@@ -141,7 +146,6 @@ function EventModal({
               </button>
             </div>
           </div>
-
           <div className="space-y-2.5 text-sm">
             <div className="flex items-center gap-2.5">
               <CalIcon size={14} className="text-gray-400 shrink-0" />
@@ -157,25 +161,43 @@ function EventModal({
                 </span>
               </div>
             )}
-            {appt.departmentName && (
-              <div className="flex items-center gap-2.5">
-                <Building2 size={14} className="text-gray-400 shrink-0" />
-                <span className="text-gray-700">{appt.departmentName}</span>
-              </div>
-            )}
             {orgName && (
               <div className="flex items-center gap-2.5">
                 <Building2 size={14} className="text-gray-400 shrink-0" />
                 <span className="text-gray-700">{orgName}</span>
               </div>
             )}
+            {appt.departmentName && (
+              <div className="flex items-center gap-2.5">
+                <Building2 size={14} className="text-gray-400 shrink-0" />
+                <span className="text-gray-700">{appt.departmentName}</span>
+              </div>
+            )}
+            {appt.clientPhoneNumber && (
+              <div className="flex items-center gap-2.5">
+                <Phone size={14} className="text-gray-400 shrink-0" />
+                <span className="text-gray-700">{appt.clientPhoneNumber}</span>
+              </div>
+            )}
             {appt.paymentAmount !== undefined && (
-              <p className="text-gray-600 text-sm">
-                Rs {appt.paymentAmount} ·{" "}
-                <span className="capitalize">
-                  {appt.paymentMethod || "cash"}
-                </span>
-              </p>
+              <div className="bg-gray-50 rounded p-2 space-y-1">
+                <div className="flex justify-between text-xs">
+                  <span className="text-gray-500">Amount</span>
+                  <span className="font-medium">Rs {appt.paymentAmount}</span>
+                </div>
+                <div className="flex justify-between text-xs">
+                  <span className="text-gray-500">Method</span>
+                  <span className="capitalize">
+                    {appt.paymentMethod || "—"}
+                  </span>
+                </div>
+                <div className="flex justify-between text-xs">
+                  <span className="text-gray-500">Payment</span>
+                  <span className="capitalize">
+                    {appt.paymentStatus || "—"}
+                  </span>
+                </div>
+              </div>
             )}
             {appt.notes && (
               <p className="text-gray-500 italic text-xs bg-gray-50 rounded p-2">
@@ -189,31 +211,35 @@ function EventModal({
   );
 }
 
-// ─── Page ─────────────────────────────────────────────────────────────────────
-export default function UserCalendarPage() {
+export default function AdminCalendarPage() {
   const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [date, setDate] = useState(new Date());
   const [selectedEvent, setSelectedEvent] = useState<CalendarEvent | null>(
     null,
   );
 
-  useEffect(() => {
-    const load = async () => {
-      try {
-        const res = await handleGetUserAppointments();
-        if (res.success && Array.isArray(res.data)) {
-          setAppointments(res.data as Appointment[]);
-        } else {
-          setError(res.message || "Failed to load appointments");
-        }
-      } catch (e: any) {
-        setError(e.message || "Something went wrong");
-      } finally {
-        setLoading(false);
+  const load = async (silent = false) => {
+    if (!silent) setLoading(true);
+    else setRefreshing(true);
+    try {
+      const res = await handleGetAllAppointments();
+      if (res.success && Array.isArray(res.data)) {
+        setAppointments(res.data as Appointment[]);
+      } else {
+        setError(res.message || "Failed to load appointments");
       }
-    };
+    } catch (e: any) {
+      setError(e.message || "Something went wrong");
+    } finally {
+      setLoading(false);
+      setRefreshing(false);
+    }
+  };
+
+  useEffect(() => {
     load();
   }, []);
 
@@ -236,15 +262,26 @@ export default function UserCalendarPage() {
         event={selectedEvent}
         onClose={() => setSelectedEvent(null)}
       />
-
-      <div className="max-w-5xl mx-auto px-4 py-8">
-        <div className="mb-6">
-          <h1 className="text-2xl font-bold text-gray-900">My Calendar</h1>
-          <p className="text-sm text-gray-500 mt-1">
-            {loading
-              ? "Loading..."
-              : `${appointments.length} appointment${appointments.length !== 1 ? "s" : ""} total`}
-          </p>
+      <div className="max-w-6xl mx-auto px-4 py-8">
+        <div className="flex items-center justify-between mb-6">
+          <div>
+            <h1 className="text-2xl font-bold text-gray-900">
+              Appointments Calendar
+            </h1>
+            <p className="text-sm text-gray-500 mt-1">
+              {loading
+                ? "Loading..."
+                : `${appointments.length} appointment${appointments.length !== 1 ? "s" : ""} across all organizations`}
+            </p>
+          </div>
+          <button
+            onClick={() => load(true)}
+            disabled={refreshing}
+            className="flex items-center gap-2 px-4 py-2 text-sm border border-gray-300 rounded-lg text-gray-600 hover:bg-gray-50 disabled:opacity-50 transition-colors"
+          >
+            <RefreshCw size={14} className={refreshing ? "animate-spin" : ""} />
+            Refresh
+          </button>
         </div>
 
         {error && (
@@ -254,7 +291,6 @@ export default function UserCalendarPage() {
         )}
 
         <div className="bg-white border border-gray-200 rounded-xl overflow-hidden">
-          {/* Legend */}
           <div className="flex items-center gap-4 px-4 py-3 border-b border-gray-100 flex-wrap">
             <span className="text-xs font-semibold text-gray-500">Legend:</span>
             {Object.entries(STATUS_COLORS).map(([status, color]) => (
