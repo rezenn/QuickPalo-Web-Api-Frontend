@@ -7,8 +7,9 @@ import {
   getUserAppointments,
   cancelAppointment,
   completeAppointment,
-  getAllAppointment,
+  getAllAppointments,
   getAppointmentById,
+  getOrganizationAppointments,
 } from "@/lib/api/appointment/appointment";
 import { cookies } from "next/headers";
 
@@ -143,7 +144,7 @@ export async function handleCompleteAppointment(appointmentId: string) {
 
 export async function handleGetAllAppointments() {
   try {
-    const result = await getAllAppointment();
+    const result = await getAllAppointments();
     if (result.success) {
       revalidatePath("/user/appointments");
 
@@ -161,6 +162,31 @@ export async function handleGetAllAppointments() {
     return {
       success: false,
       message: error.message || "Failed to fetch appointments",
+    };
+  }
+}
+export async function handleGetOrganizationAppointments(
+  organizationId: string,
+) {
+  try {
+    const result = await getOrganizationAppointments(organizationId);
+    if (result.success) {
+      return {
+        success: true,
+        message: "Appointments fetched successfully",
+        data: result.data,
+      };
+    }
+    return {
+      success: false,
+      message: result.message || "Failed to fetch appointments",
+      data: [],
+    };
+  } catch (error: Error | any) {
+    return {
+      success: false,
+      message: error.message || "Failed to fetch appointments",
+      data: [],
     };
   }
 }

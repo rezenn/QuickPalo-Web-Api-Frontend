@@ -136,9 +136,24 @@ export const completeAppointment = async (id: string) => {
   }
 };
 
-export const getAllAppointment = async () => {
+export const getAllAppointments = async () => {
   try {
     const response = await axiosInstance.get(API.APPOINTMENT.GETALL);
+    return response.data;
+  } catch (error: Error | any) {
+    throw new Error(
+      error.response?.data?.message ||
+        error.message ||
+        "Failed to fetch all appointments",
+    );
+  }
+};
+
+export const getOrganizationAppointments = async (organizationId: string) => {
+  try {
+    const response = await axiosInstance.get(
+      API.APPOINTMENT.GETBYORGANIZATION(organizationId),
+    );
     return response.data;
   } catch (error: Error | any) {
     throw new Error(

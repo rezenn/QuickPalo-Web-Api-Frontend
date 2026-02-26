@@ -8,14 +8,10 @@ import {
   CheckCircle,
   XCircle,
   ArrowRight,
-  RefreshCw,
   MapPin,
   Phone,
   Mail,
-  Globe,
-  Settings,
   TrendingUp,
-  TrendingDown,
   Users,
   AlertCircle,
   Edit3,
@@ -24,8 +20,10 @@ import {
 } from "lucide-react";
 import { format, isThisMonth, isThisWeek, isToday } from "date-fns";
 import { handleGetMyOrganizationDetails } from "@/lib/actions/organization/organization-action";
-import { handleGetAllAppointments } from "@/lib/actions/appointment/appointment";
-import { useAuth } from "@/context/authContext";
+import {
+  handleGetAllAppointments,
+  handleGetOrganizationAppointments,
+} from "@/lib/actions/appointment/appointment";
 
 interface OrgData {
   organizationName?: string;
@@ -74,9 +72,9 @@ const STATUS_CONFIG: Record<
     label: "Confirmed",
   },
   completed: {
-    bg: "bg-emerald-50",
-    text: "text-emerald-700",
-    dot: "bg-emerald-400",
+    bg: "bg-green-50",
+    text: "text-green-700",
+    dot: "bg-green-400",
     label: "Completed",
   },
   cancelled: {
@@ -124,9 +122,7 @@ function StatCard({
   return (
     <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 hover:shadow-md transition-shadow">
       <div className="flex items-start justify-between mb-3">
-        <p className="text-xs font-bold text-gray-400 uppercase tracking-widest">
-          {title}
-        </p>
+        <p className="text-xs font-bold text-black/80  ">{title}</p>
         <div className={`p-2 rounded-xl ${iconBg}`}>
           <Icon size={16} className={iconColor} />
         </div>
@@ -145,7 +141,6 @@ function StatCard({
 
 export default function OrganizationDashboard() {
   const router = useRouter();
-  const { user } = useAuth();
 
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
@@ -157,23 +152,23 @@ export default function OrganizationDashboard() {
   const fetchData = async () => {
     try {
       setError(null);
-
-      const [orgRes, apptRes] = await Promise.all([
-        handleGetMyOrganizationDetails(),
-        handleGetAllAppointments(),
-      ]);
+      const orgRes = await handleGetMyOrganizationDetails();
 
       if (orgRes.success && orgRes.data) {
-        setOrg(orgRes.data as OrgData);
-        // Check if essential fields are missing
-        const d = orgRes.data as any;
-        setProfileIncomplete(!d.organizationName || !d.contactEmail);
+        const orgData = orgRes.data as any;
+        setOrg(orgData as OrgData);
+        setProfileIncomplete(
+          !orgData.organizationName || !orgData.contactEmail,
+        );
+
+        if (orgData._id) {
+          const apptRes = await handleGetOrganizationAppointments(orgData._id);
+          if (apptRes.success && Array.isArray(apptRes.data)) {
+            setAppointments(apptRes.data as Appointment[]);
+          }
+        }
       } else {
         setProfileIncomplete(true);
-      }
-
-      if (apptRes.success && Array.isArray(apptRes.data)) {
-        setAppointments(apptRes.data as Appointment[]);
       }
     } catch (err: any) {
       setError(err.message || "Failed to load dashboard");
@@ -186,11 +181,6 @@ export default function OrganizationDashboard() {
   useEffect(() => {
     fetchData();
   }, []);
-
-  const handleRefresh = () => {
-    setRefreshing(true);
-    fetchData();
-  };
 
   const total = appointments.length;
   const pending = appointments.filter((a) => a.status === "pending").length;
@@ -227,21 +217,17 @@ export default function OrganizationDashboard() {
     );
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 space-y-7">
+    <div className="max-w-7xl mx-auto  sm:px-6 py-1 space-y-3">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className=" font-bold text-slate-400 uppercase tracking-widest mb-1">
+          <h1 className=" font-bold text-black  mb-1">
             Organization Dashboard
           </h1>
-
-          <p className="text-sm text-slate-400 mt-0.5">
-            {format(new Date(), "EEEE, MMMM d yyyy")}
-          </p>
         </div>
 
         <div className="flex items-center gap-3">
           <button
-            onClick={() => router.push("/organization/details/edit")}
+            onClick={() => router.push("/organization/profile/update-profile")}
             className="flex items-center gap-2 px-4 py-2 bg-fuchsia-600 text-white rounded-xl text-sm font-semibold hover:bg-fuchsia-700 transition-colors shadow-sm"
           >
             <Edit3 size={14} />
@@ -250,25 +236,6 @@ export default function OrganizationDashboard() {
         </div>
       </div>
 
-      {profileIncomplete && !loading && (
-        <div className="flex items-center justify-between gap-4 bg-amber-50 border border-amber-200 rounded-2xl px-5 py-4">
-          <div className="flex items-center gap-3">
-            <AlertCircle className="text-amber-500 shrink-0" size={18} />
-            <p className="text-sm text-amber-800 font-medium">
-              Your organization profile is incomplete. Complete it so patients
-              can find and book with you.
-            </p>
-          </div>
-          <button
-            onClick={() => router.push("/organization/details")}
-            className="text-xs font-bold text-amber-700 hover:text-amber-900 whitespace-nowrap flex items-center gap-1"
-          >
-            Complete now <ChevronRight size={12} />
-          </button>
-        </div>
-      )}
-
-      {/* ── Error ──────────────────────────────────────────────────────── */}
       {error && (
         <div className="flex items-center gap-3 bg-red-50 border border-red-200 rounded-2xl px-5 py-4">
           <AlertCircle className="text-red-500 shrink-0" size={18} />
@@ -276,7 +243,6 @@ export default function OrganizationDashboard() {
         </div>
       )}
 
-      {/* ── Stat Cards ─────────────────────────────────────────────────── */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         <StatCard
           title="Total"
@@ -299,7 +265,7 @@ export default function OrganizationDashboard() {
         <StatCard
           title="Pending"
           value={pending}
-          sub="awaiting action"
+          sub="waiting"
           icon={Clock}
           iconBg="bg-amber-50"
           iconColor="text-amber-600"
@@ -310,20 +276,17 @@ export default function OrganizationDashboard() {
           value={completed}
           sub={`${cancelled} cancelled`}
           icon={CheckCircle}
-          iconBg="bg-emerald-50"
-          iconColor="text-emerald-600"
+          iconBg="bg-green-50"
+          iconColor="text-green-600"
           loading={loading}
         />
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Left col: Today's schedule + Recent appointments */}
         <div className="lg:col-span-2 space-y-6">
-          {/* Today's Appointments */}
-          <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
-            <div className="flex items-center justify-between px-6 py-4 border-b border-slate-50">
-              <h2 className="font-bold text-slate-800 flex items-center gap-2">
-                <Calendar size={16} className="text-fuchsia-500" />
+          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+            <div className="flex items-center justify-between px-6 py-4 border-b border-gray-300">
+              <h2 className="font-bold text-fuchsia-800 flex items-center gap-2">
                 Today's Schedule
                 {todayCount > 0 && (
                   <span className="ml-1 bg-fuchsia-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">
@@ -338,39 +301,38 @@ export default function OrganizationDashboard() {
                 {[1, 2, 3].map((i) => (
                   <div
                     key={i}
-                    className="h-16 bg-slate-100 animate-pulse rounded-xl"
+                    className="h-16 bg-gray-100 animate-pulse rounded-xl"
                   />
                 ))}
               </div>
             ) : upcomingToday.length === 0 ? (
-              <div className="flex flex-col items-center justify-center py-12 text-slate-300">
+              <div className="flex flex-col items-center justify-center py-12 text-gray-600">
                 <CalendarCheck size={36} strokeWidth={1.5} />
                 <p className="text-sm mt-3 font-medium">
                   No appointments today
                 </p>
               </div>
             ) : (
-              <div className="divide-y divide-slate-50">
+              <div className="divide-y divide-gray-50">
                 {upcomingToday.map((appt) => (
                   <div
                     key={appt._id}
-                    className="flex items-center gap-4 px-6 py-4 hover:bg-slate-50 transition-colors"
+                    className="flex items-center gap-4 px-6 py-4 hover:bg-gray-50 transition-colors"
                   >
-                    {/* Time block */}
                     <div className="text-center shrink-0 w-14">
                       <p className="text-xs font-bold text-fuchsia-600">
                         {appt.timeslot?.startTime || "--:--"}
                       </p>
-                      <p className="text-xs text-slate-300">
+                      <p className="text-xs text-gray-500">
                         {appt.timeslot?.endTime || ""}
                       </p>
                     </div>
 
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-semibold text-slate-800 truncate">
+                      <p className="text-sm font-semibold text-gray-800 truncate">
                         {appt.clientName || appt.clientEmail || "Unknown"}
                       </p>
-                      <p className="text-xs text-slate-400 truncate">
+                      <p className="text-xs text-gray-400 truncate">
                         {appt.clientEmail}
                         {appt.departmentId?.name
                           ? ` · ${appt.departmentId.name}`
@@ -386,10 +348,9 @@ export default function OrganizationDashboard() {
           </div>
 
           {/* Recent Appointments */}
-          <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
-            <div className="flex items-center justify-between px-6 py-4 border-b border-slate-50">
-              <h2 className="font-bold text-slate-800 flex items-center gap-2">
-                <Clock size={16} className="text-sky-500" />
+          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+            <div className="flex items-center justify-between px-6 py-4 border-b border-gray-300">
+              <h2 className="font-bold text-fuchsia-600 flex items-center gap-2">
                 Recent Appointments
               </h2>
               <button
@@ -405,36 +366,27 @@ export default function OrganizationDashboard() {
                 {[1, 2, 3, 4].map((i) => (
                   <div
                     key={i}
-                    className="h-14 bg-slate-100 animate-pulse rounded-xl"
+                    className="h-14 bg-gray-100 animate-pulse rounded-xl"
                   />
                 ))}
               </div>
             ) : recentAppointments.length === 0 ? (
-              <div className="flex flex-col items-center justify-center py-12 text-slate-300">
+              <div className="flex flex-col items-center justify-center py-12 text-gray-300">
                 <Users size={36} strokeWidth={1.5} />
                 <p className="text-sm mt-3 font-medium">No appointments yet</p>
               </div>
             ) : (
-              <div className="divide-y divide-slate-50">
+              <div className="divide-y divide-gray-50">
                 {recentAppointments.map((appt) => (
                   <div
                     key={appt._id}
-                    className="flex items-center gap-4 px-6 py-3.5 hover:bg-slate-50 transition-colors"
+                    className="flex items-center gap-4 px-6 py-3.5 hover:bg-gray-50 transition-colors"
                   >
-                    {/* Avatar initial */}
-                    <div className="h-8 w-8 rounded-full bg-fuchsia-100 flex items-center justify-center shrink-0">
-                      <span className="text-xs font-bold text-fuchsia-700">
-                        {(appt.clientName || appt.clientEmail || "?")
-                          .charAt(0)
-                          .toUpperCase()}
-                      </span>
-                    </div>
-
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-semibold text-slate-800 truncate">
+                      <p className="text-sm font-semibold text-gray-800 truncate">
                         {appt.clientName || appt.clientEmail || "Unknown"}
                       </p>
-                      <p className="text-xs text-slate-400">
+                      <p className="text-xs text-gray-400">
                         {appt.date
                           ? format(new Date(appt.date), "MMM d, yyyy")
                           : "No date"}
@@ -452,19 +404,18 @@ export default function OrganizationDashboard() {
           </div>
         </div>
 
-        {/* Right col: Org profile card + quick stats */}
         <div className="space-y-5">
           {/* Org Profile Card */}
-          <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
             <div className="px-6 pt-2 pb-6">
               {loading ? (
                 <div className="space-y-2">
-                  <div className="h-5 bg-slate-100 animate-pulse rounded w-40" />
-                  <div className="h-3.5 bg-slate-100 animate-pulse rounded w-28" />
+                  <div className="h-5 bg-gray-100 animate-pulse rounded w-40" />
+                  <div className="h-3.5 bg-gray-100 animate-pulse rounded w-28" />
                 </div>
               ) : (
                 <>
-                  <p className="font-black text-slate-900 text-lg leading-tight">
+                  <p className="font-black text-gray-900 text-lg leading-tight">
                     {org?.organizationName || "Organization Name"}
                   </p>
                   {org?.organizationType && (
@@ -473,7 +424,7 @@ export default function OrganizationDashboard() {
                     </p>
                   )}
                   {org?.description && (
-                    <p className="text-xs text-slate-400 mt-2 line-clamp-2">
+                    <p className="text-xs text-gray-400 mt-2 line-clamp-2">
                       {org.description}
                     </p>
                   )}
@@ -502,15 +453,12 @@ export default function OrganizationDashboard() {
                   },
                 ].map(({ icon: Icon, value, placeholder }, i) => (
                   <div key={i} className="flex items-start gap-2.5">
-                    <Icon
-                      size={13}
-                      className="text-slate-300 mt-0.5 shrink-0"
-                    />
+                    <Icon size={13} className="text-gray-300 mt-0.5 shrink-0" />
                     <span
-                      className={`text-xs ${value ? "text-slate-600" : "text-slate-300 italic"}`}
+                      className={`text-xs ${value ? "text-gray-600" : "text-gray-300 italic"}`}
                     >
                       {loading ? (
-                        <span className="inline-block h-3 w-32 bg-slate-100 animate-pulse rounded" />
+                        <span className="inline-block h-3 w-32 bg-gray-100 animate-pulse rounded" />
                       ) : (
                         value || placeholder
                       )}
@@ -521,7 +469,7 @@ export default function OrganizationDashboard() {
 
               <button
                 onClick={() => router.push("/organization/details/edit")}
-                className="mt-4 w-full py-2.5 rounded-xl border-2 border-fuchsia-100 bg-fuchsia-600 text-white text-xs font-bold hover:bg-fuchsia-50 transition-colors flex items-center justify-center gap-1.5"
+                className="mt-4 w-full py-2.5 rounded-xl border-2 border-fuchsia-100 bg-fuchsia-600 text-white text-xs font-bold hover:bg-fuchsia-500 transition-colors flex items-center justify-center gap-1.5"
               >
                 <Edit3 size={12} />
                 Edit Organization Profile
@@ -531,8 +479,8 @@ export default function OrganizationDashboard() {
 
           {/* Appointment Settings */}
           {!loading && org && (
-            <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-5">
-              <h3 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">
+            <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5">
+              <h3 className="text-xs font-bold text-fuchsia-400 mb-4">
                 Appointment Settings
               </h3>
               <div className="space-y-3">
@@ -565,8 +513,8 @@ export default function OrganizationDashboard() {
                     key={label}
                     className="flex items-center justify-between"
                   >
-                    <span className="text-xs text-slate-400">{label}</span>
-                    <span className="text-xs font-semibold text-slate-700">
+                    <span className="text-xs text-gray-600">{label}</span>
+                    <span className="text-xs font-semibold text-gray-700">
                       {value}
                     </span>
                   </div>
@@ -576,65 +524,6 @@ export default function OrganizationDashboard() {
           )}
         </div>
       </div>
-
-      {/* ── Appointment Summary Bar ─────────────────────────────────────── */}
-      {!loading && total > 0 && (
-        <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
-          <h2 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-5">
-            Appointment Overview
-          </h2>
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-            {[
-              {
-                label: "This Month",
-                value: thisMonth,
-                icon: TrendingUp,
-                color: "text-fuchsia-600",
-                bg: "bg-fuchsia-50",
-              },
-              {
-                label: "This Week",
-                value: thisWeek,
-                icon: Calendar,
-                color: "text-sky-600",
-                bg: "bg-sky-50",
-              },
-              {
-                label: "Completion Rate",
-                value:
-                  total > 0
-                    ? `${Math.round((completed / total) * 100)}%`
-                    : "0%",
-                icon: CheckCircle,
-                color: "text-emerald-600",
-                bg: "bg-emerald-50",
-              },
-              {
-                label: "Cancellation Rate",
-                value:
-                  total > 0
-                    ? `${Math.round((cancelled / total) * 100)}%`
-                    : "0%",
-                icon: XCircle,
-                color: "text-red-500",
-                bg: "bg-red-50",
-              },
-            ].map(({ label, value, icon: Icon, color, bg }) => (
-              <div key={label} className="flex items-center gap-3">
-                <div className={`p-2.5 rounded-xl ${bg} shrink-0`}>
-                  <Icon size={16} className={color} />
-                </div>
-                <div>
-                  <p className="text-lg font-black text-slate-900 tabular-nums">
-                    {value}
-                  </p>
-                  <p className="text-xs text-slate-400">{label}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
     </div>
   );
 }

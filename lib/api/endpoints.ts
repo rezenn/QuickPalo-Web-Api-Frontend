@@ -37,5 +37,7 @@ export const API = {
     CHECKAVAILABILITY: "/api/appointments/availability",
     GETBYDATERANGE: "/api/appointments/date-range",
     GETALL: "/api/appointments?limit=1000",
+    GETBYORGANIZATION: (orgId: string) =>
+      `/api/appointments/organization/${orgId}`,
   },
 };
