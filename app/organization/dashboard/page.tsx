@@ -350,7 +350,7 @@ export default function OrganizationDashboard() {
               </h2>
               <button
                 onClick={() => router.push("/organization/appointments")}
-                className="text-xs font-semibold text-sky-600 hover:text-sky-800 flex items-center gap-1 transition-colors"
+                className="text-xs font-semibold text-black/70 hover:text-black/50  flex items-center gap-1 transition-colors"
               >
                 View all <ArrowRight size={12} />
               </button>

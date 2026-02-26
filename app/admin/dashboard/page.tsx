@@ -321,7 +321,7 @@ export default function AdminDashboard() {
             </h2>
             <button
               onClick={() => router.push("/admin/users")}
-              className="text-xs font-semibold text-violet-600 hover:text-violet-800 flex items-center gap-1 transition-colors"
+              className="text-xs font-semibold text-black/70 hover:text-black/50 flex items-center gap-1 transition-colors"
             >
               View all <ArrowRight size={12} />
             </button>
@@ -392,7 +392,7 @@ export default function AdminDashboard() {
             </h2>
             <button
               onClick={() => router.push("/admin/appointments")}
-              className="text-xs font-semibold text-sky-600 hover:text-sky-800 flex items-center gap-1 transition-colors"
+              className="text-xs font-semibold text-black/70 hover:text-black/50 flex items-center gap-1 transition-colors"
             >
               View all <ArrowRight size={12} />
             </button>

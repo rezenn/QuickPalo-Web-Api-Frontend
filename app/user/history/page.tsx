@@ -275,7 +275,7 @@ export default function UserAppointmentsPage() {
           a.notes?.toLowerCase().includes(q),
       );
     }
-    // Sort: upcoming first, then by date desc
+    // Sort: upcoming first
     result.sort((a, b) => {
       const aDate = new Date(a.date).getTime();
       const bDate = new Date(b.date).getTime();
@@ -284,8 +284,8 @@ export default function UserAppointmentsPage() {
       const bUpcoming = bDate >= now;
       if (aUpcoming && !bUpcoming) return -1;
       if (!aUpcoming && bUpcoming) return 1;
-      if (aUpcoming && bUpcoming) return aDate - bDate; // soonest first
-      return bDate - aDate; // most recent past first
+      if (aUpcoming && bUpcoming) return aDate - bDate;
+      return bDate - aDate;
     });
     setFiltered(result);
   };
@@ -349,7 +349,7 @@ export default function UserAppointmentsPage() {
         loading={cancelLoading}
       />
 
-      <div className=" max-w-6xl mx-auto px-1 py-1">
+      <div className="  mx-auto px-1 py-1">
         {/* Header */}
         <div className="mb-6">
           <h1 className="text-2xl font-bold text-gray-900">My Appointments</h1>
