@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState } from "react";
+import { useMemo } from "react";
 import { Calendar, dateFnsLocalizer } from "react-big-calendar";
 import { format, parse, startOfWeek, getDay } from "date-fns";
 import { enUS } from "date-fns/locale";
@@ -14,6 +15,7 @@ import {
 } from "lucide-react";
 import { handleGetUserAppointments } from "@/lib/actions/appointment/appointment";
 
+// ─── Localizer ────────────────────────────────────────────────────────────────
 const localizer = dateFnsLocalizer({
   format,
   parse,
@@ -22,12 +24,13 @@ const localizer = dateFnsLocalizer({
   locales: { "en-US": enUS },
 });
 
+// ─── Types ────────────────────────────────────────────────────────────────────
 interface Appointment {
   _id: string;
   clientName: string;
   clientEmail: string;
   date: string;
-  status: "pending" | "confirmed" | "completed" | "cancelled" | "noShow";
+  status: "pending" | "confirmed" | "completed" | "cancelled";
   timeslot?: { startTime: string; endTime: string };
   departmentName?: string;
   organizationId?: any;
@@ -44,12 +47,12 @@ interface CalendarEvent {
   resource: Appointment;
 }
 
+// ─── Constants ────────────────────────────────────────────────────────────────
 const STATUS_COLORS: Record<string, string> = {
   pending: "#f59e0b",
   confirmed: "#3b82f6",
   completed: "#10b981",
   cancelled: "#ef4444",
-  noShow: "#6b7280",
 };
 
 const STATUS_BG: Record<string, string> = {
@@ -57,13 +60,13 @@ const STATUS_BG: Record<string, string> = {
   confirmed: "bg-blue-100 text-blue-800",
   completed: "bg-green-100 text-green-800",
   cancelled: "bg-red-100 text-red-800",
-  noShow: "bg-gray-100 text-gray-700",
 };
 
-// Handles "Wed Feb 25 2026 05:45:00 GMT+0545 (Nepal Time)" AND ISO strings
-function parseDateToLocal(dateStr: string): Date {
-  const d = new Date(dateStr);
-  return new Date(d.getFullYear(), d.getMonth(), d.getDate());
+// ─── Helpers ──────────────────────────────────────────────────────────────────
+function parseLocalDate(dateStr: string): Date {
+  const datePart = dateStr.split("T")[0];
+  const [year, month, day] = datePart.split("-").map(Number);
+  return new Date(year, month - 1, day);
 }
 
 function parseTime(base: Date, timeStr: string): Date {
@@ -76,7 +79,7 @@ function parseTime(base: Date, timeStr: string): Date {
 function toCalendarEvents(appointments: Appointment[]): CalendarEvent[] {
   if (!appointments?.length) return [];
   return appointments.map((a) => {
-    const base = parseDateToLocal(a.date);
+    const base = parseLocalDate(a.date);
     const start = a.timeslot?.startTime
       ? parseTime(base, a.timeslot.startTime)
       : new Date(new Date(base).setHours(9, 0));
@@ -93,6 +96,7 @@ function toCalendarEvents(appointments: Appointment[]): CalendarEvent[] {
   });
 }
 
+// ─── Event Modal ──────────────────────────────────────────────────────────────
 function EventModal({
   event,
   onClose,
@@ -125,7 +129,7 @@ function EventModal({
             </div>
             <div className="flex items-center gap-2">
               <span
-                className={`text-xs px-2 py-1 rounded-full font-medium ${STATUS_BG[appt.status] || "bg-gray-100 text-gray-700"}`}
+                className={`text-xs px-2 py-1 rounded-full font-medium ${STATUS_BG[appt.status]}`}
               >
                 {appt.status}
               </span>
@@ -137,6 +141,7 @@ function EventModal({
               </button>
             </div>
           </div>
+
           <div className="space-y-2.5 text-sm">
             <div className="flex items-center gap-2.5">
               <CalIcon size={14} className="text-gray-400 shrink-0" />
@@ -165,7 +170,7 @@ function EventModal({
               </div>
             )}
             {appt.paymentAmount !== undefined && (
-              <p className="text-gray-600">
+              <p className="text-gray-600 text-sm">
                 Rs {appt.paymentAmount} ·{" "}
                 <span className="capitalize">
                   {appt.paymentMethod || "cash"}
@@ -184,6 +189,7 @@ function EventModal({
   );
 }
 
+// ─── Page ─────────────────────────────────────────────────────────────────────
 export default function UserCalendarPage() {
   const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [loading, setLoading] = useState(true);
@@ -194,16 +200,21 @@ export default function UserCalendarPage() {
   );
 
   useEffect(() => {
-    handleGetUserAppointments()
-      .then((res) => {
+    const load = async () => {
+      try {
+        const res = await handleGetUserAppointments();
         if (res.success && Array.isArray(res.data)) {
           setAppointments(res.data as Appointment[]);
         } else {
-          setError(res.message || "Failed to load");
+          setError(res.message || "Failed to load appointments");
         }
-      })
-      .catch((e) => setError(e.message || "Something went wrong"))
-      .finally(() => setLoading(false));
+      } catch (e: any) {
+        setError(e.message || "Something went wrong");
+      } finally {
+        setLoading(false);
+      }
+    };
+    load();
   }, []);
 
   const events = useMemo(() => toCalendarEvents(appointments), [appointments]);
@@ -225,6 +236,7 @@ export default function UserCalendarPage() {
         event={selectedEvent}
         onClose={() => setSelectedEvent(null)}
       />
+
       <div className="max-w-5xl mx-auto px-4 py-8">
         <div className="mb-6">
           <h1 className="text-2xl font-bold text-gray-900">My Calendar</h1>
@@ -242,6 +254,7 @@ export default function UserCalendarPage() {
         )}
 
         <div className="bg-white border border-gray-200 rounded-xl overflow-hidden">
+          {/* Legend */}
           <div className="flex items-center gap-4 px-4 py-3 border-b border-gray-100 flex-wrap">
             <span className="text-xs font-semibold text-gray-500">Legend:</span>
             {Object.entries(STATUS_COLORS).map(([status, color]) => (

@@ -3,6 +3,7 @@
 @plugin "tailwindcss-animate";
 @import "react-international-phone/style.css";
 @import "tw-animate-css";
+@import "react-big-calendar/lib/css/react-big-calendar.css";
 
 @custom-variant dark (&:is(.dark *));
 
