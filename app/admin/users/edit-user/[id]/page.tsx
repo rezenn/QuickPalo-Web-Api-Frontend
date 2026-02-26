@@ -102,7 +102,7 @@ export default function AdminEditUserPage() {
       </div>
 
       <div className="text-center mb-8">
-        <h1 className="text-3xl font-bold bg-gradient-to-r from-purple-600 to-pink-500 bg-clip-text text-transparent">
+        <h1 className="text-3xl font-bold bg-linear-to-r from-purple-600 to-pink-500 bg-clip-text text-transparent">
           Edit User
         </h1>
         <p className="text-gray-600 mt-2">
@@ -113,11 +113,11 @@ export default function AdminEditUserPage() {
         </p>
       </div>
 
-      <div className="bg-gradient-to-br from-white via-white to-purple-50 shadow-2xl rounded-3xl overflow-hidden border border-purple-100">
+      <div className="bg-linear-to-br from-white via-white to-purple-50 shadow-2xl rounded-3xl overflow-hidden border border-purple-100">
         <EditUserForm initialUser={userData} onSuccess={handleUpdateSuccess} />
 
         <footer>
-          <div className="px-8 py-6 bg-gradient-to-r from-gray-50 to-white border-t border-gray-100">
+          <div className="px-8 py-6 bg-linear-to-r from-gray-50 to-white border-t border-gray-100">
             <div className="flex items-center justify-between text-sm">
               <div className="text-gray-600">
                 <span className="font-medium">Last updated:</span>{" "}

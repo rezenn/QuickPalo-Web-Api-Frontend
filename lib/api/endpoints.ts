@@ -10,6 +10,7 @@ export const API = {
   ADMIN: {
     GETALLUSERS: "/api/admin/auth/users",
     CREATEUSER: "/api/admin/auth/create-user",
+    REGISTERORGANIZATION: "/api/admin/auth/register-organization",
     GETUSERBYID: (id: string) => `/api/auth/${id}`,
     UPDATEUSERASADMIN: (id: string) => `/api/admin/auth/${id}`,
     DELETEUSERASADMIN: (id: string) => `/api/admin/auth/${id}`,
@@ -25,5 +26,18 @@ export const API = {
   MESSAGE: {
     SENDTOORG: "/api/message/send-to-org",
     STREAMTOKEN: "/api/message/stream-token",
+  },
+  APPOINTMENT: {
+    CREATE: "/api/appointments",
+    GETUSERAPPOINTMENT: "/api/appointments/user",
+    GETBYID: (id: string) => `/api/appointments/${id}`,
+    UPDATE: (id: string) => `/api/appointments/${id}`,
+    CANCEL: (id: string) => `/api/appointments/${id}/cancel`,
+    COMPLETE: (id: string) => `/api/appointments/${id}/complete`,
+    CHECKAVAILABILITY: "/api/appointments/availability",
+    GETBYDATERANGE: "/api/appointments/date-range",
+    GETALL: "/api/appointments?limit=1000",
+    GETBYORGANIZATION: (orgId: string) =>
+      `/api/appointments/organization/${orgId}`,
   },
 };

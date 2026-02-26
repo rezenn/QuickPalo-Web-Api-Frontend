@@ -106,7 +106,7 @@ export default function CreateUserForm() {
     <div className="max-w-3xl mx-auto mt-10 px-4">
       <Link
         className="w-20 h-10 px-2 flex flex-row justify-center items-center gap-2 rounded-2xl bg-fuchsia-100 hover:bg-fuchsia-200 transition-colors"
-        href="/admin/users" 
+        href="/admin/users"
       >
         <ArrowLeft size={16} />
         <p>Back</p>
@@ -244,7 +244,7 @@ export default function CreateUserForm() {
             {/* Full Name */}
             <div className="relative group">
               <label className="block text-sm font-semibold mb-2 text-gray-700">
-                Full Name *
+                Full Name
               </label>
               <div className="relative">
                 <input
@@ -265,7 +265,7 @@ export default function CreateUserForm() {
             {/* Email */}
             <div>
               <label className="block text-sm font-semibold mb-2 text-gray-700">
-                Email Address *
+                Email Address
               </label>
               <div className="relative">
                 <input
@@ -287,7 +287,7 @@ export default function CreateUserForm() {
             {/* Phone Number */}
             <div className="relative group">
               <label className="block text-sm font-semibold mb-2 text-gray-700">
-                Phone Number *
+                Phone Number
               </label>
               <div className="relative">
                 <input
@@ -308,7 +308,7 @@ export default function CreateUserForm() {
             {/* Password */}
             <div className="relative group">
               <label className="block text-sm font-semibold mb-2 text-gray-700">
-                Password *
+                Password
               </label>
               <div className="relative">
                 <input
@@ -330,7 +330,7 @@ export default function CreateUserForm() {
             {/* Confirm password */}
             <div className="relative group">
               <label className="block text-sm font-semibold mb-2 text-gray-700">
-                Confirm Password *
+                Confirm Password
               </label>
               <div className="relative">
                 <input

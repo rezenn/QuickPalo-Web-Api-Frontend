@@ -46,6 +46,7 @@ export async function handleLogin(loginData: any) {
     return { success: false, message: error.message };
   }
 }
+
 export async function handleGetUser() {
   try {
     const result = await getUser();
@@ -64,7 +65,6 @@ export async function handleGetUser() {
     return { success: false, message: err.message };
   }
 }
-
 
 export async function handleUpdateProfile(profileData: any) {
   try {
@@ -106,7 +106,6 @@ export async function handleUpdateProfile(profileData: any) {
     return { success: false, message: error.message };
   }
 }
-
 
 export const handleRequestPasswordReset = async (email: string) => {
   try {

@@ -19,6 +19,24 @@ export const createUser = async (profileData: any) => {
     );
   }
 };
+export const createOrganization = async (profileData: any) => {
+  try {
+    const response = await axiosInstance.post(
+      API.ADMIN.REGISTERORGANIZATION,
+      profileData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      },
+    );
+    return response.data;
+  } catch (err: Error | any) {
+    throw new Error(
+      err.response?.data?.message || err.message || "new user not created",
+    );
+  }
+};
 
 export const updateUserAsAdmin = async (userId: string, userData: FormData) => {
   try {

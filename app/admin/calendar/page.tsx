@@ -11,8 +11,10 @@ import {
   Clock,
   Building2,
   Loader2,
+  Phone,
+  RefreshCw,
 } from "lucide-react";
-import { handleGetUserAppointments } from "@/lib/actions/appointment/appointment";
+import { handleGetAllAppointments } from "@/lib/actions/appointment/appointment";
 
 const localizer = dateFnsLocalizer({
   format,
@@ -26,6 +28,7 @@ interface Appointment {
   _id: string;
   clientName: string;
   clientEmail: string;
+  clientPhoneNumber?: string;
   date: string;
   status: "pending" | "confirmed" | "completed" | "cancelled" | "noShow";
   timeslot?: { startTime: string; endTime: string };
@@ -34,6 +37,7 @@ interface Appointment {
   notes?: string;
   paymentAmount?: number;
   paymentMethod?: string;
+  paymentStatus?: string;
 }
 
 interface CalendarEvent {
@@ -72,6 +76,12 @@ function parseTime(base: Date, timeStr: string): Date {
   return d;
 }
 
+function getOrgName(orgId: any): string {
+  if (!orgId) return "";
+  if (typeof orgId === "object") return orgId.organizationName || "";
+  return "";
+}
+
 function toCalendarEvents(appointments: Appointment[]): CalendarEvent[] {
   if (!appointments?.length) return [];
   return appointments.map((a) => {
@@ -82,9 +92,12 @@ function toCalendarEvents(appointments: Appointment[]): CalendarEvent[] {
     const end = a.timeslot?.endTime
       ? parseTime(base, a.timeslot.endTime)
       : new Date(new Date(base).setHours(9, 30));
+    const orgName = getOrgName(a.organizationId);
     return {
       id: a._id,
-      title: a.clientName || a.clientEmail || "Appointment",
+      title: orgName
+        ? `${a.clientName} · ${orgName}`
+        : a.clientName || "Appointment",
       start,
       end,
       resource: a,
@@ -101,10 +114,7 @@ function EventModal({
 }) {
   if (!event) return null;
   const appt = event.resource;
-  const orgName =
-    typeof appt.organizationId === "object"
-      ? appt.organizationId?.organizationName
-      : null;
+  const orgName = getOrgName(appt.organizationId);
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
@@ -151,25 +161,43 @@ function EventModal({
                 </span>
               </div>
             )}
-            {appt.departmentName && (
-              <div className="flex items-center gap-2.5">
-                <Building2 size={14} className="text-gray-400 shrink-0" />
-                <span className="text-gray-700">{appt.departmentName}</span>
-              </div>
-            )}
             {orgName && (
               <div className="flex items-center gap-2.5">
                 <Building2 size={14} className="text-gray-400 shrink-0" />
                 <span className="text-gray-700">{orgName}</span>
               </div>
             )}
+            {appt.departmentName && (
+              <div className="flex items-center gap-2.5">
+                <Building2 size={14} className="text-gray-400 shrink-0" />
+                <span className="text-gray-700">{appt.departmentName}</span>
+              </div>
+            )}
+            {appt.clientPhoneNumber && (
+              <div className="flex items-center gap-2.5">
+                <Phone size={14} className="text-gray-400 shrink-0" />
+                <span className="text-gray-700">{appt.clientPhoneNumber}</span>
+              </div>
+            )}
             {appt.paymentAmount !== undefined && (
-              <p className="text-gray-600">
-                Rs {appt.paymentAmount} ·{" "}
-                <span className="capitalize">
-                  {appt.paymentMethod || "cash"}
-                </span>
-              </p>
+              <div className="bg-gray-50 rounded p-2 space-y-1">
+                <div className="flex justify-between text-xs">
+                  <span className="text-gray-500">Amount</span>
+                  <span className="font-medium">Rs {appt.paymentAmount}</span>
+                </div>
+                <div className="flex justify-between text-xs">
+                  <span className="text-gray-500">Method</span>
+                  <span className="capitalize">
+                    {appt.paymentMethod || "—"}
+                  </span>
+                </div>
+                <div className="flex justify-between text-xs">
+                  <span className="text-gray-500">Payment</span>
+                  <span className="capitalize">
+                    {appt.paymentStatus || "—"}
+                  </span>
+                </div>
+              </div>
             )}
             {appt.notes && (
               <p className="text-gray-500 italic text-xs bg-gray-50 rounded p-2">
@@ -183,26 +211,36 @@ function EventModal({
   );
 }
 
-export default function UserCalendarPage() {
+export default function AdminCalendarPage() {
   const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [date, setDate] = useState(new Date());
   const [selectedEvent, setSelectedEvent] = useState<CalendarEvent | null>(
     null,
   );
 
+  const load = async (silent = false) => {
+    if (!silent) setLoading(true);
+    else setRefreshing(true);
+    try {
+      const res = await handleGetAllAppointments();
+      if (res.success && Array.isArray(res.data)) {
+        setAppointments(res.data as Appointment[]);
+      } else {
+        setError(res.message || "Failed to load appointments");
+      }
+    } catch (e: any) {
+      setError(e.message || "Something went wrong");
+    } finally {
+      setLoading(false);
+      setRefreshing(false);
+    }
+  };
+
   useEffect(() => {
-    handleGetUserAppointments()
-      .then((res) => {
-        if (res.success && Array.isArray(res.data)) {
-          setAppointments(res.data as Appointment[]);
-        } else {
-          setError(res.message || "Failed to load");
-        }
-      })
-      .catch((e) => setError(e.message || "Something went wrong"))
-      .finally(() => setLoading(false));
+    load();
   }, []);
 
   const events = useMemo(() => toCalendarEvents(appointments), [appointments]);
@@ -224,14 +262,26 @@ export default function UserCalendarPage() {
         event={selectedEvent}
         onClose={() => setSelectedEvent(null)}
       />
-      <div className="max-w-5xl mx-auto px-4 py-8">
-        <div className="mb-6">
-          <h1 className="text-2xl font-bold text-gray-900">My Calendar</h1>
-          <p className="text-sm text-gray-500 mt-1">
-            {loading
-              ? "Loading..."
-              : `${appointments.length} appointment${appointments.length !== 1 ? "s" : ""} total`}
-          </p>
+      <div className="max-w-6xl mx-auto px-4 py-8">
+        <div className="flex items-center justify-between mb-6">
+          <div>
+            <h1 className="text-2xl font-bold text-gray-900">
+              Appointments Calendar
+            </h1>
+            <p className="text-sm text-gray-500 mt-1">
+              {loading
+                ? "Loading..."
+                : `${appointments.length} appointment${appointments.length !== 1 ? "s" : ""} across all organizations`}
+            </p>
+          </div>
+          <button
+            onClick={() => load(true)}
+            disabled={refreshing}
+            className="flex items-center gap-2 px-4 py-2 text-sm border border-gray-300 rounded-lg text-gray-600 hover:bg-gray-50 disabled:opacity-50 transition-colors"
+          >
+            <RefreshCw size={14} className={refreshing ? "animate-spin" : ""} />
+            Refresh
+          </button>
         </div>
 
         {error && (

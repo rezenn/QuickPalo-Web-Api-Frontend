@@ -11,8 +11,11 @@ import {
   Clock,
   Building2,
   Loader2,
+  Phone,
+  Mail,
 } from "lucide-react";
-import { handleGetUserAppointments } from "@/lib/actions/appointment/appointment";
+import { handleGetMyOrganizationDetails } from "@/lib/actions/organization/organization-action";
+import { handleGetOrganizationAppointments } from "@/lib/actions/appointment/appointment";
 
 const localizer = dateFnsLocalizer({
   format,
@@ -26,14 +29,15 @@ interface Appointment {
   _id: string;
   clientName: string;
   clientEmail: string;
+  clientPhoneNumber?: string;
   date: string;
   status: "pending" | "confirmed" | "completed" | "cancelled" | "noShow";
   timeslot?: { startTime: string; endTime: string };
   departmentName?: string;
-  organizationId?: any;
   notes?: string;
   paymentAmount?: number;
   paymentMethod?: string;
+  paymentStatus?: string;
 }
 
 interface CalendarEvent {
@@ -101,11 +105,6 @@ function EventModal({
 }) {
   if (!event) return null;
   const appt = event.resource;
-  const orgName =
-    typeof appt.organizationId === "object"
-      ? appt.organizationId?.organizationName
-      : null;
-
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
       <div className="absolute inset-0 bg-black/40" onClick={onClose} />
@@ -157,19 +156,31 @@ function EventModal({
                 <span className="text-gray-700">{appt.departmentName}</span>
               </div>
             )}
-            {orgName && (
+            {appt.clientPhoneNumber && (
               <div className="flex items-center gap-2.5">
-                <Building2 size={14} className="text-gray-400 shrink-0" />
-                <span className="text-gray-700">{orgName}</span>
+                <Phone size={14} className="text-gray-400 shrink-0" />
+                <span className="text-gray-700">{appt.clientPhoneNumber}</span>
               </div>
             )}
             {appt.paymentAmount !== undefined && (
-              <p className="text-gray-600">
-                Rs {appt.paymentAmount} ·{" "}
-                <span className="capitalize">
-                  {appt.paymentMethod || "cash"}
-                </span>
-              </p>
+              <div className="bg-gray-50 rounded p-2 space-y-1">
+                <div className="flex justify-between text-xs">
+                  <span className="text-gray-500">Amount</span>
+                  <span className="font-medium">Rs {appt.paymentAmount}</span>
+                </div>
+                <div className="flex justify-between text-xs">
+                  <span className="text-gray-500">Method</span>
+                  <span className="capitalize">
+                    {appt.paymentMethod || "—"}
+                  </span>
+                </div>
+                <div className="flex justify-between text-xs">
+                  <span className="text-gray-500">Payment status</span>
+                  <span className="capitalize">
+                    {appt.paymentStatus || "—"}
+                  </span>
+                </div>
+              </div>
             )}
             {appt.notes && (
               <p className="text-gray-500 italic text-xs bg-gray-50 rounded p-2">
@@ -183,7 +194,7 @@ function EventModal({
   );
 }
 
-export default function UserCalendarPage() {
+export default function OrgCalendarPage() {
   const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -193,16 +204,27 @@ export default function UserCalendarPage() {
   );
 
   useEffect(() => {
-    handleGetUserAppointments()
-      .then((res) => {
-        if (res.success && Array.isArray(res.data)) {
-          setAppointments(res.data as Appointment[]);
-        } else {
-          setError(res.message || "Failed to load");
+    const load = async () => {
+      try {
+        const orgRes = await handleGetMyOrganizationDetails();
+        if (!orgRes.success || !orgRes.data) {
+          setError("Could not load organization info");
+          return;
         }
-      })
-      .catch((e) => setError(e.message || "Something went wrong"))
-      .finally(() => setLoading(false));
+        const orgId = (orgRes.data as any)._id;
+        const apptRes = await handleGetOrganizationAppointments(orgId);
+        if (apptRes.success && Array.isArray(apptRes.data)) {
+          setAppointments(apptRes.data as Appointment[]);
+        } else {
+          setError(apptRes.message || "Failed to load appointments");
+        }
+      } catch (e: any) {
+        setError(e.message || "Something went wrong");
+      } finally {
+        setLoading(false);
+      }
+    };
+    load();
   }, []);
 
   const events = useMemo(() => toCalendarEvents(appointments), [appointments]);
@@ -226,7 +248,9 @@ export default function UserCalendarPage() {
       />
       <div className="max-w-5xl mx-auto px-4 py-8">
         <div className="mb-6">
-          <h1 className="text-2xl font-bold text-gray-900">My Calendar</h1>
+          <h1 className="text-2xl font-bold text-gray-900">
+            Appointments Calendar
+          </h1>
           <p className="text-sm text-gray-500 mt-1">
             {loading
               ? "Loading..."
