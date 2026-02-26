@@ -184,14 +184,12 @@ export default function OrganizationChat({
   };
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between p-6 bg-white border-b border-gray-200 rounded-t-3xl">
-        <h2 className="text-2xl font-bold text-gray-900">
-          Messages with Users
-        </h2>
+    <div className="space-y-6 px-5">
+      <div className="flex items-center justify-between p-4 bg-white border-b border-gray-200 rounded-t-3xl">
+        <h2 className="text-xl font-bold text-gray-900">Messages with Users</h2>
       </div>
 
-      <div className="h-[500px] bg-white rounded-3xl shadow-2xl overflow-hidden border-4 border-gray-100">
+      <div className="h-[550px] bg-white rounded-3xl shadow-2xl overflow-hidden border-4 border-gray-100">
         <Chat client={chatClient} theme="messaging light">
           <div className="flex h-full">
             <div className="w-1/3 border-r border-gray-200 bg-gradient-to-b from-gray-50 to-white overflow-y-auto">

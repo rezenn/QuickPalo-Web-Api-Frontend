@@ -12,7 +12,6 @@ import {
   Building2,
   Loader2,
   Phone,
-  RefreshCw,
 } from "lucide-react";
 import { handleGetAllAppointments } from "@/lib/actions/appointment/appointment";
 
@@ -262,7 +261,7 @@ export default function AdminCalendarPage() {
         event={selectedEvent}
         onClose={() => setSelectedEvent(null)}
       />
-      <div className="max-w-6xl mx-auto px-4 py-8">
+      <div className="max-w-6xl mx-auto px-1 py-1">
         <div className="flex items-center justify-between mb-6">
           <div>
             <h1 className="text-2xl font-bold text-gray-900">
@@ -274,14 +273,6 @@ export default function AdminCalendarPage() {
                 : `${appointments.length} appointment${appointments.length !== 1 ? "s" : ""} across all organizations`}
             </p>
           </div>
-          <button
-            onClick={() => load(true)}
-            disabled={refreshing}
-            className="flex items-center gap-2 px-4 py-2 text-sm border border-gray-300 rounded-lg text-gray-600 hover:bg-gray-50 disabled:opacity-50 transition-colors"
-          >
-            <RefreshCw size={14} className={refreshing ? "animate-spin" : ""} />
-            Refresh
-          </button>
         </div>
 
         {error && (

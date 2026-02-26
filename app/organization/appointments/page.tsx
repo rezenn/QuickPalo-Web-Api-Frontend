@@ -443,26 +443,32 @@ export default function OrganizationAppointmentsPage() {
                   </table>
 
                   {totalPages > 1 && (
-                    <div className="flex items-center justify-between px-4 py-3 border-t border-gray-100 text-sm text-gray-500">
+                    <div className="flex items-center justify-between px-4 py-3 border-t border-gray-100 text-sm bg-gray-100 text-gray-800">
                       <span>
-                        {(page - 1) * PER_PAGE + 1}–
-                        {Math.min(page * PER_PAGE, filtered.length)} of{" "}
-                        {filtered.length}
+                        {" "}
+                        Showing &nbsp;
+                        {(page - 1) * PER_PAGE + 1}&nbsp;to&nbsp;
+                        {Math.min(page * PER_PAGE, filtered.length)}
+                        &nbsp;of&nbsp;
+                        {filtered.length} appointments
                       </span>
                       <div className="flex gap-2">
                         <button
                           onClick={() => setPage((p) => Math.max(1, p - 1))}
                           disabled={page === 1}
-                          className="px-3 py-1 border border-gray-300 rounded text-sm disabled:opacity-40 hover:bg-gray-50"
+                          className="px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                         >
-                          Prev
+                          Previous
                         </button>
+                        <span className="px-3 py-2 text-sm font-medium text-gray-900">
+                          Page {page} of {totalPages}
+                        </span>
                         <button
                           onClick={() =>
                             setPage((p) => Math.min(totalPages, p + 1))
                           }
                           disabled={page === totalPages}
-                          className="px-3 py-1 border border-gray-300 rounded text-sm disabled:opacity-40 hover:bg-gray-50"
+                          className="px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                         >
                           Next
                         </button>

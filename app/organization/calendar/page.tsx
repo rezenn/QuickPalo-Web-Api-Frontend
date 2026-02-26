@@ -12,7 +12,6 @@ import {
   Building2,
   Loader2,
   Phone,
-  Mail,
 } from "lucide-react";
 import { handleGetMyOrganizationDetails } from "@/lib/actions/organization/organization-action";
 import { handleGetOrganizationAppointments } from "@/lib/actions/appointment/appointment";
@@ -246,7 +245,7 @@ export default function OrgCalendarPage() {
         event={selectedEvent}
         onClose={() => setSelectedEvent(null)}
       />
-      <div className="max-w-5xl mx-auto px-4 py-8">
+      <div className="max-w-6xl mx-auto px-1 py-1">
         <div className="mb-6">
           <h1 className="text-2xl font-bold text-gray-900">
             Appointments Calendar
