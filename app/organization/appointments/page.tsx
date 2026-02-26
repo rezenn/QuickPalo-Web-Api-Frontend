@@ -77,14 +77,12 @@ function ConfirmModal({
       />
       <div className="relative bg-white rounded-xl shadow-lg w-full max-w-sm mx-4 p-6">
         <div className="flex items-start gap-3 mb-4">
-          <div className="p-2 bg-yellow-50 rounded-full shrink-0">
-            <AlertTriangle size={18} className="text-yellow-600" />
-          </div>
           <div>
             <h3 className="font-semibold text-gray-900">{title}</h3>
             <p className="text-sm text-gray-500 mt-1">{message}</p>
           </div>
         </div>
+        <div className="w-full mb-4 border border-gray-200"></div>
         <div className="flex gap-3 justify-end">
           <button
             onClick={onClose}
@@ -272,7 +270,7 @@ export default function OrganizationAppointmentsPage() {
               <div
                 key={s}
                 onClick={() => setStatusFilter(statusFilter === s ? "all" : s)}
-                className={`bg-white border rounded-lg p-4 cursor-pointer transition-all hover:shadow-sm ${
+                className={`bg-white border rounded-lg shadow-sm p-5 hover:shadow-md transition-shadow cursor-pointer  ${
                   statusFilter === s
                     ? "border-gray-900 ring-1 ring-gray-900"
                     : "border-gray-200"
@@ -288,8 +286,8 @@ export default function OrganizationAppointmentsPage() {
         <div className="flex flex-col lg:flex-row gap-6">
           {/* Table */}
           <div className="flex-1 min-w-0">
-            <div className="flex flex-col sm:flex-row gap-3 mb-4">
-              <div className="relative flex-1">
+            <div className="flex flex-col sm:flex-row gap-3 mb-4 ">
+              <div className="relative flex-1 ">
                 <Search
                   size={15}
                   className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
@@ -299,14 +297,14 @@ export default function OrganizationAppointmentsPage() {
                   placeholder="Search by name, email, phone..."
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
-                  className="w-full pl-9 pr-4 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:border-gray-500"
+                  className="w-full pl-9 pr-4 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:border-gray-500 shadow-sm hover:shadow-md transition-shadow"
                 />
               </div>
               <div className="relative">
                 <select
                   value={statusFilter}
                   onChange={(e) => setStatusFilter(e.target.value as Status)}
-                  className="appearance-none pl-3 pr-8 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:border-gray-500 bg-white"
+                  className="appearance-none pl-3 pr-8 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:border-gray-500 bg-white shadow-sm p-5 hover:shadow-md transition-shadow"
                 >
                   <option value="all">All ({counts.all})</option>
                   <option value="pending">Pending ({counts.pending})</option>
@@ -339,7 +337,7 @@ export default function OrganizationAppointmentsPage() {
                 </div>
               ) : (
                 <>
-                  <table className="w-full text-sm">
+                  <table className="w-full text-sm shadow-sm p-5 hover:shadow-md transition-shadow">
                     <thead className="bg-gray-50 border-b border-gray-200">
                       <tr>
                         <th className="text-left px-4 py-3 font-semibold text-gray-600">

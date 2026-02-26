@@ -61,31 +61,20 @@ function StatCard({
   title,
   value,
   sub,
-  icon: Icon,
-  accent,
   growth,
   loading,
 }: {
   title: string;
   value: number | string;
   sub?: string;
-  icon: any;
-  accent: string;
   growth?: number;
   loading: boolean;
 }) {
   return (
     <div className="relative bg-white rounded-2xl border border-gray-100 shadow-sm p-6 overflow-hidden group hover:shadow-md transition-shadow">
-      {/* accent strip */}
-      <div
-        className={`absolute left-0 top-0 bottom-0 w-1 ${accent} rounded-l-2xl`}
-      />
-
       <div className="flex items-start justify-between">
         <div>
-          <p className="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-1">
-            {title}
-          </p>
+          <p className="text-sm font-semibold text-gray-800  mb-1">{title}</p>
           {loading ? (
             <div className="h-8 w-20 bg-gray-100 animate-pulse rounded-lg mt-1" />
           ) : (
@@ -96,12 +85,6 @@ function StatCard({
           {sub && !loading && (
             <p className="text-xs text-gray-400 mt-1">{sub}</p>
           )}
-        </div>
-
-        <div
-          className={`p-3 rounded-xl ${accent.replace("bg-", "bg-").replace("-500", "-50")}`}
-        >
-          <Icon size={22} className={accent.replace("bg-", "text-")} />
         </div>
       </div>
 
@@ -223,15 +206,12 @@ export default function AdminDashboard() {
   }, []);
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 space-y-8">
+    <div className="max-w-7xl mx-auto px-1 sm:px-6 py-1 space-y-8">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-black text-gray-900 tracking-tight">
+          <h1 className="text-2xl font-black text-gray-900 ">
             Admin Dashboard
           </h1>
-          <p className="text-sm text-gray-400 mt-0.5">
-            {format(new Date(), "EEEE, MMMM d yyyy")}
-          </p>
         </div>
       </div>
 
@@ -247,38 +227,30 @@ export default function AdminDashboard() {
           title="Total Users"
           value={stats.totalUsers}
           sub={`${stats.newUsersThisMonth} joined this month`}
-          icon={Users}
-          accent="bg-violet-500"
           loading={loading}
         />
         <StatCard
           title="Organizations"
           value={stats.totalOrgs}
           sub={`${stats.orgsWithDetails} with full profile`}
-          icon={Building2}
-          accent="bg-fuchsia-500"
           loading={loading}
         />
         <StatCard
           title="Total Appointments"
           value={stats.totalAppointments}
           sub={`${stats.appointmentsThisMonth} this month`}
-          icon={CalendarCheck}
-          accent="bg-sky-500"
           loading={loading}
         />
         <StatCard
           title="Pending"
           value={stats.pendingAppointments}
           sub={`${stats.completedAppointments} completed · ${stats.cancelledAppointments} cancelled`}
-          icon={Clock}
-          accent="bg-amber-500"
           loading={loading}
         />
       </div>
 
       <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
-        <h2 className="text-sm font-bold text-gray-500 uppercase tracking-widest mb-5">
+        <h2 className="text-sm font-bold text-gray-800  mb-5">
           Appointment Breakdown
         </h2>
         {loading ? (
@@ -403,7 +375,7 @@ export default function AdminDashboard() {
                     </p>
                   </div>
 
-                  <p className="text-xs text-gray-300 whitespace-nowrap">
+                  <p className="text-xs text-gray-600 whitespace-nowrap">
                     {format(new Date(user.createdAt), "MMM d")}
                   </p>
                 </div>

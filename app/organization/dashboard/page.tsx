@@ -106,9 +106,7 @@ function StatCard({
   title,
   value,
   sub,
-  icon: Icon,
-  iconBg,
-  iconColor,
+
   loading,
 }: {
   title: string;
@@ -123,9 +121,6 @@ function StatCard({
     <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 hover:shadow-md transition-shadow">
       <div className="flex items-start justify-between mb-3">
         <p className="text-xs font-bold text-black/80  ">{title}</p>
-        <div className={`p-2 rounded-xl ${iconBg}`}>
-          <Icon size={16} className={iconColor} />
-        </div>
       </div>
       {loading ? (
         <div className="h-8 w-16 bg-gray-100 animate-pulse rounded-lg" />
@@ -220,7 +215,7 @@ export default function OrganizationDashboard() {
     <div className="max-w-7xl mx-auto  sm:px-6 py-1 space-y-3">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className=" font-bold text-black  mb-1">
+          <h1 className="text-2xl font-black text-gray-900 ">
             Organization Dashboard
           </h1>
         </div>
