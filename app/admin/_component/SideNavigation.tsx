@@ -151,10 +151,10 @@ export default function SideNavigation() {
 
         <div className="mt-auto p-4 border-t border-gray-200 space-y-4">
           {/* Theme Toggle */}
-          <div className="flex items-center justify-between p-3 rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors">
+          {/* <div className="flex items-center justify-between p-3 rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors">
             <span className="font-medium text-gray-700">Theme</span>
             <ThemeSwitch />
-          </div>
+          </div> */}
 
           {/* Logout Button */}
           <button
