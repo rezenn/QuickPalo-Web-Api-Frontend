@@ -34,7 +34,6 @@ export default function AppointmentSuccess() {
       sessionStorage.getItem("bookingData") ||
       localStorage.getItem("bookingData");
 
-
     if (stored) {
       try {
         const parsed: BookingData = JSON.parse(stored);

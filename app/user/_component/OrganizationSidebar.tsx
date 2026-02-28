@@ -87,119 +87,91 @@ export default function OrganizationSidebar({
   const [availabilityStatus, setAvailabilityStatus] = useState<{
     [key: string]: boolean;
   }>({});
+  const [availabilityChecked, setAvailabilityChecked] = useState(false);
   const [departmentMap, setDepartmentMap] = useState<Map<string, string>>(
     new Map(),
   );
 
-  // Create a map of department names to IDs
   useEffect(() => {
     const map = new Map<string, string>();
     departments.forEach((dept) => {
       const deptId = dept._id || dept.id;
-      if (deptId) {
-        map.set(dept.name, deptId);
-      } else {
-        console.warn(`Department "${dept.name}" has no ID`);
-      }
+      if (deptId) map.set(dept.name, deptId);
     });
     setDepartmentMap(map);
   }, [departments]);
 
-  // Process time slots
   const processedTimeSlots = useMemo(() => {
-    return (timeSlots || []).map((slot) => {
-      if ("time" in slot) {
-        const [startTime, endTime] = slot.time.split(" - ");
-        return {
-          startTime: startTime || "",
-          endTime: endTime || "",
-          isAvailable: slot.isAvailable,
-          display: slot.time,
-        };
-      } else {
-        return {
-          startTime: slot.startTime,
-          endTime: slot.endTime,
-          isAvailable: slot.isAvailable,
-          display: `${slot.startTime} - ${slot.endTime}`,
-        };
-      }
-    });
+    return (timeSlots || [])
+      .map((slot) => {
+        if ("time" in slot) {
+          const parts = slot.time.split(" - ");
+          const startTime = parts[0]?.trim() || "";
+          const endTime = parts[1]?.trim() || "";
+          if (!startTime || !endTime) return null;
+          return {
+            startTime,
+            endTime,
+            isAvailable: slot.isAvailable ?? true,
+            display: `${startTime} - ${endTime}`,
+          };
+        } else {
+          const startTime = slot.startTime?.trim() || "";
+          const endTime = slot.endTime?.trim() || "";
+          if (!startTime || !endTime) return null;
+          return {
+            startTime,
+            endTime,
+            isAvailable: slot.isAvailable ?? true,
+            display: `${startTime} - ${endTime}`,
+          };
+        }
+      })
+      .filter(Boolean) as {
+      startTime: string;
+      endTime: string;
+      isAvailable: boolean;
+      display: string;
+    }[];
   }, [timeSlots]);
 
   useEffect(() => {
     if (departments.length > 0 && !filterDepartment) {
       const firstDept = departments[0];
       const deptId = firstDept._id || firstDept.id;
-
       if (deptId) {
         setFilterDepartment(firstDept.name);
-        setSelectedDepartment({
-          name: firstDept.name,
-          id: deptId,
-        });
-      } else {
-        console.error("First department has no ID:", firstDept);
+        setSelectedDepartment({ name: firstDept.name, id: deptId });
       }
     }
   }, [departments, filterDepartment]);
 
-  // Update selected department when filterDepartment changes
   useEffect(() => {
-    if (filterDepartment) {
-      const deptId = departmentMap.get(filterDepartment);
-
-      if (deptId) {
-        setSelectedDepartment({
-          name: filterDepartment,
-          id: deptId,
-        });
-      } else {
-        console.error("No ID found for department:", filterDepartment);
-
-        const dept = departments.find((d) => d.name === filterDepartment);
-        if (dept) {
-          const fallbackId = dept._id || dept.id;
-          if (fallbackId) {
-            setSelectedDepartment({
-              name: dept.name,
-              id: fallbackId,
-            });
-          }
-        }
-      }
-    }
+    if (!filterDepartment) return;
+    const deptId =
+      departmentMap.get(filterDepartment) ||
+      departments.find((d) => d.name === filterDepartment)?._id ||
+      departments.find((d) => d.name === filterDepartment)?.id;
+    if (deptId) setSelectedDepartment({ name: filterDepartment, id: deptId });
   }, [filterDepartment, departmentMap, departments]);
 
-  // Check availability when changes made
   useEffect(() => {
-    const checkAllSlotAvailability = async () => {
-      if (!selectedDepartment?.id) {
-        console.log("No selected department ID yet", {
-          selectedDepartment,
-          filterDepartment,
-          availableIds: Array.from(departmentMap.entries()),
-        });
-        return;
-      }
-
-      if (!filterDate || !organizationId) {
-        console.log("Missing date or organizationId");
-        return;
-      }
-
-      console.log("Checking availability for:", {
-        department: selectedDepartment,
-        date: filterDate.fullDate,
-        organizationId,
-      });
+    const checkAll = async () => {
+      if (!selectedDepartment?.id || !filterDate || !organizationId) return;
+      if (processedTimeSlots.length === 0) return;
 
       setIsCheckingAvailability(true);
+      setAvailabilityChecked(false);
+
+      const initial: { [key: string]: boolean } = {};
+      processedTimeSlots.forEach((slot) => {
+        initial[slot.display] = slot.isAvailable;
+      });
+      setAvailabilityStatus(initial);
 
       try {
-        const availabilityMap: { [key: string]: boolean } = {};
+        const updated: { [key: string]: boolean } = {};
 
-        // Check each slot one by one
         for (const slot of processedTimeSlots) {
           try {
             const result = await handleCheckAvailability({
@@ -210,69 +182,63 @@ export default function OrganizationSidebar({
               departmentId: selectedDepartment.id,
             });
 
-            if (result.success && result.data) {
-              availabilityMap[slot.display] = result.data.isAvailable === true;
-            } else {
-              availabilityMap[slot.display] = slot.isAvailable;
-            }
-          } catch (slotError) {
-            console.error(`Error checking slot ${slot.display}:`, slotError);
-            availabilityMap[slot.display] = slot.isAvailable;
+            updated[slot.display] =
+              result.success && result.data != null
+                ? result.data.isAvailable === true
+                : slot.isAvailable;
+          } catch {
+            updated[slot.display] = slot.isAvailable;
           }
         }
 
-        setAvailabilityStatus(availabilityMap);
-      } catch (error) {
+        setAvailabilityStatus(updated);
+      } catch {
         toast.error("Failed to check slot availability");
+        // Keep static fallback
+        const fallback: { [key: string]: boolean } = {};
+        processedTimeSlots.forEach(
+          (s) => (fallback[s.display] = s.isAvailable),
+        );
+        setAvailabilityStatus(fallback);
       } finally {
         setIsCheckingAvailability(false);
+        setAvailabilityChecked(true);
       }
     };
 
-    checkAllSlotAvailability();
-  }, [
-    selectedDepartment,
-    filterDate,
-    organizationId,
-    processedTimeSlots,
-    departmentMap,
-  ]);
+    checkAll();
+  }, [selectedDepartment?.id, filterDate.fullDate, organizationId]);
 
-  // Get available time slots based on real-time availability
-  const availableTimeSlots = processedTimeSlots
-    .filter((slot) => {
-      if (Object.keys(availabilityStatus).length > 0) {
-        return availabilityStatus[slot.display] === true;
-      }
-      return slot.isAvailable;
-    })
-    .map((slot) => slot.display);
+  const availableTimeSlots = useMemo(() => {
+    if (!availabilityChecked && Object.keys(availabilityStatus).length === 0) {
+      return processedTimeSlots
+        .filter((s) => s.isAvailable)
+        .map((s) => s.display);
+    }
+    return processedTimeSlots
+      .filter((s) => availabilityStatus[s.display] === true)
+      .map((s) => s.display);
+  }, [processedTimeSlots, availabilityStatus, availabilityChecked]);
 
-  // Update filterTimeslot when available slots change
   useEffect(() => {
     if (availableTimeSlots.length > 0) {
       if (!filterTimeslot || !availableTimeSlots.includes(filterTimeslot)) {
         setFilterTimeslot(availableTimeSlots[0]);
       }
-    } else {
+    } else if (availabilityChecked) {
       setFilterTimeslot("");
     }
-  }, [availableTimeSlots, filterTimeslot]);
+  }, [availableTimeSlots, availabilityChecked]);
 
-  const departmentNames = departments.map((dept) => dept.name);
+  const departmentNames = departments.map((d) => d.name);
 
   const handleDepartmentChange = (deptName: string) => {
     setFilterDepartment(deptName);
     setAvailabilityStatus({});
-
-    // Immediately try to set the selected department
+    setAvailabilityChecked(false);
+    setFilterTimeslot("");
     const deptId = departmentMap.get(deptName);
-    if (deptId) {
-      setSelectedDepartment({
-        name: deptName,
-        id: deptId,
-      });
-    }
+    if (deptId) setSelectedDepartment({ name: deptName, id: deptId });
   };
 
   const handleBookAppointment = async () => {
@@ -280,49 +246,31 @@ export default function OrganizationSidebar({
       router.push(`/auth/login?redirect=/organization/${organizationId}`);
       return;
     }
-
     if (!filterDepartment) {
       toast.error("Please select a department");
       return;
     }
-
     if (!filterTimeslot) {
       toast.error("Please select a time slot");
       return;
     }
 
-    // Get department ID
-    let departmentId = selectedDepartment?.id;
+    const departmentId =
+      selectedDepartment?.id ||
+      departmentMap.get(filterDepartment) ||
+      departments.find((d) => d.name === filterDepartment)?._id ||
+      departments.find((d) => d.name === filterDepartment)?.id;
 
     if (!departmentId) {
-      departmentId = departmentMap.get(filterDepartment);
+      toast.error(
+        "Department ID not found. Please try selecting the department again.",
+      );
+      return;
     }
 
-    if (!departmentId) {
-      console.error("No department ID found", {
-        selectedDepartment,
-        filterDepartment,
-        departmentMap: Array.from(departmentMap.entries()),
-      });
-
-      const dept = departments.find((d) => d.name === filterDepartment);
-      if (dept) {
-        departmentId = dept._id || dept.id;
-      }
-
-      if (!departmentId) {
-        toast.error(
-          "Department ID not found. Please try selecting the department again.",
-        );
-        return;
-      }
-    }
-
-    // Get selected time slot
     const selectedSlot = processedTimeSlots.find(
-      (slot) => slot.display === filterTimeslot,
+      (s) => s.display === filterTimeslot,
     );
-
     if (!selectedSlot) {
       toast.error("Selected time slot not found");
       return;
@@ -336,33 +284,27 @@ export default function OrganizationSidebar({
         date: filterDate.fullDate,
         startTime: selectedSlot.startTime,
         endTime: selectedSlot.endTime,
-        departmentId: departmentId,
+        departmentId,
       });
 
       if (!availabilityCheck.success || !availabilityCheck.data?.isAvailable) {
         toast.error(
           availabilityCheck.message || "This time slot is no longer available",
         );
-
         setAvailabilityStatus((prev) => ({
           ...prev,
           [selectedSlot.display]: false,
         }));
-
         setIsBooking(false);
         return;
       }
 
-      // Create booking data
       const bookingData = {
         organizationId,
         organizationName,
         organizationType,
         fees: fees || 0,
-        department: {
-          name: filterDepartment,
-          id: departmentId,
-        },
+        department: { name: filterDepartment, id: departmentId },
         date: {
           display: filterDate.display,
           fullDate: filterDate.fullDate,
@@ -386,12 +328,8 @@ export default function OrganizationSidebar({
       };
 
       sessionStorage.setItem("bookingData", JSON.stringify(bookingData));
-      console.log("Saved booking data:", sessionStorage.getItem("bookingData")); 
-
-      // Navigate to confirmation page
       router.push("/user/appointment");
-    } catch (error) {
-      console.error("Booking error:", error);
+    } catch {
       toast.error("Failed to process booking");
       setIsBooking(false);
     }
@@ -433,9 +371,12 @@ export default function OrganizationSidebar({
             filters={DATES.map((d) => d.display)}
             activeFilter={filterDate.display}
             onChange={(selected) => {
-              const selectedDateObj = DATES.find((d) => d.display === selected);
-              if (selectedDateObj) {
-                setFilterDate(selectedDateObj);
+              const obj = DATES.find((d) => d.display === selected);
+              if (obj) {
+                setFilterDate(obj);
+                setAvailabilityStatus({});
+                setAvailabilityChecked(false);
+                setFilterTimeslot("");
               }
             }}
           />
@@ -446,25 +387,38 @@ export default function OrganizationSidebar({
             <h3 className="text-sm font-medium text-gray-600 mb-2 flex items-center gap-2">
               Select Time
               {isCheckingAvailability && (
-                <span className="inline-block w-4 h-4 border-2 border-purple-600 border-t-transparent rounded-full animate-spin"></span>
+                <span className="inline-block w-4 h-4 border-2 border-purple-600 border-t-transparent rounded-full animate-spin" />
               )}
             </h3>
-            <FilterBar
-              filters={
-                availableTimeSlots.length > 0
-                  ? availableTimeSlots
-                  : ["No slots available"]
-              }
-              activeFilter={
-                availableTimeSlots.includes(filterTimeslot) && filterTimeslot
-                  ? filterTimeslot
-                  : availableTimeSlots[0] || ""
-              }
-              onChange={setFilterTimeslot}
-              disabled={
-                availableTimeSlots.length === 0 || isCheckingAvailability
-              }
-            />
+
+            {/* Skeleton while first check runs */}
+            {isCheckingAvailability && availableTimeSlots.length === 0 ? (
+              <div className="flex gap-2 flex-wrap">
+                {processedTimeSlots.map((_, i) => (
+                  <div
+                    key={i}
+                    className="h-9 w-28 bg-gray-100 rounded-lg animate-pulse"
+                  />
+                ))}
+              </div>
+            ) : (
+              <FilterBar
+                filters={
+                  availableTimeSlots.length > 0
+                    ? availableTimeSlots
+                    : ["No slots available"]
+                }
+                activeFilter={
+                  availableTimeSlots.includes(filterTimeslot)
+                    ? filterTimeslot
+                    : availableTimeSlots[0] || ""
+                }
+                onChange={setFilterTimeslot}
+                disabled={
+                  availableTimeSlots.length === 0 || isCheckingAvailability
+                }
+              />
+            )}
 
             <div className="mt-3 text-sm text-gray-600">
               <span className="font-medium">{availableTimeSlots.length}</span>{" "}
@@ -475,48 +429,43 @@ export default function OrganizationSidebar({
           </div>
         )}
       </div>
+
       <div className="mt-3 h-px w-full bg-gray-400" />
 
       <div className="mt-1 text-sm text-gray-600">
         <h2 className="py-2 font-bold text-xl text-gray-800">
-          {" "}
           Appointment Fees
         </h2>
         <div className="flex items-center">
-          {" "}
           <FaMoneyBill className="text-green-600 mr-2" />
           <span className="font-medium">Rs {fees}</span>
         </div>
       </div>
 
       {(filterDepartment || filterTimeslot) && (
-        <div className="mt-6 p-3 bg-fuchsia-50 rounded-lg ">
+        <div className="mt-6 p-3 bg-fuchsia-50 rounded-lg">
           <h3 className="font-semibold text-[#B61BE1] mb-2">Your Selection</h3>
-          <div className="mb-1 rounded-full border bg-[#B61BE1] "></div>
           {filterDepartment && (
             <p className="text-sm text-gray-700">
               <span className="font-medium">Department: </span>
               {filterDepartment}
-              {selectedDepartment?.id && (
-                <span className="text-xs text-gray-500 ml-2">
-                  (ID: {selectedDepartment.id.substring(0, 15)}...)
-                </span>
-              )}
             </p>
           )}
           {filterDate && (
             <p className="text-sm text-gray-700">
-              <span className="font-medium">Date: </span>{" "}
+              <span className="font-medium">Date: </span>
               {filterDate.display.replace("\n", " ")}, {filterDate.month}
             </p>
           )}
           {filterTimeslot && availableTimeSlots.length > 0 && (
             <p className="text-sm text-gray-700">
-              <span className="font-medium">Time: </span> {filterTimeslot}
+              <span className="font-medium">Time: </span>
+              {filterTimeslot}
             </p>
           )}
         </div>
       )}
+
       <div className="my-5 flex items-center justify-center">
         <button
           onClick={handleBookAppointment}
@@ -531,7 +480,7 @@ export default function OrganizationSidebar({
         >
           {isBooking ? (
             <span className="flex items-center gap-2">
-              <span className="inline-block w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+              <span className="inline-block w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
               Processing...
             </span>
           ) : isCheckingAvailability ? (

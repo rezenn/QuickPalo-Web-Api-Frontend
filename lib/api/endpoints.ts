@@ -40,4 +40,8 @@ export const API = {
     GETBYORGANIZATION: (orgId: string) =>
       `/api/appointments/organization/${orgId}`,
   },
+  PAYMENT: {
+    CREATEINTENT: "/api/payments/create-payment-intent",
+    MARKPAID: (id: string) => `/api/payments/${id}/mark-paid`,
+  },
 };

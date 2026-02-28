@@ -59,7 +59,6 @@ export async function handleCheckAvailability(data: {
   departmentId?: string;
 }) {
   try {
-    console.log("Server action handleCheckAvailability called with:", data);
     if (
       !data.organizationId ||
       !data.date ||
@@ -72,7 +71,6 @@ export async function handleCheckAvailability(data: {
       };
     }
     const result = await checkAvailability(data);
-    console.log("Server action result:", result);
 
     return result;
   } catch (error: Error | any) {

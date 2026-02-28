@@ -22,15 +22,10 @@ export default async function OrganizationDetail({
   const returnTo = resolvedSearchParams.returnTo || "/user/organizations";
   const organizationId = resolvedParams.id;
 
-  if (!organizationId) {
-    notFound();
-  }
+  if (!organizationId) notFound();
 
   const result = await handleGetOrganizationById(organizationId);
-
-  if (!result.success || !result.data) {
-    notFound();
-  }
+  if (!result.success || !result.data) notFound();
 
   const organization = result.data;
 
@@ -46,7 +41,6 @@ export default async function OrganizationDetail({
 
   const profileImageUrl = getProfileImageUrl();
 
-  // Working hours & filtered slots
   const days = [
     "sunday",
     "monday",
@@ -68,22 +62,17 @@ export default async function OrganizationDetail({
     return "Closed Today";
   };
 
-  const filteredTimeSlots =
-    organization.timeSlots?.filter((slot: any) => {
-      if (!todayHours?.isWorking) return false;
-      return (
-        slot.startTime >= todayHours.openingTime &&
-        slot.endTime <= todayHours.closingTime
-      );
-    }) || [];
-
   const getFullAddress = () => {
     const parts = [organization.street, organization.city];
-    if (organization.state) {
-      parts.push(organization.state);
-    }
+    if (organization.state) parts.push(organization.state);
     return parts.join(", ");
   };
+
+  const allTimeSlots = (organization.timeSlots || []).map((slot: any) => ({
+    startTime: slot.startTime,
+    endTime: slot.endTime,
+    isAvailable: slot.isAvailable ?? true,
+  }));
 
   return (
     <div className="flex flex-row gap-2">
@@ -124,13 +113,14 @@ export default async function OrganizationDetail({
                 </div>
               </div>
             </div>
-            <div className="h-px w-full bg-gray-400"></div>
+            <div className="h-px w-full bg-gray-400" />
             <p className="line-clamp-3 overflow-hidden text-sm">
               {organization.description}
             </p>
           </div>
         </div>
       </div>
+
       <div className="flex flex-col justify-start">
         <div className="w-xl">
           <OrganizationSidebar
@@ -141,10 +131,7 @@ export default async function OrganizationDetail({
                 _id: dept._id?.toString() || dept.id?.toString(),
               })) || []
             }
-            timeSlots={filteredTimeSlots.map((slot: any) => ({
-              time: `${slot.startTime} - ${slot.endTime}`,
-              isAvailable: slot.isAvailable,
-            }))}
+            timeSlots={allTimeSlots}
             organizationId={organization._id?.toString()}
             organizationName={organization.organizationName}
             organizationType={organization.organizationType}

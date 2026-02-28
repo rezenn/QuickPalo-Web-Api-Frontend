@@ -25,10 +25,6 @@ export interface CheckAvailabilityData {
   departmentId?: string;
 }
 
-console.log("API Endpoints loaded:", {
-  CHECKAVAILABILITY: API.APPOINTMENT?.CHECKAVAILABILITY,
-  APPOINTMENT_OBJECT: API.APPOINTMENT,
-});
 export const createAppointment = async (
   appointmentData: CreateAppointmentData,
 ) => {
@@ -47,16 +43,41 @@ export const createAppointment = async (
   }
 };
 
+export const createPaymentIntent = async (
+  amount: number,
+  appointmentId?: string,
+): Promise<string> => {
+  try {
+    const response = await axiosInstance.post(
+      "/api/payments/create-payment-intent",
+      {
+        amount,
+        currency: "npr",
+        ...(appointmentId ? { appointmentId } : {}),
+      },
+    );
+    return response.data.data.clientSecret;
+  } catch (error: Error | any) {
+    throw new Error(
+      error.response?.data?.message || "Failed to create payment intent",
+    );
+  }
+};
+
+export const markAppointmentPaid = async (
+  appointmentId: string,
+): Promise<void> => {
+  try {
+    await axiosInstance.patch(`/api/payments/${appointmentId}/mark-paid`);
+  } catch (error: Error | any) {
+    console.error("Failed to mark appointment paid:", error.message);
+  }
+};
+
 export const checkAvailability = async (data: CheckAvailabilityData) => {
   try {
-    console.log("Check availability called with:", data);
-    console.log("Using endpoint:", API.APPOINTMENT?.CHECKAVAILABILITY);
-
-    // Validate that the endpoint exists
     if (!API.APPOINTMENT?.CHECKAVAILABILITY) {
-      throw new Error(
-        "CHECKAVAILABILITY endpoint is not defined in API endpoints",
-      );
+      throw new Error("CHECKAVAILABILITY endpoint is not defined");
     }
     const params = new URLSearchParams({
       organizationId: data.organizationId,
@@ -64,11 +85,8 @@ export const checkAvailability = async (data: CheckAvailabilityData) => {
       startTime: data.startTime,
       endTime: data.endTime,
     });
-    if (data.departmentId) {
-      params.append("departmentId", data.departmentId);
-    }
-    const url = `${API.APPOINTMENT.CHECKAVAILABILITY}?${params}`;
-    console.log("Request URL:", url);
+    if (data.departmentId) params.append("departmentId", data.departmentId);
+
     const response = await axiosInstance.get(
       `${API.APPOINTMENT.CHECKAVAILABILITY}?${params}`,
     );
@@ -159,7 +177,7 @@ export const getOrganizationAppointments = async (organizationId: string) => {
     throw new Error(
       error.response?.data?.message ||
         error.message ||
-        "Failed to fetch all appointments",
+        "Failed to fetch organization appointments",
     );
   }
 };
