@@ -86,34 +86,29 @@ export default function Header() {
 
           {/* Right Section - Icons */}
           <div className="flex items-center gap-2 sm:gap-4 shrink-0">
-            <button className="text-gray-600 hover:text-purple-700 transition p-1">
+            {/* <button className="text-gray-600 hover:text-purple-700 transition p-1">
               <BellDot size={20} className="sm:w-6 sm:h-6" />
-            </button>
+            </button> */}
 
-            
-              <div className="relative h-12 w-12 sm:h-14 sm:w-14 rounded-full overflow-hidden border-2 border-fuchsia-400 hover:border-purple-600 transition-colors">
-                <Link
-                  // href="/admin/profile"
-                  href={getRoleBasedRoute("/profile", user?.role)}
-                >
-                  {profileImageUrl && !imageError ? (
-                    <Image
-                      src={profileImageUrl}
-                      alt="Profile"
-                      fill
-                      className="object-cover"
-                      unoptimized
-                      onError={() => setImageError(true)}
-                      sizes="(max-width: 640px) 36px, 48px"
-                    />
-                  ) : (
-                    <div className="w-full h-full flex items-center justify-center bg-linear-to-br from-purple-100 to-pink-100">
-                      <User className="text-purple-500" size={18} />
-                    </div>
-                  )}
-                </Link>
-              </div>
-          
+            <div className="relative h-12 w-12 sm:h-14 sm:w-14 rounded-full overflow-hidden border-2 border-fuchsia-400 hover:border-purple-600 transition-colors">
+              <Link href={getRoleBasedRoute("/profile", user?.role)}>
+                {profileImageUrl && !imageError ? (
+                  <Image
+                    src={profileImageUrl}
+                    alt="Profile"
+                    fill
+                    className="object-cover"
+                    unoptimized
+                    onError={() => setImageError(true)}
+                    sizes="(max-width: 640px) 36px, 48px"
+                  />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center bg-linear-to-br from-purple-100 to-pink-100">
+                    <User className="text-purple-500" size={18} />
+                  </div>
+                )}
+              </Link>
+            </div>
           </div>
         </header>
       </div>

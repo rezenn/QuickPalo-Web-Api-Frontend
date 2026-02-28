@@ -5,10 +5,14 @@ import FiltersBar from "./FiltersBar";
 const orgFilters = [
   "All",
   "Hospital",
+  "Clinic",
+  "Government Office",
+  "Service Center",
+  "Bank",
   "School",
   "College",
   "University",
-  "Service Center",
+  "Others",
 ];
 
 export default function OrganizationFilter() {

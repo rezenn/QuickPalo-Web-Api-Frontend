@@ -127,8 +127,12 @@ export default function SimpleEditForm({
             >
               <option value="hospital">Hospital</option>
               <option value="clinic">Clinic</option>
+              <option value="government_office">Government Office</option>
+              <option value="service_center">Service Center</option>
               <option value="bank">Bank</option>
               <option value="school">School</option>
+              <option value="college">College</option>
+              <option value="university">University</option>
               <option value="others">Others</option>
             </select>
           </div>
