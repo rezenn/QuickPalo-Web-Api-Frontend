@@ -585,7 +585,13 @@ export default function OrganizationAppointmentsPage() {
                       </div>
                       <div className="flex justify-between text-sm">
                         <span className="text-gray-500">Status</span>
-                        <span className="capitalize">
+                        <span
+                          className={`capitalize text-xs font-medium px-1.5 py-0.5 rounded ${
+                            selectedAppt.paymentStatus === "paid"
+                              ? "bg-green-100 text-green-700"
+                              : "bg-yellow-100 text-yellow-600"
+                          }`}
+                        >
                           {selectedAppt.paymentStatus || "—"}
                         </span>
                       </div>
@@ -627,7 +633,7 @@ export default function OrganizationAppointmentsPage() {
                               selectedAppt.clientName,
                             )
                           }
-                          className="w-full py-2 border border-red-300 text-red-600 text-sm font-medium rounded-lg hover:bg-red-50 flex items-center justify-center gap-2 transition-colors"
+                          className="w-full py-2 border border-red-300 bg-red-500 text-white text-sm font-medium rounded-lg hover:bg-red-600 flex items-center justify-center gap-2 transition-colors"
                         >
                           <XCircle size={14} />
                           Cancel Appointment

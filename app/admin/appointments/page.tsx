@@ -522,7 +522,7 @@ export default function AdminAppointmentsPage() {
               <div className="bg-white border border-gray-200 rounded-lg overflow-hidden sticky top-4">
                 <div className="px-4 py-3 border-b border-gray-100 flex items-center justify-between">
                   <h3 className="font-semibold text-fuchsia-600 text-sm">
-                    Details
+                    Appointment Details
                   </h3>
                   <button
                     onClick={() => setSelectedAppt(null)}
@@ -645,7 +645,7 @@ export default function AdminAppointmentsPage() {
                             className={`capitalize text-xs font-medium px-1.5 py-0.5 rounded ${
                               selectedAppt.paymentStatus === "paid"
                                 ? "bg-green-100 text-green-700"
-                                : "bg-gray-100 text-gray-600"
+                                : "bg-yellow-100 text-yellow-600"
                             }`}
                           >
                             {selectedAppt.paymentStatus || "—"}
@@ -692,7 +692,7 @@ export default function AdminAppointmentsPage() {
                               selectedAppt.clientName,
                             )
                           }
-                          className="w-full py-2 border border-red-300 text-red-600 text-sm font-medium rounded-lg hover:bg-red-50 flex items-center justify-center gap-2 transition-colors"
+                          className="w-full py-2 border border-red-300 bg-red-500 text-white text-sm font-medium rounded-lg hover:bg-red-600 flex items-center justify-center gap-2 transition-colors"
                         >
                           <XCircle size={14} />
                           Cancel Appointment
