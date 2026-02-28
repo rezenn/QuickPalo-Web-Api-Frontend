@@ -25,12 +25,20 @@ export default function StripeCardForm({
   const elements = useElements();
   const [error, setError] = useState<string | null>(null);
   const [processing, setProcessing] = useState(false);
+  const [elementReady, setElementReady] = useState(false);
 
   const handlePay = async () => {
-    if (!stripe || !elements) return;
+    if (!stripe || !elements || !elementReady) return;
 
     setProcessing(true);
     setError(null);
+
+    const { error: submitError } = await elements.submit();
+    if (submitError) {
+      setError(submitError.message || "Please check your card details");
+      setProcessing(false);
+      return;
+    }
 
     const { error: stripeError, paymentIntent } = await stripe.confirmPayment({
       elements,
@@ -55,16 +63,28 @@ export default function StripeCardForm({
   };
 
   const isLoading = processing || isSubmitting;
+  const isDisabled = !stripe || !elements || !elementReady || isLoading;
 
   return (
     <div className="space-y-4">
       <PaymentElement
+        onReady={() => setElementReady(true)}
+        onLoadError={(e) =>
+          setError("Failed to load payment form. Please refresh.")
+        }
         options={{
           layout: "tabs",
           paymentMethodOrder: ["card"],
           terms: { card: "never" },
         }}
       />
+
+      {!elementReady && (
+        <div className="flex items-center gap-2 text-sm text-gray-500 py-2">
+          <div className="w-4 h-4 border-2 border-purple-400 border-t-transparent rounded-full animate-spin" />
+          <span>Loading payment form...</span>
+        </div>
+      )}
 
       {error && (
         <div className="p-3 bg-red-50 border border-red-200 rounded-xl text-red-600 text-sm">
@@ -83,7 +103,7 @@ export default function StripeCardForm({
         <button
           type="button"
           onClick={handlePay}
-          disabled={!stripe || isLoading}
+          disabled={isDisabled}
           className="flex-1 bg-[#B61BE1] text-white font-semibold py-3 px-6 rounded-xl hover:opacity-90 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {isLoading ? (
@@ -91,6 +111,8 @@ export default function StripeCardForm({
               <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
               {isSubmitting ? "Booking..." : "Processing..."}
             </span>
+          ) : !elementReady ? (
+            "Loading..."
           ) : (
             `Pay Rs. ${amount} & Confirm`
           )}

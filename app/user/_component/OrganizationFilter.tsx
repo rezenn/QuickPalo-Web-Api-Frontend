@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
 import FiltersBar from "./FiltersBar";
+
 const orgFilters = [
   "All",
   "Hospital",
@@ -15,16 +15,20 @@ const orgFilters = [
   "Others",
 ];
 
-export default function OrganizationFilter() {
-  const [filter, setFilter] = useState<(typeof orgFilters)[number]>("All");
+interface OrganizationFilterProps {
+  activeFilter: string;
+  onFilterChange: (filter: string) => void;
+}
 
+export default function OrganizationFilter({
+  activeFilter,
+  onFilterChange,
+}: OrganizationFilterProps) {
   return (
-    <>
-      <FiltersBar
-        filters={orgFilters}
-        activeFilter={filter}
-        onChange={setFilter}
-      />
-    </>
+    <FiltersBar
+      filters={orgFilters}
+      activeFilter={activeFilter}
+      onChange={onFilterChange}
+    />
   );
 }
