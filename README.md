@@ -15,7 +15,7 @@ monitor queues, and optimize workflow efficiency.
 -   **Database:** MongoDB with Mongoose
 -   **Language:** TypeScript
 -   **Authentication:** JWT-based authentication
--   **Architecture Pattern:** Layered (Onion) Architecture
+-   **Architecture Pattern:** Layered Architecture
 
 ------------------------------------------------------------------------
 
@@ -43,13 +43,16 @@ server/client component separation.
     │
     ├── app/
     │   ├── (auth)/
+    │   ├── admin/ 
+    │   ├── organization/
+    │   ├── user/    
     │   ├── dashboard/
     │   ├── appointments/
     │   └── api/
     │
     ├── components/
     ├── lib/
-    ├── middleware.ts
+    ├── proxy.ts
     ├── services/
     └── types/
 
