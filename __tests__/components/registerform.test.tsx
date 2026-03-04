@@ -28,7 +28,6 @@ jest.mock("react-international-phone", () => ({
   ),
 }));
 
-// 
 describe("RegisterForm", () => {
   beforeEach(() => jest.clearAllMocks());
 
