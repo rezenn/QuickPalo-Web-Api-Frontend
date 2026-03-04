@@ -8,7 +8,7 @@ monitor queues, and optimize workflow efficiency.
 
 ------------------------------------------------------------------------
 
-## 🏗 Architecture Overview
+## Architecture Overview
 
 -   **Frontend:** Next.js (React-based with Server-Side Rendering)
 -   **Backend:** Node.js + Express (RESTful API)
@@ -19,7 +19,7 @@ monitor queues, and optimize workflow efficiency.
 
 ------------------------------------------------------------------------
 
-# 📦 Frontend -- Next.js Application
+# Frontend -- Next.js Application
 
 ## Overview
 
