@@ -59,7 +59,7 @@ server/client component separation.
 ## Run Frontend
 
 ``` bash
-cd frontend
+cd client
 npm install
 npm run dev
 ```
