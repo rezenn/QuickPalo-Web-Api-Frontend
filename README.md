@@ -1,83 +1,64 @@
-QuickPalo – Appointment Booking & Queue Management System
+# QuickPalo -- Appointment Booking & Queue Management System
 
-QuickPalo is a full-stack web application designed to modernize traditional appointment scheduling and queuing systems. It enables users to book appointments remotely, complete secure payments, and verify bookings via QR-based check-in. Service providers can manage slots, monitor queues, and optimize workflow efficiency.
+QuickPalo is a full-stack web application designed to modernize
+traditional appointment scheduling and queuing systems. It enables users
+to book appointments remotely, complete secure payments, and verify
+bookings via QR-based check-in. Service providers can manage slots,
+monitor queues, and optimize workflow efficiency.
 
-The system is built using a modern web technology stack with layered architecture principles to ensure scalability, maintainability, and performance.
+------------------------------------------------------------------------
 
-🏗 Architecture Overview
+## 🏗 Architecture Overview
 
-Frontend: Next.js (React-based, SSR-enabled)
+-   **Frontend:** Next.js (React-based with Server-Side Rendering)
+-   **Backend:** Node.js + Express (RESTful API)
+-   **Database:** MongoDB with Mongoose
+-   **Language:** TypeScript
+-   **Authentication:** JWT-based authentication
+-   **Architecture Pattern:** Layered (Onion) Architecture
 
-Backend: Node.js + Express (RESTful API)
+------------------------------------------------------------------------
 
-Database: MongoDB with Mongoose
+# 📦 Frontend -- Next.js Application
 
-Language: TypeScript
+## Overview
 
-Authentication: JWT-based authentication
+The frontend is built using Next.js with App Router architecture. It
+supports Server-Side Rendering (SSR), file-based routing, and
+server/client component separation.
 
-Architecture Pattern: Layered (Onion) Architecture
+## Key Features
 
-📦 Frontend – Next.js Application
-Overview
+-   Server-Side Rendering (SSR)
+-   File-based routing
+-   Server Actions
+-   Middleware-based authentication
+-   Component separation (Server & Client Components)
+-   Dynamic appointment booking UI
+-   QR-based booking confirmation
 
-The frontend is built using Next.js with App Router architecture. It supports server-side rendering (SSR), file-based routing, and server/client component separation.
+## Folder Structure
 
-Key Features
+    frontend/
+    │
+    ├── app/
+    │   ├── (auth)/
+    │   ├── dashboard/
+    │   ├── appointments/
+    │   └── api/
+    │
+    ├── components/
+    ├── lib/
+    ├── middleware.ts
+    ├── services/
+    └── types/
 
-Server-Side Rendering (SSR) for improved performance
+## Run Frontend
 
-File-based (convention-based) routing
-
-Server Actions for secure backend logic execution
-
-Authentication-aware middleware
-
-Component-level separation (Server vs Client Components)
-
-Secure API integration with backend
-
-Dynamic appointment booking UI
-
-QR-based booking confirmation display
-
-Folder Structure
-frontend/
-│
-├── app/
-│   ├── (auth)/
-│   ├── dashboard/
-│   ├── appointments/
-│   └── api/
-│
-├── components/
-├── lib/
-├── middleware.ts
-├── services/
-└── types/
-Key Technologies Used
-
-Next.js (App Router)
-
-React
-
-TypeScript
-
-Context API (or state management solution used)
-
-Fetch / Axios for API communication
-
-Running the Frontend
+``` bash
 cd frontend
 npm install
 npm run dev
+```
 
-Application runs on:
-
-http://localhost:3000
-Environment Variables
-
-Create .env.local:
-
-NEXT_PUBLIC_API_URL=http://localhost:5000/api
-JWT_SECRET=your_secret_key
+App runs at: http://localhost:3000
