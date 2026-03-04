@@ -1,10 +1,9 @@
-import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import LoginForm from "@/app/(auth)/_components/LoginForm";
 import { handleLogin } from "@/lib/actions/auth-action";
 import { useAuth } from "@/context/authContext";
 
-// ─── Mocks ──────────────────────────────────────────────────
 jest.mock("@/lib/actions/auth-action", () => ({
   handleLogin: jest.fn(),
 }));
